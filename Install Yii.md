@@ -1,22 +1,24 @@
 Install Yii
+
 # 1. Install composer.
-# 	a. `curl -sS https://getcomposer.org/installer | php`
-# (the first time is failed, but second is success.)
-# 	b. `sudo mv composer.phar /usr/local/bin/composer`
-# 2. Get the PHP's localhost folder with Terminal and type:
-# 	`composer create-project --prefer-dist yiisoft/yii2-app-basic basic`
-# 	to get down the yii2.
-# 	Prompt: "Your requirements could not be resolved to an installable set of packages."
+
++ 	a. `curl -sS https://getcomposer.org/installer | php`
++ (the first time is failed, but second is success.)
++ 	b. `sudo mv composer.phar /usr/local/bin/composer`
++ 2. Get the PHP's localhost folder with Terminal and type:
++ 	`composer create-project --prefer-dist yiisoft/yii2-app-basic basic`
++ 	to get down the yii2.
++ 	Prompt: "Your requirements could not be resolved to an installable set of packages."
 
 
-the method above can't install easily.
+# 2. the method above can't install easily.
 
-# 1. Install basic version as below:
-1. Install and config your nginx successfully.
-2. Download the link "Yii2的基本应用程序模板" from the website "http://www.yiichina.com/download".
-	It actually download the source "...".
++ 1. Install basic version as below:
+  + 1. Install and config your nginx successfully.
+  + 2. Download the link "Yii2的基本应用程序模板" from the website "http://www.yiichina.com/download".
+	+ It actually download the source "...".
 
-# 2. Install Advanced version as below:
+# 3. Install Advanced version as below:
 
 + First, do not use the composer to install the yii.
 + Just to download the Advance package.
@@ -83,7 +85,7 @@ the method above can't install easily.
     root /home/user/workshop/advanced/frontend/web;
   }
 
-<pre>
+</pre>
 
 + Then you should follow above to new the folder 'log' and the file 'access.log', 'error.log';
 + You can see the 'error.log' at the folder "/var/log/nginx/" to see what's error if there was.
