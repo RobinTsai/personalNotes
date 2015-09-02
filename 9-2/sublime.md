@@ -16,3 +16,11 @@
 + Ctrl + M : move the point to corresponding symble, such as '(' or )'.
 + Ctrl + J : combine multi-line in one, but not hide.
 + Ctrl + B + K : open/close panel beside.(B & K at the same time.only B to close.)
+
++ Install a helper to support Chinese input
+    ```shell
+    cd ~/.config/sublime-text-2/Packages
+    git clone https://github.com/xgenvn/InputHelper.git
+    ```
+
+    + Use 'Ctrl + Shift + z' to get an input box to input Chinese.

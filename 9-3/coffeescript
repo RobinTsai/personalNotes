@@ -1,0 +1,37 @@
+Coffeescript
+
+1. 在CoffeeScript是一种很简洁的JS语言。
+	square = (x) -> x * x  
+	函数名 = (传入参数) -> 函数体
+
+	sum = (nums) -> nums.reduce (a, b) -> a + b   // 其中reduce是一个回调函数。
+	函数名 = (传入参数) -> 子函数体
+	子函数体：  函数名 (传入参数) -> 函数体
+	
+	diff = (nums) -> (square sum nums) - (sum nums.map square)
+	函数名 = (传入参数) -> (子函数1) - (子函数2)
+	子函数1： 函数名 子函数11
+		子函数11： 函数名 传入参数
+	子函数2： 函数名 子函数21
+		子函数21： 函数名 函数名作为传入参数			// 由于map函数是系统自己的函数。
+		
+	diff [1..100]		// 调用函数并传入参数
+	
+2. (n for n in [1..999] when n % 3 == 0 or n % 5 == 0).reduce (x, y) -> x + y
+	编译成js是
+	  ((function() {
+		var j, results1;
+		results1 = [];
+		for (n = j = 1; j <= 999; n = ++j) {
+		  if (n % 3 === 0 || n % 5 === 0) {
+		    results1.push(n);
+		  }
+		}
+		return results1;
+	  })()).reduce(function(x, y) {
+		return x + y;
+	  });
+	 for循环前有个n是什么意思？
+	 这是for的固定用法，例子上说: eat food for food in ['toast', 'cheese', 'wine']
+	  
+  
