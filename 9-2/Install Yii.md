@@ -91,3 +91,13 @@ Install Yii
 + You can see the 'error.log' at the folder "/var/log/nginx/" to see what's error if there was.
 
 + restart your nginx with "sudo service nginx reload" or use "restart" instead "reload".
+
+# listen to fpm of phpbrew
++ write on 9-3. change the 'default' file.
+    ```php
+    location ~ \.php$ {
+      include fastcgi_params;
+      fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+      fastcgi_pass   127.0.0.1:9000;
+    }
+    ```
