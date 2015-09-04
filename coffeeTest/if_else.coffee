@@ -1,3 +1,6 @@
+# if_else
+# no 'return', but every have a return.
+
 console.log "all the 'flag' should be 'true'"
 
 # if
