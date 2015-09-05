@@ -18,3 +18,17 @@ ages = for own name, age of yearsOld
 for name, age in yearsOld
   console.log name + age
 console.log "\nSee use 'in' can't output, but no error\n"
+
+### =>
+
+Wang is 10
+Cai is 9
+Sun is 11
+
+Wang is 10
+Cai is 9
+Sun is 11
+
+See use 'in' can't output, but no error
+
+###

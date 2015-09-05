@@ -6,3 +6,4 @@ console.log (
     catch e
       "the error is #{e}"
   )
+# => Infinity

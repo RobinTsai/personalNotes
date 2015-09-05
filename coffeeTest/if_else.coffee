@@ -42,3 +42,13 @@ if false or true
 else
   console.log "Not there"
 
+### =>
+all the 'flag' should be 'true'
+flag1 = true
+flag2 = true
+flag3 = true
+flag4 = true
+in if-true-and-true
+in if-true-and-false
+in if-false-or-true
+###

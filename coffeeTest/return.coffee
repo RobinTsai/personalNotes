@@ -18,3 +18,22 @@ grade = ->
 console.log "\nthe grade function contents:\n" + grade
 
 console.log "\ngrade = " + grade()
+
+### =>
+
+one = 1
+six = 6
+
+the grade function contents:
+function () {
+    if (false) {
+      return "false";
+    } else if (true) {
+      return "true";
+    } else {
+      return "none";
+    }
+  }
+
+grade = true
+###

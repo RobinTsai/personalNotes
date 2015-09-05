@@ -19,3 +19,12 @@ console.log volume4     # => so 'unless' means "if not"
 # 不过注意,省略的部分是一个boolean型的
 volume5 = 10 unless false
 console.log volume5
+
+
+### =>
+10
+10
+undefined
+undefined
+10
+###

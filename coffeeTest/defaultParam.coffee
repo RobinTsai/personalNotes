@@ -1,7 +1,7 @@
 fill = (container, liquid = "coffee") ->
   console.log "Filling the #{container} with #{liquid}..."
 
-fill("cup", null)      # run it.
+fill("cup", null)      # => Filling the cup with coffee...
 
 ###
   # this may be used for html tag.

@@ -1,0 +1,74 @@
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+  <style type="text/css">
+  tt {
+    display: inline-block;
+    background: #fff;
+    border: 1px solid #dedede;
+    padding: 0px 0.2em;
+  }
+  td {
+    text-align: center;
+  }
+  </style>
+</head>
+<body>
+    <p>
+      <span id="operators" class="bookmark"></span>
+      <h1>从CoffeeScript到Script</h1>
+      <h2 class="header">操作符和 aliase</h2>
+      由于操作符 <tt>==</tt> 常常带来不准确的约束, 不容易达到效果, 而且跟其他语言当中意思不一致,
+      CoffeeScript 会把 <tt>==</tt> 编译为 <tt>===</tt>, 把 <tt>!=</tt> 变异为 <tt>!==</tt>.
+      此外, <tt>is</tt> 编译为 <tt>===</tt>, 而 <tt>isnt</tt> 编译为 <tt>!==</tt>.
+    </p>
+    <p>
+      <tt>not</tt> 可以作为 <tt>!</tt> 的 alias 使用.
+    </p>
+    <p>
+      逻辑操作方面, <tt>and</tt> 编译为 <tt>&amp;&amp;</tt>, 而 <tt>or</tt> 编译为 <tt>||</tt>.
+    </p>
+    <p>
+      在 <b>while</b>, <b>if</b>/<b>else</b>, <b>switch</b>/<b>when</b> 的语句当中,
+      <tt>then</tt> 可以被用来分隔判断条件跟表达式, 这样就不用强制写换行或者分号了.
+    </p>
+    <p>
+      就像 <a href="http://yaml.org/">YAML</a>, <tt>on</tt> 和 <tt>yes</tt>
+      跟 <tt>true</tt> 是一样的, 而 <tt>off</tt> 和 <tt>no</tt> 是布尔值 <tt>false</tt>.
+    </p>
+    <p>
+      <tt>unless</tt> 可以认为是 <tt>if</tt> 相反的版本.
+    </p>
+    <p>
+      <tt>this.property</tt> 简短的写法可以用 <tt>@property</tt>.
+    </p>
+    <p>
+      可以用 <tt>in</tt> 判断数据在数组中是否出现, 而 <tt>of</tt>
+      可以探测 JavaScript 对象的属性是否存在.
+    </p>
+    <p>
+      为了简化数学表达式, <tt>**</tt> 可以用来表示乘方, <tt>//</tt> 表示整除, <tt>%%</tt>
+      提供数学的模运算(译注: true mathematical modulo?).
+    </p>
+    <p>
+      完整的列表:
+    </p>
+
+    <table class="definitions">
+      <tr><th>CoffeeScript</th><th>JavaScript</th></tr>
+      <tr><td><tt>is</tt></td><td><tt>===</tt></td></tr>
+      <tr><td><tt>isnt</tt></td><td><tt>!==</tt></td></tr>
+      <tr><td><tt>not</tt></td><td><tt>!</tt></td></tr>
+      <tr><td><tt>and</tt></td><td><tt>&amp;&amp;</tt></td></tr>
+      <tr><td><tt>or</tt></td><td><tt>||</tt></td></tr>
+      <tr><td><tt>true</tt>, <tt>yes</tt>, <tt>on</tt></td><td><tt>true</tt></td></tr>
+      <tr><td><tt>false</tt>, <tt>no</tt>, <tt>off</tt></td><td><tt>false</tt></td></tr>
+      <tr><td><tt>@</tt>, <tt>this</tt></td><td><tt>this</tt></td></tr>
+      <tr><td><tt>of</tt></td><td><tt>in</tt></td></tr>
+      <tr><td><tt>in</tt></td><td><i><small>no JS equivalent</small></i></td></tr>
+      <tr><td><tt>a ** b</tt></td><td><tt>Math.pow(a, b)</tt></td></tr>
+      <tr><td><tt>a // b</tt></td><td><tt>Math.floor(a / b)</tt></td></tr>
+      <tr><td><tt>a %% b</tt></td><td><tt>(a % b + b) % b</tt></td></tr>
+    </table>
+</body>
+</html>

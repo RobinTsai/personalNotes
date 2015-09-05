@@ -21,3 +21,10 @@ awardMedals contenders...
 console.log "gold = " + gold
 console.log "silver = " + silver
 console.log "rest = " + rest
+
+
+### =>
+gold = Michael Phelps
+silver = Mike Wang
+rest = Robin Cai,Qill Li,Garl Sun
+###

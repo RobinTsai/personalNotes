@@ -14,3 +14,11 @@ cube = (x) -> square(x) * x
 ###
   multi-line comment
 ###
+
+
+### =>
+4   // 这个是需要输入的
+square = 16
+cube = 64
+
+###

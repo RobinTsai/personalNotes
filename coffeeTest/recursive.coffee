@@ -13,3 +13,11 @@ arrs3 = (num for num in [0..10] by 2)     # +2
 arrs4 = (num for num in [10..0] by -2)    # -2
 console.log arrs3
 console.log arrs4
+
+
+### =>
+[ 5, 4, 3, 2, 1 ]
+[ 10, 8, 6, 4, 2 ]
+[ 0, 2, 4, 6, 8, 10 ]
+[ 10, 8, 6, 4, 2, 0 ]
+###

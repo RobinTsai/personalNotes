@@ -17,8 +17,8 @@ globals2 = (name2 for name2 in window)[0...10]
 # the name2 also means the value. They are the same.
 # It means the 'name2' and the 'value' all equal the value. there is no key.
 
-console.log globals
-console.log globals2
+console.log globals       # => [ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 ]
+console.log globals2      # => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]
 
 # See, 'in' & 'of' are different.
 # you will know when you run it in the Terminal

@@ -43,3 +43,21 @@ eat food for food in arrs when food isnt 'b'
 console.log " "
 
 
+### =>
+
+toast
+cheese
+wine
+
+a
+b
+c
+
+1:a
+2:b
+3:c
+
+a
+c
+
+###
