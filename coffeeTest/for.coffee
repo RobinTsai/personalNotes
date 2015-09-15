@@ -29,6 +29,11 @@ menu = (i, bread) -> console.log i + ':' + bread
 
 # run function.
 menu i + 1, food for food, i in arrs
+# Attention this:
+  # At there, "for food, i in arrs"
+  # 'food' 表示arrs中的值
+  # 'i' 表示从0开始的计数. 但到底是计数,还是arrs的键,还需要进一步确认
+  # 比如arrs=['a' = 'tom', 'b' = 'mike']时,i到底是谁????
 
 # conclusion
 # 在coffeescript中，逗号表示并列元素
