@@ -1,0 +1,55 @@
+<html>
+<head>
+<script type="text/javascript" src="https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superplus/js/lib/jquery-1.10.2_d88366fd.js"></script>
+<script src="./angular.min.js"></script>
+<script type="text/javascript">
+angular.module('myApp', [])
+.controller('MyController', ['$scope', '$parse', function($scope, $parse){
+  $scope.$watch('expression', function(newVal, oldVal) {
+    if (newVal != oldVal) {
+      var parseFun = $parse(newVal);      // 将字符串转换为表达式
+      $scope.parsedValue = parseFun();    // 这个东西的用法很奇怪，但就是这样用的
+    }
+  });
+}])
+.filter('capitalize', function() {        // 定义一个filter，让首字母大写
+  return function(input) {                // 其实就是一个函数的用法
+    if (input) {
+      return input[0].toUpperCase() + input.slice(1);
+    }
+  }
+})
+.directive('oneToTen', function() {       // 定义一个指令, 来讲解parsers的用法,虽然还是不很清楚
+  return {
+    require: '?ngModel',                  // ?有或没有(不报错)。和ngModel的值进行绑定，作为下面第四个参数
+    link: function(scope, ele, attrs, ngModel) {
+      if (!ngModel) return;
+      ngModel.$parsers.unshift(
+        function (viewValue) {
+          var i = parseInt(viewValue);
+          if (i >= 0 && i < 10) {
+            ngModel.$setValidity('oneToTen', true);
+            console.log('true');          // 看控制台
+            return viewValue;
+          } else {
+            ngModel.$setValidity('oneToTen', false);
+            console.log('false');
+            return undefined;
+          }
+        }
+      );
+    }
+  }
+})
+</script>
+</head>
+<body ng-app="myApp">
+  <div ng-controller="MyController">
+    <input type="text" ng-model="expression"/>
+    <div> {{parsedValue}}</div>
+    <input type="text" ng-model="name"/>
+    <div> {{name | capitalize}}</div>
+    <input one-to-ten type="text" ng-model="num"/>
+  </div>
+</body>
+</html>
