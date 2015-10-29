@@ -1,0 +1,22 @@
+<html>
+<head>
+<script type="text/javascript" src="https://ss0.bdstatic.com/5aV1bjqh_Q23odCf/static/superplus/js/lib/jquery-1.10.2_d88366fd.js"></script>
+<script src="./angular.min.js"></script>
+<script type="text/javascript">
+angular.module('myApp', [])
+.controller('MyController', ['$scope', '$parse', function($scope, $parse){
+}])
+.directive('myDirective', function(){
+  return {
+    restrict: 'E',          // 节点元素
+    template: '<a href="http://www.baidu.com">Click to Baidu</a>'   // 不能没有http://这样会仅替换地址的最后一部分
+  };
+})
+</script>
+</head>
+<body ng-app="myApp">
+  <div ng-controller="MyController">
+    <my-directive></my-directive>
+  </div>
+</body>
+</html>
