@@ -1,0 +1,20 @@
+body {
+  padding: 20px 40px;
+}
+
+table {
+  min-width: 500px;
+}
+
+
+th, td {
+  border: 1px solid #000;
+}
+
+.page {
+  cursor: pointer;
+}
+
+.active {
+  color: #0F0;
+}
