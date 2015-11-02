@@ -56,4 +56,14 @@
 + Object.keys(x); 可返回对象x中的所有自有属性的名称（键名）, 但仅仅是可枚举的属性
     + Object.getOwnPropertyNames(x); 和keys()类似，但不仅仅是可枚举的属性
 
-+ 到P144, 6.6了
++ 存取器：get/set方法可以定义单向流动方向的数据和方法. get r(){...}用在定义r()方法只读
+
++ Object.getOwnPropertyDescriptor(a, 'x');是获取<strong>自有</strong>a变量x属性的描述(要想获得继承属性的描述，需要遍历原型链getPrototypeOf())
+    返回类型有,一般变量：{value: *, writable: *, enumerable: *, configurable: *}
+    而存取器的描述：{get/set: *, writable: *, enumerable: *, configurable: *}
+    value/get/set性，可写性，可枚举性，可配置性
++ 可以定义或修改属性的特性：Object.defineProperty(a, 'x', {value: 1, writable: true, enumerable: false, configurable: true}); 此属性存在但不可枚举：a.x==1;Object.keys(a)是[]空
+
++ 数组的语法允许最后一个元素有逗号，所以当最后一个元素是空时,[,,,]表示有三个元素，而非四个
+
++ var a = new Array(10); 10有或没有，表示数组的长度, 但这长度还是可以增加的。 但参数过多，就不是数组个数了，而是数组的值
