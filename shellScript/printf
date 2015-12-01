@@ -1,0 +1,10 @@
+#!/bin/bash
+
+printf "%-5s %-10s %-4s\n" No Name Mark
+echo "  5  |    10    | 4  |"
+echo "-----+----------+----+"
+printf "%-5s %-10s %-4.2f\n" 1 Cai 5.2343
+
+# %-5s, 's' means 'string'
+# %-4.2f, 'f' means 'float'
+# type follow by some formats
