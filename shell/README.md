@@ -31,3 +31,8 @@
 - In bash, one semicolon ';' in line can separate one command to two.
 
 - bash不区分单双引号
+
+# ATTENTION
+
+- Those all are written and tested under zsh shell, not bash, maybe it will have different.
+- I'm a newbie.

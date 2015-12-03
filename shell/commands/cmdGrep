@@ -1,0 +1,6 @@
+#!/bin/bash
+
+echo -e "\e[1;42mGlobal Regular Expression Print\e[0m"
+echo -e "\e[1;42mThis is used to search together with '|'\e[0m"
+
+cat ~/.bashrc | grep PS1

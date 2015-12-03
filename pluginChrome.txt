@@ -1,0 +1,5 @@
+插件分享
+网页查词翻译插件： chrome-extension://ikhdkkncnoglghljlkmcimlnlhkeamad/options.html
+特性1： 有无vpn都可使用，
+特性2：小图标，方式点选启动翻译。避免了对Ctrl + C等快捷键的干扰
+特性3：可自定义翻译词典

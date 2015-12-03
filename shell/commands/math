@@ -1,0 +1,46 @@
+#!/bin/bash
+
+var1=9
+echo var1=$var1
+var2=10
+echo var2=$var2
+let var3=$var1+$var2
+echo var3=$var3
+echo ""
+
+echo -e "\e[1;42mWhen use 'let', '$' can be left out\e[0m"
+let result2=var1+var2  # no '$'
+echo var1+var2=$result2
+
+echo -e "\e[1;42mYou can use '++' or '--'\e[0m"
+let var1++
+echo "(var1++)=$var1"
+
+let var1--
+echo "(var1--)=$var1"
+
+let --var1
+echo "(--var1)=$var1"
+
+let ++var1
+echo "(++var1)=$var1"
+
+# echo -e "\e[1;42mWhen use '()', quote is necessary.\e[0m"
+
+echo ""
+echo -e "\e[1;44mAll Of Below: Float Not Accept\e[0m"
+echo -e "\e[1;42mUse '\$[]' rather than 'let'\e[0m"
+echo result=$[var1+var2]
+
+echo ""
+echo -e "\e[1;42mUse '\$(())' rather than 'let'\e[0m"
+echo result=$((var1+var2))
+
+echo ""
+echo -e "\e[1;42mUse 'expr' to calculate.\e[0m"
+echo "Attention: must have every space."
+result=`expr 3 + 4` # Attention every space.
+echo $result
+
+result=$(expr $var1 + 3) # Attention: every space.
+echo $result
