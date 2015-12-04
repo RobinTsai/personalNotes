@@ -1,0 +1,10 @@
+#!/bin/bash
+
+echo -e "\e[1;42mUse >, >> to input and add at the end.\e[0m"
+echo "This is a sample text 1" > temp.txt
+echo "This is sample text 2" >> temp.txt
+echo "==============temp.txt================>"
+cat ./temp.txt
+echo "<=================end=================="
+
+rm ./temp.txt
