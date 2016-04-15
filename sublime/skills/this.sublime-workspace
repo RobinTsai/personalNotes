@@ -1,0 +1,1649 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"hei",
+				"height"
+			],
+			[
+				"Util",
+				"LogUtil"
+			],
+			[
+				"L",
+				"LogHelper"
+			],
+			[
+				"ordeid",
+				"ORDER_ID"
+			],
+			[
+				"MIN",
+				"minlength	Attr"
+			],
+			[
+				"restua",
+				"restaurant"
+			],
+			[
+				"blo",
+				"inline-block"
+			],
+			[
+				"regex",
+				"string2MongoRegex"
+			],
+			[
+				"trac",
+				"transaction"
+			],
+			[
+				"back",
+				"background-color"
+			],
+			[
+				"pi",
+				"pipeline"
+			],
+			[
+				"p",
+				"pagination"
+			],
+			[
+				"con",
+				"condition"
+			],
+			[
+				"array_key",
+				"array_key_exists"
+			],
+			[
+				"SOR",
+				"SORT_ASC"
+			],
+			[
+				"conta",
+				"contractTime"
+			],
+			[
+				"restaurnt",
+				"restaurant"
+			],
+			[
+				"if",
+				"if?	$… = ( … ) ? … : …"
+			],
+			[
+				"Restaurant",
+				"Restaurant"
+			],
+			[
+				"mon",
+				"MongoId"
+			],
+			[
+				"para",
+				"parentName"
+			],
+			[
+				"ordr",
+				"Order"
+			],
+			[
+				"ba",
+				"background-color"
+			],
+			[
+				"typ",
+				"TYPE_RESERVE"
+			],
+			[
+				"Sort",
+				"SORT_DESC"
+			],
+			[
+				"fav",
+				"Favorite"
+			],
+			[
+				"fun",
+				"function"
+			],
+			[
+				"IDbr",
+				"ID_BR001"
+			],
+			[
+				"see",
+				"seeResponseIsUnauthorized"
+			],
+			[
+				"opera",
+				"operation"
+			],
+			[
+				"opeat",
+				"operation"
+			],
+			[
+				"sta",
+				"status"
+			],
+			[
+				"membe",
+				"memeberId"
+			],
+			[
+				"op",
+				"operation"
+			],
+			[
+				"operat",
+				"operations"
+			],
+			[
+				"ope",
+				"operation"
+			],
+			[
+				"Mo",
+				"MongoDate"
+			],
+			[
+				"rese",
+				"reserveAt"
+			],
+			[
+				"strrep",
+				"str_replace"
+			],
+			[
+				"table",
+				"tableIds"
+			],
+			[
+				"STAT",
+				"STATUS_SEATED"
+			],
+			[
+				"reser",
+				"reservedTableIds"
+			],
+			[
+				"OPERATIO",
+				"operation"
+			],
+			[
+				"for",
+				"foreach	foreach …"
+			],
+			[
+				"we",
+				"wechatMessage"
+			],
+			[
+				"loca",
+				"location	\\$location"
+			],
+			[
+				"mess",
+				"message"
+			],
+			[
+				"me",
+				"merge"
+			],
+			[
+				"messa",
+				"messageListParent"
+			],
+			[
+				"message",
+				"messageListParent"
+			],
+			[
+				"w",
+				"wechatMessage"
+			],
+			[
+				"remain",
+				"remainingLength"
+			],
+			[
+				"print",
+				"print_r"
+			],
+			[
+				"pa",
+				"participation"
+			],
+			[
+				"al",
+				"text-align"
+			]
+		]
+	},
+	"buffers":
+	[
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "blame",
+		"selected_items":
+		[
+			[
+				"blame",
+				"Git: Blame"
+			],
+			[
+				"ssphp",
+				"Set Syntax: PHP"
+			],
+			[
+				"ssme",
+				"Set Syntax: Markdown Extended"
+			],
+			[
+				"BLAME",
+				"Git: Blame"
+			],
+			[
+				"ssshe",
+				"Set Syntax: Shell Script (Bash)"
+			],
+			[
+				"format",
+				"Pretty JSON: Format (Pretty Print) JSON"
+			],
+			[
+				"prett",
+				"Pretty JSON: JSON 2 XML"
+			],
+			[
+				"fo",
+				"Format: Javascript"
+			],
+			[
+				"prety",
+				"Pretty JSON: Validate"
+			],
+			[
+				"fresh",
+				"Project: Refresh Folders"
+			],
+			[
+				"packagins",
+				"Package Control: Install Package"
+			],
+			[
+				"prettyjson",
+				"Pretty JSON: JSON 2 XML"
+			],
+			[
+				"json",
+				"Pretty JSON: Format (Pretty Print) JSON"
+			],
+			[
+				"jsforma",
+				"Pretty JSON: Format (Pretty Print) JSON"
+			],
+			[
+				"ssnginx",
+				"Set Syntax: nginx"
+			],
+			[
+				"ssconf",
+				"Set Syntax: EditorConfig"
+			],
+			[
+				"refre",
+				"Project: Refresh Folders"
+			],
+			[
+				"sshtml",
+				"Set Syntax: HTML"
+			],
+			[
+				"refresh",
+				"Project: Refresh Folders"
+			],
+			[
+				"blma",
+				"Git: Blame"
+			],
+			[
+				"blam",
+				"Git: Blame"
+			],
+			[
+				"sspyth",
+				"Set Syntax: Python"
+			],
+			[
+				"ss",
+				"Set Syntax: Perl"
+			],
+			[
+				"sspp",
+				"Set Syntax: PHP"
+			],
+			[
+				"ssshel",
+				"Set Syntax: Shell Script (Bash)"
+			],
+			[
+				"git",
+				"Git: Blame"
+			],
+			[
+				"for",
+				"Format: Javascript"
+			],
+			[
+				"ssjas",
+				"Set Syntax: JavaScript"
+			],
+			[
+				"ssmare",
+				"Set Syntax: Markdown Extended"
+			],
+			[
+				"ssmaden",
+				"Set Syntax: Markdown Extended"
+			],
+			[
+				"ssmarkdo",
+				"Set Syntax: Markdown Extended"
+			],
+			[
+				"ssmark",
+				"Set Syntax: Markdown Extended"
+			],
+			[
+				"sspy",
+				"Set Syntax: Python"
+			],
+			[
+				"ssper",
+				"Set Syntax: Perl"
+			],
+			[
+				"ssp",
+				"Set Syntax: Perl"
+			],
+			[
+				"gitblame",
+				"Git: Blame"
+			],
+			[
+				"Snippet: ",
+				"Snippet: aggregate"
+			],
+			[
+				"Snippet: aggre",
+				"Snippet: aggregate"
+			],
+			[
+				"instapa",
+				"Package Control: Install Package"
+			],
+			[
+				"inspa",
+				"Package Control: Install Package"
+			],
+			[
+				"fres",
+				"Project: Refresh Folders"
+			],
+			[
+				"",
+				"About"
+			],
+			[
+				"Snippet: incl",
+				"Snippet: include …"
+			],
+			[
+				"Snippet: robin",
+				"Snippet: robin"
+			],
+			[
+				"git blame",
+				"Git: Blame"
+			],
+			[
+				"gitbla",
+				"Set Syntax: Git Blame"
+			],
+			[
+				"insta",
+				"Package Control: Install Package"
+			],
+			[
+				"install",
+				"Package Control: Install Package"
+			],
+			[
+				"gitdiff",
+				"Git: Diff Current File"
+			],
+			[
+				"settringuser",
+				"Preferences: Package Control Settings – User"
+			],
+			[
+				"refr",
+				"Project: Refresh Folders"
+			],
+			[
+				"pack",
+				"Preferences: Browse Packages"
+			],
+			[
+				"inste",
+				"Package Control: Install Package"
+			],
+			[
+				"i",
+				"Package Control: Install Package"
+			],
+			[
+				"instll",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: in",
+				"Package Control: Install Package"
+			],
+			[
+				"lis",
+				"Package Control: List Packages"
+			],
+			[
+				"in",
+				"Package Control: Install Package"
+			],
+			[
+				"ins",
+				"Package Control: Install Package"
+			],
+			[
+				"pci",
+				"Package Control: Install Package"
+			],
+			[
+				"re",
+				"Package Control: Remove Package"
+			],
+			[
+				"list",
+				"Package Control: List Packages"
+			],
+			[
+				"insta	",
+				"Package Control: Install Package"
+			],
+			[
+				"listp",
+				"Package Control: List Packages"
+			],
+			[
+				"mp",
+				"Markdown Preview: Preview in Browser"
+			],
+			[
+				"palist",
+				"Package Control: List Packages"
+			],
+			[
+				"remo",
+				"Package Control: Remove Package"
+			],
+			[
+				"pc",
+				"Package Control: Install Package"
+			],
+			[
+				"markdown",
+				"Build With: Markdown"
+			],
+			[
+				"pa",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"up",
+				"Package Control: Upgrade Package"
+			],
+			[
+				"markdownpreview",
+				"Markdown Preview: Export HTML in Sublime Text"
+			],
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			],
+			[
+				"remov",
+				"Package Control: Remove Package"
+			],
+			[
+				"remove",
+				"Package Control: Remove Package"
+			],
+			[
+				"packa",
+				"Preferences: Browse Packages"
+			]
+		],
+		"width": 593.0
+	},
+	"console":
+	{
+		"height": 214.0,
+		"history":
+		[
+			"import urllib2,os; pf='Package Control.sublime-package'; ipp=sublime.installed_packages_path(); os.makedirs(ipp) if not os.path.exists(ipp) else None; urllib2.install_opener(urllib2.build_opener(urllib2.ProxyHandler())); open(os.path.join(ipp,pf),'wb').write(urllib2.urlopen('http://sublime.wbond.net/'+pf.replace(' ','%20')).read()); print 'Please restart Sublime Text to finish installation'",
+			"cls",
+			"clear",
+			"import urllib.request,os; pf = 'Package Control.sublime-package'; ipp = sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); open(os.path.join(ipp, pf), 'wb').write(urllib.request.urlopen( 'http://sublime.wbond.net/' + pf.replace(' ','%20')).read())"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+	],
+	"file_history":
+	[
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/components/extservice/models/Member.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/backend/controllers/MemberController.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/components/WeConnect.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/controllers/MobileController.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/modules/channel/controllers/FollowerController.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/modules/member/controllers/MemberController.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/this.sublime-project",
+		"/home/user/workshop/augmentum/www/aug-marketing/document/schema.md",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/document/api.md",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/document/schema.md",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/common/config/config.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/components/rest/IndexAction.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/components/rest/RestController.php",
+		"/home/user/Desktop/NIKE/generateAppPrivateKey.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/vendor/yiisoft/yii2/web/NotFoundHttpException.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/models/Applications.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/components/BaseModel.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/modules/management/controllers/ApplicationController.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/utils/TimeUtil.php",
+		"/home/user/Desktop/NIKE/registerRequest",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/components/Curl.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/components/extservice/models/Account.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/webapp/static/coffee/whyUs.coffee",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/static/config.json",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/webapp/views/layouts/login.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/webapp/controllers/UserController.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/webapp/static/scss/app.scss",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/webapp/views/cms/login.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/webapp/static/scss/user/whyUs.scss",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/webapp/views/layouts/main.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/vendor/yiisoft/yii2-debug/views/layouts/main.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/vendor/yiisoft/yii2-gii/views/layouts/main.php",
+		"/home/user/.config/sublime-text-3/Packages/User/Preferences.sublime-settings",
+		"/home/user/.config/sublime-text-3/Packages/Default/Preferences.sublime-settings",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/webapp/controllers/ShopController.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/webapp/controllers/BaseController.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/webapp/controllers/NikeController.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/webapp/views/user/whyUs.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/document/extensionService.md",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/backend/controllers/SiteController.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/webapp/views/user/why-us.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/webapp/controllers/SiteController.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/webapp/views/user/login.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/modules/member/models/Member.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/behaviors/MemberBehavior.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/backend/controllers/HookController.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/webapp/static/coffee/app.coffee",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/this.sublime-",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/vendor/yiisoft/yii2/rest/Controller.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/components/Controller.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/components/extservice/models/Coupon.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/components/BaseControllerTrait.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/models/Goods.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/models/MessageTemplate.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/modules/member/models/MemberProperty.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/components/CptConfValidator.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/models/Channel.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/components/extservice/Service.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/components/extservice/models/Channel.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/vendor/yiisoft/yii2/helpers/ArrayHelper.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/reservation/backend/controllers/ReservationOrderController.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/vendor/yiisoft/yii2-mongodb/Collection.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/utils/LogUtil.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/vendor/phpoffice/phpexcel/Classes/PHPExcel/DocumentProperties.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/modules/product/models/PromotionCode.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/vendor/yiisoft/yii2/db/BaseActiveRecord.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/vendor/yiisoft/yii2/web/BadRequestHttpException.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/backend/models/Interest.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/common/config/params.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/components/extservice/models/MemberProperty.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/vendor/yiisoft/yii2-mongodb/ActiveRecord.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/vendor/yiisoft/yii2-mongodb/file/ActiveRecord.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/models/Follower.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/components/PlainModel.php",
+		"/home/user/Desktop/NIKE/getFollowByOpenId()",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/backend/behaviors/ControllerBehavior.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/vendor/yiisoft/yii2/web/Controller.php",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/.gitignore",
+		"/etc/nginx/conf.d/wm.conf",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/modules/nikejdi/backend/controllers/ShopController.php",
+		"/home/user/.zshrc",
+		"/home/user/Desktop/nginx",
+		"/home/user/Desktop/1.1.2/_metadata/verified_contents.json",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/build/grunt/watch.coffee",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/build/grunt/aliases.coffee",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/build/grunt/scsslint.coffee",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/build/grunt/coffeelint.coffee",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/static/i18n/locate-zh_cn.json",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/backend/models/Restaurant.php",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/static/partials/edit/restaurant.html",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/static/controllers/edit/restaurantCtrl.coffee",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/docs/dbSchema.md",
+		"/etc/supervisor/conf.d/supervisor.conf",
+		"/home/user/Desktop/test.html",
+		"/home/user/workshop/augmentum/www/aug-marketing/src/Gruntfile.coffee",
+		"/home/user/Desktop/test-angular/test.html",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/backend/controllers/admin/OrderController.php",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/backend/models/Order.php",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/backend/controllers/admin/GuestController.php",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/tests/api/business/CreateOrderCest.php",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/static/controllers/view/order/restaurantCtrl.coffee",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/docs/toBusinessApi.md",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/backend/controllers/business/OrderController.php",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/tests/api/business/ChangeOrderTypeToBeArrangedCest.php",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/tests/api/business/ChangeTablesCest.php",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/backend/models/Guest.php",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/static/partials/chain.html",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/static/controllers/chainCtrl.coffee",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/backend/controllers/admin/RestaurantController.php",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/static/i18n/locate-en_us.json",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/static/partials/restaurant.html",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/backend/models/Event.php",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/backend/helpers/MongoHelper.php",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/backend/models/Operation.php",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/console/data/dev/OrderManager.php",
+		"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/console/data/dev/TableManager.php",
+		"/home/user/workshop/augmentum/Help/抱米用户手册/_book/index.html",
+		"/home/user/workshop/augmentum/Help/抱米用户手册/_book/gitbook/app.js",
+		"/home/user/workshop/augmentum/Help/抱米用户手册/book.json",
+		"/home/user/.npm/gitbook-asciidoc/0.2.4/package/package.json",
+		"/home/user/.npm/gitbook-markdown/0.5.3/package/package.json",
+		"/home/user/workshop/augmentum/Help/抱米用户手册/_book/gitbook/plugins/gitbook-plugin-search/search.js",
+		"/home/user/workshop/augmentum/Help/抱米用户手册/_book/search_index.json",
+		"/home/user/workshop/augmentum/Help/.gitignore",
+		"/home/user/workshop/augmentum/Help/抱米用户手册/2B_iOS_1.0/chapter_2/README.md",
+		"/home/user/workshop/augmentum/Help/抱米用户手册/2B_iOS_1.0/chapter_1/README.md",
+		"/home/user/workshop/augmentum/Help/抱米用户手册/_book/2B_iOS_1.0/chapter_1/index.html",
+		"/home/user/.config/sublime-text-3/Packages/Pretty JSON/Pretty JSON.sublime-settings"
+	],
+	"find":
+	{
+		"height": 35.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			"",
+			"*.json",
+			"",
+			"*.coffee",
+			"",
+			"*.php",
+			"*.coffee",
+			"*.php",
+			"*.json",
+			"*.php",
+			"*.html",
+			"*.coffee",
+			"",
+			"*.php",
+			"*.json",
+			"*.php",
+			"",
+			"*.scss",
+			"*.php",
+			"*html",
+			"*.php",
+			"*.coffee",
+			"*.html",
+			"*.php",
+			"*.scss",
+			"*.html",
+			"",
+			"*.php",
+			"*.md",
+			"*.php",
+			"*.md",
+			"*.php",
+			"",
+			"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi",
+			"/home/user/workshop/augmentum/www/baomi/aug-marketing/src",
+			"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/",
+			"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi/tests/api",
+			"/home/user/workshop/augmentum/www/baomi/aug-marketing/src/modules/baomi",
+			"*\n.",
+			"*\n",
+			"*\n*.*",
+			"*\n*.coffee",
+			"*\n*",
+			"*\n",
+			"*.json",
+			"*.html",
+			"*.coffee",
+			"*.php",
+			"*",
+			"*.scss",
+			"",
+			"*.html",
+			"",
+			"*.php",
+			"*.coffee",
+			"",
+			"*.json",
+			"*.coffee",
+			"",
+			"*.php",
+			"*.coffee",
+			"*.scss",
+			"*.json",
+			"*.scss",
+			"",
+			"*.php",
+			"",
+			"*.html",
+			"",
+			"*.php",
+			"*.coffee",
+			"",
+			"*.scss",
+			"",
+			"*.scss",
+			"",
+			"*.scss",
+			"*.html",
+			"",
+			"*.scss",
+			"*.css",
+			"*.scss",
+			"*.css",
+			"*.scss",
+			"",
+			"*.scss",
+			"",
+			"*.scss",
+			"*.json",
+			"*.scss",
+			"",
+			"*Cest.php",
+			"",
+			"\\helpers;",
+			"",
+			"*.scss",
+			"",
+			"*.html",
+			"*.HTML",
+			"",
+			"*.scss",
+			"*.coffee",
+			"*.json",
+			"",
+			"*.json",
+			"*.scss",
+			"",
+			"*.json",
+			"",
+			"*.json",
+			".json",
+			"",
+			"*.scss",
+			"*.css",
+			"*.html",
+			"",
+			"*.scss",
+			"",
+			"vendor/yiisoft",
+			"src/",
+			"vendor/yiisoft",
+			"",
+			"vendor/yiisoft",
+			"",
+			"*.html",
+			"",
+			"*.scss",
+			"*.json"
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": true,
+		"find_history":
+		[
+			"_transferUserCondition",
+			"member->save",
+			"save",
+			"unionId",
+			"GET",
+			"ServerErrorHttpException",
+			"_curl",
+			"API_DOMAIN",
+			"DOMAIN",
+			"api_dom",
+			"_curl",
+			"appli",
+			"app",
+			"api_domain",
+			"api",
+			"api.quncrm.com",
+			"site",
+			"css",
+			"nike-unite-loginForm",
+			"6a96b0eb-2c05-4b67-9899-e4e523e57e5a",
+			"http://www.baidu.com",
+			"Channel::",
+			"channel",
+			"Channel",
+			"protect",
+			":",
+			"description",
+			"value",
+			"p",
+			"redirect(",
+			"example:\n{",
+			"layout",
+			"id=\"nike-unite-confirm-password-reset-view\"",
+			"id=\"nike-unite\"",
+			"updateItemByScoreRule",
+			"backend\\behaviors\\MemberBehavior",
+			"updateItemByScoreRule",
+			"        \n",
+			"wechat",
+			"PORTAL",
+			"new MongoDate",
+			"new MongDate",
+			"openId",
+			"ORIGIN_WECHAT",
+			" = ''",
+			"bindChannel",
+			"service->setAccountId",
+			"this->accountId",
+			"member",
+			"Yii::$app->service",
+			"ensureMongoId",
+			"ensure",
+			"mongo",
+			"$accountId",
+			"throw new BadRequestHttpException",
+			"parameters_missing",
+			"throw new BadRequestHttpException",
+			"'];\n",
+			" =>",
+			"value",
+			"\n                    $params['properties'][] = [\n                        'id' => $property->_id,\n                        'name' => $property->name,",
+			"switch ($property",
+			"upper",
+			"uper",
+			"switch",
+			"foreach ($properties as $property",
+			"::getMemberProperty",
+			"throw",
+			"throw BadRequestHttpException",
+			"MemberProperty",
+			"findOne",
+			"location",
+			"member {",
+			"ModelQrcode",
+			"Qrcode",
+			"MemberShipCard",
+			"ufstrust",
+			"MemberLogs",
+			"foll",
+			"follower",
+			"unionId",
+			"throw",
+			"email",
+			"id",
+			"bindChannel",
+			"service",
+			"$service",
+			"updateProperties",
+			"bindChannel",
+			"getByIds",
+			"shakeCoupon",
+			"updateScore",
+			"search",
+			"bindChannel",
+			"unionId",
+			"getFollowerByOriginId",
+			"open",
+			"setUserInfo",
+			"unionId",
+			"unioNid",
+			"openId",
+			"Qrcode",
+			"ServerErrorHttpException",
+			"member",
+			"Member",
+			"member",
+			"accountId",
+			"\n\n:",
+			":\n",
+			"BaseControllerTrait",
+			" nike.com",
+			" wm.com",
+			"x/www.nike",
+			"/wm.com",
+			"nike",
+			"wm",
+			"phone",
+			"redirect",
+			"self::",
+			"redirectFromGenderByOpenId",
+			"LogUtil",
+			"destinationUrl",
+			"params['openId']",
+			"accountId",
+			"AccountId",
+			"accountId",
+			"venue",
+			"192.168.206.255"
+		],
+		"highlight": false,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"ModelQrcode",
+			"ModelMemberShipCard",
+			"ModelMemberLogs",
+			"unionId",
+			" :",
+			"\n: ",
+			" www.nike.com",
+			" nike.com",
+			"x/nike",
+			"/www.nike.com",
+			"wm",
+			"padHardwareCode",
+			"wechatId",
+			"",
+			"data/srv/baomi_stage2/src/modules",
+			" ",
+			"chain",
+			"onsumer",
+			"chain",
+			"chain_",
+			"chain",
+			"MarkExpiredOrderLock",
+			"MarkExpiredInitialOrder",
+			"MarkExpiredOrderLock",
+			"contract",
+			"weekly_capacity",
+			"weeklyCapacity",
+			"as the same as",
+			"**",
+			"set as the same as",
+			".png)\n",
+			"pics",
+			"### ",
+			"",
+			"'562060870c25e65d1c8b8000'",
+			"</span>",
+			"<span class=\"blank\">",
+			" <span class=\"blank\">",
+			"<span class=\"blank\">",
+			"</span>",
+			"<span class=\"blank\">",
+			" [",
+			"`",
+			"",
+			"MongoId",
+			" ",
+			"getOneByRestaurantId",
+			"TimeHelper",
+			"\\helpers",
+			"\\helpers;",
+			"getOneByRestaurantId",
+			"currentPage",
+			"Module",
+			"screen-logo-img-wrapper",
+			".defaultLogoImage",
+			".logoImage",
+			"/home/user/workshop/augmentum",
+			" "
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": false
+	},
+	"groups":
+	[
+		{
+			"sheets":
+			[
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 25.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 118.0
+	},
+	"pinned_build_system": "",
+	"project": "this.sublime-project",
+	"replace":
+	{
+		"height": 64.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"ext/member.php",
+				"src/backend/components/extservice/models/Member.php"
+			],
+			[
+				"this",
+				"nikejdi/this.sublime-project"
+			],
+			[
+				"document/schema.dm",
+				"document/schema.md"
+			],
+			[
+				"membercont",
+				"src/backend/modules/member/controllers/MemberController.php"
+			],
+			[
+				"api.md",
+				"nikejdi/document/api.md"
+			],
+			[
+				"sche",
+				"nikejdi/document/schema.md"
+			],
+			[
+				"notf",
+				"src/vendor/yiisoft/yii2/web/NotFoundHttpException.php"
+			],
+			[
+				"appli.php",
+				"src/backend/models/Applications.php"
+			],
+			[
+				"backend/components/restindex",
+				"src/backend/components/rest/IndexAction.php"
+			],
+			[
+				"managementcontroller.php",
+				"src/backend/modules/management/controllers/ApplicationController.php"
+			],
+			[
+				"common/config.php",
+				"src/common/config/config.php"
+			],
+			[
+				"nike/",
+				"NIKE/registerRequest"
+			],
+			[
+				"timeutl",
+				"src/backend/utils/TimeUtil.php"
+			],
+			[
+				"curl",
+				"src/backend/components/Curl.php"
+			],
+			[
+				"config.php",
+				"src/common/config/config.php"
+			],
+			[
+				"extservice/",
+				"src/backend/components/extservice/models/Account.php"
+			],
+			[
+				"extser/mmephp",
+				"src/backend/components/extservice/models/Member.php"
+			],
+			[
+				"membercontroller",
+				"src/backend/modules/member/controllers/MemberController.php"
+			],
+			[
+				"usercont",
+				"webapp/controllers/UserController.php"
+			],
+			[
+				"webapp/static/scss/app.scss",
+				"webapp/static/scss/app.scss"
+			],
+			[
+				"webapp/usercon",
+				"webapp/controllers/UserController.php"
+			],
+			[
+				"login.php",
+				"webapp/views/cms/login.php"
+			],
+			[
+				"weba/scss",
+				"webapp/static/scss/app.scss"
+			],
+			[
+				"main.php",
+				"src/vendor/yiisoft/yii2-gii/views/layouts/main.php"
+			],
+			[
+				"webappmain.php",
+				"webapp/views/layouts/main.php"
+			],
+			[
+				"usercon",
+				"webapp/controllers/UserController.php"
+			],
+			[
+				"whyscss",
+				"webapp/static/scss/user/whyUs.scss"
+			],
+			[
+				"shopcont",
+				"webapp/controllers/ShopController.php"
+			],
+			[
+				"basecon",
+				"webapp/controllers/BaseController.php"
+			],
+			[
+				"shop",
+				"webapp/controllers/ShopController.php"
+			],
+			[
+				"nicont",
+				"webapp/controllers/NikeController.php"
+			],
+			[
+				"user",
+				"webapp/controllers/UserController.php"
+			],
+			[
+				"docu/extmd",
+				"document/extensionService.md"
+			],
+			[
+				"extmember.php",
+				"src/backend/components/extservice/models/Member.php"
+			],
+			[
+				"app.scss",
+				"webapp/static/scss/app.scss"
+			],
+			[
+				"why",
+				"webapp/views/user/why-us.php"
+			],
+			[
+				"sitecont",
+				"nikejdi/backend/controllers/SiteController.php"
+			],
+			[
+				"docu/extsermd",
+				"document/extensionService.md"
+			],
+			[
+				"ex/member.php",
+				"src/backend/components/extservice/models/Member.php"
+			],
+			[
+				"nikecont",
+				"webapp/controllers/NikeController.php"
+			],
+			[
+				"this-",
+				"nikejdi/this.sublime-project"
+			],
+			[
+				"modules/member/models/member",
+				"src/backend/modules/member/models/Member.php"
+			],
+			[
+				"schema.md",
+				"nikejdi/document/schema.md"
+			],
+			[
+				"membcon",
+				"src/backend/modules/member/controllers/MemberController.php"
+			],
+			[
+				"memberbehavior.php",
+				"src/backend/behaviors/MemberBehavior.php"
+			],
+			[
+				"schem",
+				"nikejdi/document/schema.md"
+			],
+			[
+				"document/schemmd",
+				"document/schema.md"
+			],
+			[
+				"model/member.php",
+				"src/backend/modules/member/models/Member.php"
+			],
+			[
+				"sitecon",
+				"nikejdi/backend/controllers/SiteController.php"
+			],
+			[
+				"mobicon",
+				"src/backend/controllers/MobileController.php"
+			],
+			[
+				"docu",
+				"document/schema.md"
+			],
+			[
+				"member/mo/memb.php",
+				"src/backend/modules/member/models/Member.php"
+			],
+			[
+				"extse/member.php",
+				"src/backend/components/extservice/models/Member.php"
+			],
+			[
+				"this.",
+				"nikejdi/this.sublime-project"
+			],
+			[
+				"hookcont",
+				"nikejdi/backend/controllers/HookController.php"
+			],
+			[
+				"exts/member.php",
+				"src/backend/components/extservice/models/Member.php"
+			],
+			[
+				"yii/rest/controller",
+				"src/vendor/yiisoft/yii2/rest/Controller.php"
+			],
+			[
+				"backend/components/controller",
+				"src/backend/components/Controller.php"
+			],
+			[
+				"shopcontl.php",
+				"webapp/controllers/ShopController.php"
+			],
+			[
+				"time",
+				"src/backend/utils/TimeUtil.php"
+			],
+			[
+				"channel.php",
+				"src/backend/models/Channel.php"
+			],
+			[
+				"basemodel.h",
+				"src/backend/components/BaseModel.php"
+			],
+			[
+				"backend/components/basecontrollertrait",
+				"src/backend/components/BaseControllerTrait.php"
+			],
+			[
+				"helper.php",
+				"src/vendor/yiisoft/yii2/helpers/ArrayHelper.php"
+			],
+			[
+				"ext/service.php",
+				"src/backend/components/extservice/Service.php"
+			],
+			[
+				"logutil",
+				"src/backend/utils/LogUtil.php"
+			],
+			[
+				"docume/schemd",
+				"document/schema.md"
+			],
+			[
+				"badhttp",
+				"src/vendor/yiisoft/yii2/web/BadRequestHttpException.php"
+			],
+			[
+				"inter",
+				"nikejdi/backend/models/Interest.php"
+			],
+			[
+				"params.php",
+				"src/common/config/params.php"
+			],
+			[
+				"member.php",
+				"src/backend/modules/member/models/Member.php"
+			],
+			[
+				"ext/memb.php",
+				"src/backend/components/extservice/models/Member.php"
+			],
+			[
+				"schemmd",
+				"document/schema.md"
+			],
+			[
+				"memberproperty.php",
+				"src/backend/modules/member/models/MemberProperty.php"
+			],
+			[
+				"yii/db/baseactiverecord",
+				"src/vendor/yiisoft/yii2/db/BaseActiveRecord.php"
+			],
+			[
+				"mongodb/activerecord",
+				"src/vendor/yiisoft/yii2-mongodb/file/ActiveRecord.php"
+			],
+			[
+				"models/member.php",
+				"src/backend/modules/member/models/Member.php"
+			],
+			[
+				"model/member.ph",
+				"src/backend/modules/member/models/Member.php"
+			],
+			[
+				"membercontroller.php",
+				"src/backend/modules/member/controllers/MemberController.php"
+			],
+			[
+				"membercontorller.php",
+				"src/backend/modules/member/controllers/MemberController.php"
+			],
+			[
+				"backend/components/plainmodel",
+				"src/backend/components/PlainModel.php"
+			],
+			[
+				"follower.php",
+				"src/backend/models/Follower.php"
+			],
+			[
+				"extservice/member.php",
+				"src/backend/components/extservice/models/Member.php"
+			],
+			[
+				"shopcontroller.php",
+				"webapp/controllers/ShopController.php"
+			],
+			[
+				"member/membe.php",
+				"src/backend/modules/member/models/Member.php"
+			],
+			[
+				"yii/web/controller",
+				"src/vendor/yiisoft/yii2/web/Controller.php"
+			],
+			[
+				"extser/member.php",
+				"src/backend/components/extservice/models/Member.php"
+			],
+			[
+				"member/member.php",
+				"backend/modules/member/models/Member.php"
+			],
+			[
+				"sitecontrl",
+				"webapp/controllers/SiteController.php"
+			],
+			[
+				"",
+				"manifest.json"
+			],
+			[
+				"aliasescoffee",
+				"build/grunt/aliases.coffee"
+			],
+			[
+				"watch.coffee",
+				"build/grunt/watch.coffee"
+			],
+			[
+				"scsslintcoffee",
+				"build/grunt/scsslint.coffee"
+			],
+			[
+				"coffeelint.coffee",
+				"build/grunt/coffeelint.coffee"
+			],
+			[
+				"zhcnjson",
+				"static/i18n/locate-zh_cn.json"
+			],
+			[
+				"dbshcem.d",
+				"docs/dbSchema.md"
+			],
+			[
+				"tobusapi",
+				"docs/toBusinessApi.md"
+			],
+			[
+				"tobusiapi",
+				"docs/toBusinessApi.md"
+			],
+			[
+				"createordercest",
+				"tests/api/business/CreateOrderCest.php"
+			],
+			[
+				"tobusi",
+				"docs/toBusinessApi.md"
+			],
+			[
+				"order/restactrlcoffe",
+				"static/controllers/view/order/restaurantCtrl.coffee"
+			],
+			[
+				"ordercontroll",
+				"backend/controllers/admin/OrderController.php"
+			],
+			[
+				"admin/guestcont",
+				"backend/controllers/admin/GuestController.php"
+			],
+			[
+				"changetablecest",
+				"tests/api/business/ChangeTablesCest.php"
+			],
+			[
+				"business/arrangecest.php",
+				"tests/api/business/ChangeOrderTypeToBeArrangedCest.php"
+			],
+			[
+				"ordercont",
+				"backend/controllers/business/OrderController.php"
+			],
+			[
+				"orderctrlcoffee",
+				"static/controllers/view/order/restaurantCtrl.coffee"
+			],
+			[
+				"chainhtml",
+				"static/partials/chain.html"
+			],
+			[
+				"chaincoffee",
+				"static/controllers/chainCtrl.coffee"
+			],
+			[
+				"restacont",
+				"backend/controllers/admin/RestaurantController.php"
+			],
+			[
+				"restau.php",
+				"backend/models/Restaurant.php"
+			],
+			[
+				"edit/restactrlcoffee",
+				"static/controllers/edit/restaurantCtrl.coffee"
+			],
+			[
+				"enus.json",
+				"static/i18n/locate-en_us.json"
+			],
+			[
+				"edit/restaurahtml",
+				"static/partials/edit/restaurant.html"
+			],
+			[
+				"restahtml",
+				"static/partials/restaurant.html"
+			],
+			[
+				"dbschema",
+				"docs/dbSchema.md"
+			],
+			[
+				"restat.php",
+				"backend/models/Restaurant.php"
+			],
+			[
+				"enusjson",
+				"static/i18n/locate-en_us.json"
+			],
+			[
+				"enjson",
+				"static/i18n/locate-en_us.json"
+			],
+			[
+				"restatcont",
+				"backend/controllers/admin/RestaurantController.php"
+			],
+			[
+				"edit/restatctrlcoffee",
+				"static/controllers/edit/restaurantCtrl.coffee"
+			],
+			[
+				"edit/restathml",
+				"static/partials/edit/restaurant.html"
+			],
+			[
+				"mongohlphp",
+				"backend/helpers/MongoHelper.php"
+			],
+			[
+				"event.php",
+				"backend/models/Event.php"
+			],
+			[
+				"changtablecest",
+				"tests/api/business/ChangeTablesCest.php"
+			],
+			[
+				"tobusineapi",
+				"docs/toBusinessApi.md"
+			],
+			[
+				"operatphp",
+				"backend/models/Operation.php"
+			],
+			[
+				"mongohelper",
+				"backend/helpers/MongoHelper.php"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": false,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 321.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
