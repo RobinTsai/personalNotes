@@ -1,0 +1,4 @@
+format: "keywords..."(camelStyle), "usage", "else"
+so you can use shell command `cat piecesInProject.txt | grep keywords` to search
+
+"crossDomain ajax CORS", "{crossDomain:true, xhrFields:{withCredentials: true}}"
