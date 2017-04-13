@@ -56,9 +56,17 @@
     而`(?=……)`匹配到的内容不会改变这个匹配位置（这个点还是在括弧的前面），可以说这就是环视的特性。
     + `/i`, 规定不区分大小写
     + `/m`， 让字符串转换为逻辑行模式。在字符串操作中，常常可能一串字符中有'\n\r'的编码标志(CR是回车，NL是换行)，/m模式可以识别他们。
-    + `/x`，宽松排列。会忽略正则中的空白。（具体还是自己看吧）
+    + `/x`，宽松排列。会忽略正则中字符组外的空白,但字符组内的仍有效，此模式下可以加注释。
 
 - 例： 解析数字，加上适于阅读的逗号 (p64)
     + `perl -p -i -e 's/(?=(\d{3})+\b)(?<=\d)/,/g' ./test`
     + `perl -p -i -e 's/(\d)(?=(\d{3})+\b)(?<=\d)/$1,/g' ./test`
     + 注意这里的加号的解读，`(\d{3})+`表示后面的`\d`是3的倍数时，才是正确的匹配.所以后面有9个时(是3的倍数)能匹配到，下次匹配就是匹配到后面是6个时，再下次就是匹配到后面是3个时.
+
+- See the supportability between BREG or EREG
+    + ![Supportability between BREG or EREG](./BasicOrExtendedSupportability.png)
+
+- See the supportability among some REG utils
+    + ![Supportability among utils](./ModernUtilSupportability.png)
+
+- 注意 **语言** 中的 **元字符** 在 *正则语句* 中使用时的冲突问题,有时，要加两个转义符号 **\\** 
