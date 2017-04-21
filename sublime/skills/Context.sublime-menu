@@ -1,0 +1,14 @@
+// Add this file into everywhere below content of path/to/sublime/Packages/
+
+[
+    {"caption": "-", "id": "Custom"},
+    {
+        "caption": "Custom",
+        "id": "Custom",
+        "children":
+        [
+            { "command": "camel2_hyphen"},
+            {"command":"nike_event_format"},
+        ]
+    },
+]
