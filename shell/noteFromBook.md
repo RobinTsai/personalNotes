@@ -87,3 +87,155 @@ Book Name: Linux命令行与shell脚本编程大全(第3版)
 - 定义: `myArr=(one two three)`注意:所有的空格有无是严格的
 - 输出所有：`echo ${myArr[*]}`(用 `*`可输出所有)
 - `unset myArr[2]`后，数组其他key->value不会变
+
+
+# Day 3
+
+## scripts
+
+- 命令替换: 命令赋值给变量。
+    + 反引号包裹
+    + `$()`包裹
+
+- 命令替换会 **创建一个子shell**来运行命令。`./`会创建一个子shell，不加路径时不是子shell
+- `<<` 叫 **内联输入重定向**,真正的输入其实来自用户，它只是用来标记结束的字符(串)
+
+# Day 4
+
+## Mathematics
+
+- `expr`不建议使用,弃学
+- `$[]`包裹。仅整数运算。(zsh提供了浮点数运算)
+- `bc` 命令,'bash calculator',支持浮点运算(内置变量 `scale`)
+
+## Exit Code
+
+- 变量`$?` ，一个成功的退出应显示为0，否则是个正数值
+- `exit` 可自定义状态码(0~255)
+
+## Structured Commands
+
+### if-then
+
+- `if-then(-elif-then)(-else)-fi`: `if`后面必须是命令(不是0或非0)，按退出状态码(0表示成功)判断. if的命令后有分号 `;`，可以把 `then`放在同行
+
+```shell
+    if Condition
+    then
+        Commands
+    elif Command2; then
+        Commands
+    else 
+        Commands
+    fi
+```
+
+- Condition: `test`和 `[ CONDITION ]`. 用于条件测试(数值、字符串、文件)，可和if一起使用，弥补if缺陷.(注意严格的空格)
+    + `test $var1`,只要变量不为空，都通过（应该是这样）
+    + 数值比较. `[ n1 -eq n2 ]`. `-eq`,`-ge`,`-gt`,`-le`,`-lt`,`-ne`
+    + 字符串比较. `[ str1 = str2]`. `=`,`!=`,`<`,`>`; `-n str1`(是否长度非0),`-z`(是否长度为0)
+        * 未定义的变量用字符串长度测试,输出为0
+        * `>`, `<`在使用时大多情况下要加转义符，否则认为是重定向
+    + 文件比较.
+        * `-d` is direction ? 
+        * `-e` is existent?
+        * `-f` is a file?
+        * `-r`, `-w`, `-x` is readable/writable/executable
+        * `-s` is empty?
+        * `-nt` is newer than
+        * `-ot` is older than
+- 复合条件. `&&` and `||`.`[ condition1 ] && [ condition2 ]`.
+- `(( EXPRESSION ))`. 高级数学表达式. 支持 `++`, `--`, `!`, `~`, `**`(幂), `<<`, `>>`, `&`, `|`, `&&`, `||`
+- `[[ EXPRESSION ]]`. 高级字符串表达式. 支持模式匹配 (有些shell可能不支持)
+
+### Case
+
+```shell
+case $variable in 
+    pattern1 | pattern2) 
+        commands1;;     # can lay it in up one line
+    pattern3) 
+        commands2
+        ;;
+    *) commands3;;
+esac
+```
+
+### For
+
+- 重定向可以写在 done 后面，这样就不会输出在shell中了
+
+```shell
+for var in LIST         # there is 'var', not '$var'.
+do                      # for var in list; do ...
+    commands1           # there use '$var', not 'var'
+done > output.log       # 重定向(非必需)可以写这里
+```
+
+- `LIST` can be:
+    + `str1 str2 str3` elements seperate by SPACE by default, or use quotes for a sentence as one element
+    + SPACE means 空格，制表符，换行符. 更改 `IFS`的值来更改这个符号. `IFS=$'\\n'`
+        * `IFS=$'\n':;`. 指定多种分隔符
+        * ```shell 
+        IFS.OLD=$IFS  # store default value for restore
+        IFS=$'\n'
+        ```
+
+    + `$list` use variables. `list=ele1 ele2 ele3`, `list=$list" ele4"`(字串拼接)
+    + `$(cat $file)` 从命令中读. 以上说过`$()`是一种命令替换符
+    + `/home/robin/test/*` 用通配符. 这时应该将 `commands1`中所有用到 `$var`的地方用引号括起来(避免空格)
+- For as C lang `for (( i = 1; i <= 10; i++ ))`
+
+### While
+
+```shell
+while Condition          # test or []
+do 
+    Commands
+done
+```
+
+### until
+
+- 只有在退出状态码为0时终止
+
+```shell
+until Condition          # test or []. 
+do 
+    Commands
+done
+```
+
+### break and continue
+
+- `break N`
+- `continue N`
+
+# Day 5
+
+## User Input
+
+- `$0`, shell脚本名
+- `$1`~ `$9`, `${10}`... `${n}`, 参数
+- `$#`, 参数个数
+- `$*`和`$@`: 返回所有参数。但 `$*`把所有参数当作一个单词保存，而 `$@`当作一个字符串中独立的单词。在输出时没有分别，但用for时就有区别了.
+- `basename` can remove path, only leave file name
+- `shift N` 移动变量,单独用即可。N可省，默认为1,$1删除, $2->$1, $3->$2
+- shell中-a后跟参数值就是用 `case`, `shift` 组合使用的
+- `getopt`是一个处理选项和参数的工具. (一般你看到的-ab是-a,-b的组合，就是它做的)
+- `getopts`扩展了 `getopt`
+    + -a "test1 test2",使用时多了引号，是它做到的
+    + 你用的 `-pabc123_`,-p能和值放在一起是它做到的
+- `read`:
+    + 读取用户输入
+        * `read name`, 将输入信息存入 `name`中
+        * `-p`, 读时自定义提示 `read -p 'Please enter your name: ' name`
+        * 不指定以上的name变量时，它默认把输入放入 `$REPLY`中
+        * `-t`,指定用户输入的时间(s)，超时返回一个非0状态码
+        * 输入是实时的，所以用 case可以及时限定输入的长度(是y就退出)
+        * `-s`隐藏用户输入的内容
+    + 读取文件
+        * 技巧： `cat test | while read line ...` (read自动读取下一行)
+
+
+
