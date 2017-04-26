@@ -216,6 +216,7 @@ done
 ## User Input
 
 - `$0`, shell脚本名
+- `$$`, shell本身的PID
 - `$1`~ `$9`, `${10}`... `${n}`, 参数
 - `$#`, 参数个数
 - `$*`和`$@`: 返回所有参数。但 `$*`把所有参数当作一个单词保存，而 `$@`当作一个字符串中独立的单词。在输出时没有分别，但用for时就有区别了.
@@ -237,5 +238,91 @@ done
     + 读取文件
         * 技巧： `cat test | while read line ...` (read自动读取下一行)
 
+## Day 6
 
+### 再探重定向
 
+- 文件描述符: 0, 1, 2; 自定义的:3~8 
+    + `0`, STDIN
+    + `1`, STDOUT; `1>`, `1>>` 将STDOUT重定向
+    + `2`, STDERR; `2>`, `2>>` 将STDERR重定向; 
+    + `cat file 1> file1 2> file2`, 分别重定向
+    + `&>`, `&>>`; 将STDOUT和STDERR都重定向到一个文件。(自动地shell认为错误信息优先级高)
+    + `>&2`, 改变重定向, 可以将STDOUT导向STDERR.(shell默认将STDERR导向STDOUT)
+- 永久重定向 `exec 1>out.log`; 在脚本中某位置设定了它后，之后的STDOUT会重定向到out.log (恢复:中间量)
+- 输入重定向 `exec 0< file`; 可以在脚本中使用，把文件重定向到STDIN (之后可直接用read)
+- 自定义重定向 `exec 3>>test.log` ( `>>`比 `>`好), `echo '...' >&3`
+- 自定义读写文件描述符 `exec 3<> testfile`.即可读入，也可写入
+- 手动关闭文件描述符 `exec 3>&-`
+- `>/dev/null` 阻止输出
+- `tee` T型管道, 一方输出到stdout, 一方输出到指定文件(默认覆盖)
+- `tee -a` 输出追加
+
+- 这个脚本可以将数据按格式填充到模板中
+
+```shell
+#!/bin/bash
+
+outfile='members.sql'       # define output file
+IFS=','                     # redefine seperator ('cause it's from .csv file)
+while read lname fname address city state zip   # read each line into each variable
+do 
+    cat >> $outfile << EOF  # each line below as INPUT output to file, and end when EOF
+    # the next lines till EOF will be as INPUT (STDIN),
+    # so having spaces at front or not is different
+INSERT INTO members (lname,fname,address,city,state,zip) VALUES ('$lname','$fname','$address','$city','$state','$zip')  # $lname is variable, will be replaced
+EOF    # attention, this line must not have space at front. because ' EOF'!='EOF' 
+done < ${1}                 # read from $1 parameter (file)
+```
+
+### 临时文件 `mktemp`
+
+- 创建临时文件 `mktemp file.XX...X` (3+个X会自动生成)
+- `-t` 在系统临时目录中创建，并返回全路径
+- `-d` 创建临时目录
+
+## 控制脚本
+
+- Linux信号
+    + 1, SIGHUP, 挂起进程
+    + 2, SIGINT, 终止, CTRL+C
+    + 3, SIGQUIT, 停止, 停止进程可保留在内存中，以待继续运行
+    + 9, SIGKILL, 无条件终止
+    + 15, SIGTERM, 尽可能终止
+    + 17, SIGSTOP, 无条件停止但不终止
+    + 18, SIGTSTP, 停止或暂停但不终止, CTRL+Z
+    + 19, SIGCONT, 继续运行停止的进程
+- `kill -9 PID`, `-9` 无条件终止
+- `./shell.sh &`, `&` 后台运行脚本, (但此进程还是和当前终端会话连在一起, 终止会话->终止进程)
+- `nohup ./shell.sh &` 阻断SIGHUP信号 (退出终端依旧运行, 输出内容重定向到nohup.out)
+- `trap` 捕获信号 
+- `jobs -l` 查看作业
+- `bg`, `fg`, 重启作业 (backgroud or frontground)
+- `nice`, `renice`, 调整优先级
+- `at` 定时作业 `atq`, `atrm`
+- `cron` 安排定时作业
+
+## function
+
+- 定义 
+
+```shell
+function NAME {
+    COMMANDS
+}
+```
+or 
+```shell
+name() {
+    COMMANDS
+}
+```
+
+- 使用 (先定义，后使用)
+
+```shell
+NAME # no need ()
+```
+
+- `return` 退出并指定退出状态码 (0~255)
+- `local`声明的变量作用域是本函数
