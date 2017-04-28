@@ -238,9 +238,9 @@ done
     + 读取文件
         * 技巧： `cat test | while read line ...` (read自动读取下一行)
 
-## Day 6
+# Day 6
 
-### 再探重定向
+## 再探重定向
 
 - 文件描述符: 0, 1, 2; 自定义的:3~8 
     + `0`, STDIN
@@ -275,7 +275,7 @@ EOF    # attention, this line must not have space at front. because ' EOF'!='EOF
 done < ${1}                 # read from $1 parameter (file)
 ```
 
-### 临时文件 `mktemp`
+## 临时文件 `mktemp`
 
 - 创建临时文件 `mktemp file.XX...X` (3+个X会自动生成)
 - `-t` 在系统临时目录中创建，并返回全路径
@@ -326,3 +326,44 @@ NAME # no need ()
 
 - `return` 退出并指定退出状态码 (0~255)
 - `local`声明的变量作用域是本函数
+
+
+# Day 7
+
+## Create Lib
+
+- `source` or `.`, like C lang `include *.h`. Use `source ./myfuncs` or `. ./myfuncs`. So you can use the functions in 'myfuncs' file directly. 注意： `source`不会运行这个库文件，但会使这些函数生效
+
+
+# Day 8
+
+- `select` 会在shell中自动生成menu
+- 例: (You can chose the Number before the menus)
+    + ```shell
+    PS3='Enter the option:' # attention this
+    select x in 'a' 'b' 'c' 'd'
+    do 
+        case $x in 
+            'a')
+                echo 'You chose A'; break;;
+            'b')
+                echo 'You chose B'; break;;
+            'c') 
+                echo 'You chose C'; break;;
+            *) 
+                clear
+                echo 'You chose other';;
+        esac
+    done
+    ```
+
+- `sed`
+
+# Last Day (funny shell)
+
+## send msg
+
+- `who` who is online; `who -T` check open 'mesg' or not;
+- `whoami` who am I
+- `mesg` check; `mesg y` open; `mesg n` close;
+- `write user pts/1` open to send msg to 'user pts/1'
