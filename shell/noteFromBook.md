@@ -42,9 +42,9 @@ Book Name: Linux命令行与shell脚本编程大全(第3版)
 
 - 外部命令：如 `ps`
 - 内部命令：如 `cd`. 以上两个用 `type/which (-a)`试试看，还有 `whereis`
-- `history`: 对应文件 `~/.zsh_history`
+- `history`: 对应文件 `~/.zsh_history`. 在Terminal注销时，命令会更新到文件中
 - `;`: 单行命令的串行执行
-- `()`: 创建子shell执行命令。子shell的成本高，会脱慢速度
+- `()`: 创建子shell执行命令。子shell的成本高，会拖慢速度
 - `coproc`: 协程，并行方式执行命令
 - `(zsh; zsh; zsh; ps --forest)`分析
     + 遇见 `(`，创建一个子shell, `)`结束这个子shell
@@ -69,11 +69,11 @@ Book Name: Linux命令行与shell脚本编程大全(第3版)
 
 - 1. 默认登陆shell
     + 五个不同的启动文件入口 
-        * `/etc/profile` 主启动文件
-        * `~/.bash_profile`; `~/`即 `$HOME/`
+        * `/etc/profile` 主启动文件, 所有user都会读
+        * 1, `~/.bash_profile`; `~/`即 `$HOME/`, 每个用户有自己的 `$HOME`
+        * 2, `~/.bash_login`
+        * 3, `~/.profile`(上面三个有顺序，且只会执行一个)
         * `~/.bashrc` (这个文件可储存 **个人用户永久性变量**)
-        * `~/.bash_login` 
-        * `~/.profile`
     + `/etc/profile`，每个帐户登陆时会执行它，可顺此看代码。它主要迭代了所有 `/etc/profile.d/`下的 `.sh`文件
     +  `$HOME/`下的文件一般只用到其中一到两个，这些文件定义了一些环境变量，并在每次启动bash shell时生效
 
@@ -96,6 +96,7 @@ Book Name: Linux命令行与shell脚本编程大全(第3版)
 - 命令替换: 命令赋值给变量。
     + 反引号包裹
     + `$()`包裹
+    + 上两个命令是不一样的。当赋值给变量时，用反引号只将命令赋值，不执行命令。而 `$()`将执行结果赋值
 
 - 命令替换会 **创建一个子shell**来运行命令。`./`会创建一个子shell，不加路径时不是子shell
 - `<<` 叫 **内联输入重定向**,真正的输入其实来自用户，它只是用来标记结束的字符(串)
@@ -130,14 +131,14 @@ Book Name: Linux命令行与shell脚本编程大全(第3版)
     fi
 ```
 
-- Condition: `test`和 `[ CONDITION ]`. 用于条件测试(数值、字符串、文件)，可和if一起使用，弥补if缺陷.(注意严格的空格)
+- Condition: `test`和 `[ CONDITION ]`. 用于条件测试(数值、字符串、文件)，可和if一起使用，弥补if缺陷. (注意严格的空格)
     + `test $var1`,只要变量不为空，都通过（应该是这样）
     + 数值比较. `[ n1 -eq n2 ]`. `-eq`,`-ge`,`-gt`,`-le`,`-lt`,`-ne`
-    + 字符串比较. `[ str1 = str2]`. `=`,`!=`,`<`,`>`; `-n str1`(是否长度非0),`-z`(是否长度为0)
+    + 字符串比较. `[ str1 = str2 ]`. `=`,`!=`,`<`,`>`; `-n str1`(是否长度非0),`-z`(是否长度为0)
         * 未定义的变量用字符串长度测试,输出为0
         * `>`, `<`在使用时大多情况下要加转义符，否则认为是重定向
     + 文件比较.
-        * `-d` is direction ? 
+        * `-d` is directory?
         * `-e` is existent?
         * `-f` is a file?
         * `-r`, `-w`, `-x` is readable/writable/executable
@@ -145,8 +146,8 @@ Book Name: Linux命令行与shell脚本编程大全(第3版)
         * `-nt` is newer than
         * `-ot` is older than
 - 复合条件. `&&` and `||`.`[ condition1 ] && [ condition2 ]`.
-- `(( EXPRESSION ))`. 高级数学表达式. 支持 `++`, `--`, `!`, `~`, `**`(幂), `<<`, `>>`, `&`, `|`, `&&`, `||`
-- `[[ EXPRESSION ]]`. 高级字符串表达式. 支持模式匹配 (有些shell可能不支持)
+- `(( EXPRESSION ))`. 高级 **数学**表达式. 支持 `++`, `--`, `!`, `~`, `**`(幂), `<<`, `>>`, `&`, `|`, `&&`, `||`
+- `[[ EXPRESSION ]]`. 高级 **字符串**表达式. 支持模式匹配 (有些shell可能不支持)
 
 ### Case
 
@@ -174,16 +175,21 @@ done > output.log       # 重定向(非必需)可以写这里
 
 - `LIST` can be:
     + `str1 str2 str3` elements seperate by SPACE by default, or use quotes for a sentence as one element
-    + SPACE means 空格，制表符，换行符. 更改 `IFS`的值来更改这个符号. `IFS=$'\\n'`
+    + SPACE means 空格，制表符，换行符. 更改 `IFS`的值来更改这个符号.
+        * IFS(Internal Field Separator), 内部字段分割符
+        * `IFS=:`
+        * `IFS=$'\n'`. 至于为什么用 `$`，自己用到的时候查吧
         * `IFS=$'\n':;`. 指定多种分隔符
-        * ```shell 
-        IFS.OLD=$IFS  # store default value for restore
-        IFS=$'\n'
-        ```
-
     + `$list` use variables. `list=ele1 ele2 ele3`, `list=$list" ele4"`(字串拼接)
     + `$(cat $file)` 从命令中读. 以上说过`$()`是一种命令替换符
     + `/home/robin/test/*` 用通配符. 这时应该将 `commands1`中所有用到 `$var`的地方用引号括起来(避免空格)
+
+```shell
+IFS.OLD=$IFS  # store default value for restore
+IFS=$'\n'     # set customized value
+IFS=$IFS.OLD  # restore default value
+```
+
 - For as C lang `for (( i = 1; i <= 10; i++ ))`
 
 ### While
@@ -324,16 +330,20 @@ name() {
 NAME # no need ()
 ```
 
-- `return` 退出并指定退出状态码 (0~255)
-- `local`声明的变量作用域是本函数
-
+- `return` 退出并指定退出状态码 (0~255) (必须是numberic型的)
+- `local`声明的变量作用域是本函数 (果然实践才能发现很多奇怪的问题)
+    + 不要随意用local, 我将自己shell中的变量改成local，出现了很奇怪的现象
+    + 请在shell中试试 `files=$(ls)`和 `local files=$(ls)`.
+        + `local files=$(ls)` 等效于`local files=file1 file2 file3`, 会分别定义 `files=file1`, `file2=''`, `file3=''`, 而 `files=$(ls)`会存成一个变量
+- `return` 和 `exit`的异同：
+    + 都是退出，且返回退出码
+    + `return`仅仅退出函数，而 `exit`可能会退出shell
 
 # Day 7
 
 ## Create Lib
 
-- `source` or `.`, like C lang `include *.h`. Use `source ./myfuncs` or `. ./myfuncs`. So you can use the functions in 'myfuncs' file directly. 注意： `source`不会运行这个库文件，但会使这些函数生效
-
+- `source` or `.`, like C lang `include *.h`. Use `source ./myfuncs` or `. ./myfuncs`. So you can use these functions in 'myfuncs' file directly. 注意： `source`会使这些函数在当前shell中生效
 
 # Day 8
 
@@ -367,3 +377,52 @@ NAME # no need ()
 - `whoami` who am I
 - `mesg` check; `mesg y` open; `mesg n` close;
 - `write user pts/1` open to send msg to 'user pts/1'
+
+<hr>
+
+bookFrom<鸟哥的Linux私房菜>
+
+找到了可能是他的博客: [link](http://www.cnblogs.com/ningvsban/category/423741.html)
+
+# Day 1
+
+- `cal`: calendar
+- `man`等命令中，用 `/STR`来搜索字符串(向下), `?`是向上, `n`next, `N`last
+- `nl -w N FILE`可带补0的行号输出文件内容
+- `find`比 `whereis/locate`搜文件慢，后者是从数据库中查的
+- 还记得字符串的 **部分裁剪**吗？ `#`, `##`, `%`, `%%`(修改ozsh时用了)
+    + `#`, `##` 是从左往右
+    + `%`, `%%` 是从右往左
+    + `${VAR#*STR}` 剪掉最短匹配 `*STR`. (VAR是变量名)
+    + `${VAR##*STR}` 剪掉最长匹配 `*STR`
+    + `${VAR%STR*}` 剪掉最短匹配 `STR*`
+    + `${VAR%%STR*}` 剪掉最长匹配 `STR*`
+- 变量内容的 **部分替换** `/`, `//`
+    + 仅一处 `${VAR/SEARCH/REPLACEMENT}`
+    + 全部处 `${VAR//SEARCH/REPLACEMENT}`
+- 变量的测试及赋值 `-`/`:-`, `+`/`:+`, `=`/`:=`, `?`/`:?`
+    + `NEW_VAR=${OLD_VAR-NEW_VALUE}`和 `NEW_VAR=${OLD_VAR:-NEW_VALUE}`
+        * 相当于 `NEW_VAR = OLD_VAR ? OLD_VAR : NEW_VALUE`
+        * 但两者的判断不一样，前者是 **有没有定义**，后者为 **是不是空**, 区别的场景就是，有没有手动定义为空字符串
+    + `+`/`:+`与 `-`相反
+    + `=`/ `:=`把旧变量 `OLD_VAR`也变成 `NEW_VALUE`
+    + `?`/ `:?` 为空时报出错误, 否则进行赋值
+    + 总之，没有冒号时，只检测有没有define，有冒号才会认为空字符串是false
+
+# Day 2
+
+- `ls ./test || mkdir test` 利用的是返回的错误码 `$?`
+- `cut -d CHAR -f NUMBER` **选取命令**和 `grep`功能相似. 这个很有用啊，你可以按每一行固定格式进行解析后显示
+    + `NUMBER` 还可以是 `N1,N2,N3`, `N1-N3`, `N1-`, `-N3`
+    + 另外还有一个参数 `-c`, 按字符进行cut. (-d: delimiter)
+- `sort` 可进行排序 `-t`, `-k`连用，指定分隔符并选取第几列进行排序
+- 字符转换命令
+    + `tr`, translating, 单字符的替换/删除, 但支持正则 `[a-z]`/`[A-Z]`
+    + `col`, 过滤控制字符
+    + `join`, 可用mysql中的join的用法来思考其作用,或用excel对列的操作来思考, 可实现按某一字段，匹配两个文件的行，进行整合
+        * `join file1 file2`
+        * `join -j N file1 file2` (N为列号，默认为1)
+        * `join -1 2 -2 3 file1 file2`, 按file1的第2列与file2的第3列进行匹配，并合并
+        * `join file1 file2 | join - file3`, `|`和 `-`一起使用实现标准输入
+    + `paste` 将两个文件按行以tab分隔联结
+    + `expand` [tab]转空格
