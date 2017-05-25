@@ -1,4 +1,4 @@
-#!/bin/bash -e
+#!/bin/bash
 # This shell is to auto-generate *.sublimt-project including files customized
 
 BASE_PATH='/confidential_in_company'

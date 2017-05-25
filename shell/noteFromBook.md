@@ -61,6 +61,7 @@ Book Name: Linux命令行与shell脚本编程大全(第3版)
 - subshell中修改全局环境变量，仅当前shell中有效，用 `export`覆盖也不行
 - subshell继承的变量只能是父shell导出(`export`)的
 - 一般地，使用变量用 `$`，操作变量不用 `$`，仅 `printenv`例外.如 `unset $my_var`
+    + 注意变量值为带有空格的字符串时，要使用 `"$var"`(带引号)
 - 单个点号加入 `$PATH`变量，执行本目录命令就不用 `./`了。但这样还有其他问题：重启系统后即丢失 => 持久化,即放入 `profile.d/`下的shell中。这关系到下面讲的三种shell不同的启动方式
 - 三种shell不同的启动方式
     + 1. 登陆时作为默认登录 shell
@@ -134,7 +135,7 @@ Book Name: Linux命令行与shell脚本编程大全(第3版)
 - Condition: `test`和 `[ CONDITION ]`. 用于条件测试(数值、字符串、文件)，可和if一起使用，弥补if缺陷. (注意严格的空格)
     + `test $var1`,只要变量不为空，都通过（应该是这样）
     + 数值比较. `[ n1 -eq n2 ]`. `-eq`,`-ge`,`-gt`,`-le`,`-lt`,`-ne`
-    + 字符串比较. `[ str1 = str2 ]`. `=`,`!=`,`<`,`>`; `-n str1`(是否长度非0),`-z`(是否长度为0)
+    + 字符串比较. `[ str1 = str2 ]`. `=`/ `==,`!=`,`<`,`>`; `-n str1`(是否长度非0),`-z`(是否长度为0)
         * 未定义的变量用字符串长度测试,输出为0
         * `>`, `<`在使用时大多情况下要加转义符，否则认为是重定向
     + 文件比较.
@@ -225,7 +226,7 @@ done
 - `$$`, shell本身的PID
 - `$1`~ `$9`, `${10}`... `${n}`, 参数
 - `$#`, 参数个数
-- `$*`和`$@`: 返回所有参数。但 `$*`把所有参数当作一个单词保存，而 `$@`当作一个字符串中独立的单词。在输出时没有分别，但用for时就有区别了.
+- `$*`和`$@`: 返回所有参数。但 `$*`把所有参数当作一个变量(可以有空格的变量)保存，而 `$@`当作一个字符串中独立的单词。在输出时没有分别，但用for时就有区别了.
 - `basename` can remove path, only leave file name
 - `shift N` 移动变量,单独用即可。N可省，默认为1,$1删除, $2->$1, $3->$2
 - shell中-a后跟参数值就是用 `case`, `shift` 组合使用的
@@ -343,7 +344,9 @@ NAME # no need ()
 
 ## Create Lib
 
-- `source` or `.`, like C lang `include *.h`. Use `source ./myfuncs` or `. ./myfuncs`. So you can use these functions in 'myfuncs' file directly. 注意： `source`会使这些函数在当前shell中生效
+- `source` or `.`, Use `source ./shell` or `. ./shell`. 
+    + `source`与 `./shell.sh` 或 `sh shell.sh`的不同. 用 source是在当前shell中执行，而用另外两种方式其实是在子shell(bash)中进行的,子shell执行完退出后，方法、变量都不能被使用了
+    + 但为什么 `source ~/.profile`等一些操作是系统级的呢？当前shell和再开一个shell，它们的关系是兄弟关系啊，肯定是系统对这些文件做了什么
 
 # Day 8
 
@@ -393,13 +396,15 @@ bookFrom<鸟哥的Linux私房菜>
 - 还记得字符串的 **部分裁剪**吗？ `#`, `##`, `%`, `%%`(修改ozsh时用了)
     + `#`, `##` 是从左往右
     + `%`, `%%` 是从右往左
+    + `#`, `%`, 最短匹配
+    + `##`, `%%`, 最长匹配
     + `${VAR#*STR}` 剪掉最短匹配 `*STR`. (VAR是变量名)
     + `${VAR##*STR}` 剪掉最长匹配 `*STR`
     + `${VAR%STR*}` 剪掉最短匹配 `STR*`
     + `${VAR%%STR*}` 剪掉最长匹配 `STR*`
 - 变量内容的 **部分替换** `/`, `//`
-    + 仅一处 `${VAR/SEARCH/REPLACEMENT}`
-    + 全部处 `${VAR//SEARCH/REPLACEMENT}`
+    + `/`, 仅一处 `${VAR/SEARCH/REPLACEMENT}`
+    + `//`, 全部处 `${VAR//SEARCH/REPLACEMENT}`
 - 变量的测试及赋值 `-`/`:-`, `+`/`:+`, `=`/`:=`, `?`/`:?`
     + `NEW_VAR=${OLD_VAR-NEW_VALUE}`和 `NEW_VAR=${OLD_VAR:-NEW_VALUE}`
         * 相当于 `NEW_VAR = OLD_VAR ? OLD_VAR : NEW_VALUE`
@@ -426,3 +431,11 @@ bookFrom<鸟哥的Linux私房菜>
         * `join file1 file2 | join - file3`, `|`和 `-`一起使用实现标准输入
     + `paste` 将两个文件按行以tab分隔联结
     + `expand` [tab]转空格
+
+# Day 3
+
+- `seq [FROM] [STEP] [LAST]`, 生成连续的数字, 这个功能和 for一起使用挺好的
+- `sh [-nvx] script.sh`可用来查询语法
+    + `-n`, 不执行script, 只查询语法问题
+    + `-v`, 执行前先输出script内容
+    + `-x`, 执行的过程(包含代码)全列出来
