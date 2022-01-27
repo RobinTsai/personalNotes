@@ -1,15 +1,8 @@
 # personalAugPro
 
-from the ninth week.
+## goBlackHat
 
-+ 9-2
-    + Shortcuts(快捷键) of sublime .
-    + 安装Yii2.0 advance.
-    + 安装phpbrew.
+《Go黑帽子 渗透测试编程之道》的读书笔记
 
-+ 9-3
-    + Use emmet plugs of sublime.
-    + Sass
-    + 什么是NodeJS
-    + 使用coffee命令
-    + 使用sass
+- portscan: 端口扫描示例
+- echo：回显服务的实现；代理服务转发 tcp 流的实现
