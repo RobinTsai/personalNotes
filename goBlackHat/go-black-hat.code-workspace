@@ -1,0 +1,12 @@
+{
+    "folders": [
+        {
+            "path": "./echo"
+        },{
+            "path": "./port_scan"
+        }, {
+            "path": "./server_shell"
+        }
+    ],
+    "settings": {}
+}

@@ -1,12 +1,14 @@
 /*
- * 小工具
  * 1. 创建一个回显服务器
- * 2. 代理 tcp 信息流到另一个服务 => 端口转发绕过防火墙的应用
- * 学习：
- * io.Reader/Writer 的使用
- * bufio.Reader/Writer 带缓冲的 Reader/Writer 的使用
+ * 2. 创建一个代理，代理 tcp 信息流到另一个服务 => 端口转发绕过防火墙的应用
+ *
+ * 使用：
+ *   通过命令 `telnet <server_ip> <port>` 连接到此服务，然后进行任意对话
+ *
+ * 学到：
+ *   io.Reader/Writer 的使用
+ *   bufio.Reader/Writer 带缓冲的 Reader/Writer 的使用
  */
-
 package main
 
 import (
