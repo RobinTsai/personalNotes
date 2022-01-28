@@ -3,20 +3,18 @@
         {
             "path": "../",
             "name": "meta"
-        },
-        {
+        }, {
             "path": "./echo"
-        },
-        {
+        }, {
             "path": "./port_scan"
-        },
-        {
+        }, {
             "path": "./server_shell"
-        },
-        {
+        }, {
             "path": "./dns"
-        },{
+        }, {
             "path": "./ws_xss"
+        }, {
+            "path": "./reverse_proxy"
         }
     ],
     "settings": {
