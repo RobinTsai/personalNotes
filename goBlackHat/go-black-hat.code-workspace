@@ -1,12 +1,32 @@
 {
     "folders": [
         {
+            "path": "../",
+            "name": "meta"
+        },
+        {
             "path": "./echo"
-        },{
+        },
+        {
             "path": "./port_scan"
-        }, {
+        },
+        {
             "path": "./server_shell"
+        },
+        {
+            "path": "./dns"
+        },{
+            "path": "./ws_xss"
         }
     ],
-    "settings": {}
+    "settings": {
+        "files.exclude": {
+            "**/.git": true,
+            "**/.svn": true,
+            "**/.hg": true,
+            "**/CVS": true,
+            "**/.DS_Store": true,
+            "**/Thumbs.db": true
+        }
+    }
 }
