@@ -1,8 +1,27 @@
-# personalAugPro
+> 读书笔记目录
+
+- [Mastering Regex](#mastering-regex)
+- [Shell](#shell)
+- [goBlackHat](#goblackhat)
+- [TCP/IP 网络编程](#tcpip-网络编程)
+- [linux高性能服务器编程](#linux高性能服务器编程)
+  - [第一篇 TCP/IP协议详解](#第一篇-tcpip协议详解)
+  - [第二篇 深入解析高性能服务器编程](#第二篇-深入解析高性能服务器编程)
+  - [第三篇 高性能服务器优化与监测](#第三篇-高性能服务器优化与监测)
+
+---
+
+## Mastering Regex
+
+[精通正则表达式](./Regex/noteOfProfessionalRegex.md)
+
+## Shell
+
+[Linux命令行与shell脚本编程大全(第3版)](./shell/noteFromBook.md)
 
 ## goBlackHat
 
-> 《Go黑帽子 渗透测试编程之道》的读书笔记
+> 《Go黑帽子 渗透测试编程之道》的程序例子
 
 - port_scan: 端口扫描示例
 - echo: 回显服务的实现；代理服务转发 tcp 流的实现
@@ -31,6 +50,8 @@
 ## linux高性能服务器编程
 
 > 《High Performance Linux Server Programming》 ——游双（著）
+
+TODO...
 
 ### 第一篇 TCP/IP协议详解 
 ### 第二篇 深入解析高性能服务器编程
