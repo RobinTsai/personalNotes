@@ -23,3 +23,24 @@
 - TODO：加密算法的技术点
 - TODO：根据 PNG 格式特点，编写一个隐藏术程式
 - TODO：实操一个 C2 远控木马
+
+## linux高性能服务器编程
+
+> 《High Performance Linux Server Programming》 ——游双（著）
+
+### 第一篇 TCP/IP协议详解 
+### 第二篇 深入解析高性能服务器编程
+
+- [第五章 Linux 网络编程基础 API](./linuxHighPerformance/Chapter_5.md)
+- [第六章 高级I/O函数](./linuxHighPerformance/Chapter_6.md)
+- [第七章 Linux 服务器程序规范](./linuxHighPerformance/Chapter_7.md)
+- 第八章 高性能服务器程序框架
+- 第九章 I/O 复用
+- 第十章 信号
+- 第十一章 定时器
+- 第十二章 高性能 I/O 框架库 Libevent
+- 第十三章 多进程编程
+- 第十四章 多线程编程
+- 第十五章 进程池和线程池
+
+### 第三篇 高性能服务器优化与监测
