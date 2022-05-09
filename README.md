@@ -1,4 +1,12 @@
-> 读书笔记目录
+# 读书速查笔记 {ignore=true}
+
+> “温故而知新”，“苟日新，日日新，又日新”。
+> 书一遍一遍读，尚且会获取到新知识，更何况我在这里做的笔记。
+
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
 
 - [Mastering Regex](#mastering-regex)
 - [Shell](#shell)
@@ -7,7 +15,10 @@
 - [linux高性能服务器编程](#linux高性能服务器编程)
   - [第一篇 TCP/IP协议详解](#第一篇-tcpip协议详解)
   - [第二篇 深入解析高性能服务器编程](#第二篇-深入解析高性能服务器编程)
+    - [第八章 高性能服务器程序框架](#第八章-高性能服务器程序框架)
   - [第三篇 高性能服务器优化与监测](#第三篇-高性能服务器优化与监测)
+
+<!-- /code_chunk_output -->
 
 ---
 
@@ -49,7 +60,7 @@
 
 ## linux高性能服务器编程
 
-> 《High Performance Linux Server Programming》 ——游双（著）
+> 《linux高性能服务器编程》 ——游双（著）
 
 TODO...
 
@@ -59,7 +70,10 @@ TODO...
 - [第五章 Linux 网络编程基础 API](./linuxHighPerformance/Chapter_5.md)
 - [第六章 高级I/O函数](./linuxHighPerformance/Chapter_6.md)
 - [第七章 Linux 服务器程序规范](./linuxHighPerformance/Chapter_7.md)
-- 第八章 高性能服务器程序框架
+
+#### 第八章 高性能服务器程序框架
+
+- [第八章 高性能服务器程序框架](./linuxHighPerformance/Chapter_8.md)
 - 第九章 I/O 复用
 - 第十章 信号
 - 第十一章 定时器
