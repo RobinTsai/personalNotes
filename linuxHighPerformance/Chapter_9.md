@@ -66,8 +66,8 @@ poll 优点：
 
 缺点：
 
-- 存储文件描述符的链表仍需要从用户态拷贝到内核态（？疑问）
-- 仍然需要用户遍历数组获取到事件（O(n)）
+- 存储文件描述符的链表仍需要从用户态拷贝到内核态（调用函数时传入的参数信息量大）
+- 仍然需要用户遍历数组获取到事件（O(n)，遍历 fds 获取数组元素中的 revents 信息）
 - 仍然不能动态添加 fd（数组无法扩充）
 - 工作模式为 水平触发（LT），不支持边沿触发（ET），效率较低
 
@@ -88,6 +88,8 @@ int epoll_wait(int epfd, struct epoll_event* events, int maxevents, int timeout)
 - epoll_create 返回一个文件描述符 epfd，指向要访问的内核事件表
 - epfd 是指 epoll_create 返回的文件描述符，是另外两个函数的第一个参数
 - epoll_wait 在有事件时返回就绪文件描述符的个数，将所有就绪事件放到第二个参数中
+    - 注意 events 不可以是空指针，内核只是复制，不会帮用户态分配内存
+    - 第三个参数表示本次可以返回的最大事件数目（通常是 events 数组的长度）
 
 epoll 优点：
 
@@ -127,3 +129,62 @@ epoll 优点：
     - 允许监听的最大 fd 达到系统最大 65535（cat /proc/sys/fs/filemax）
 
 ![三种 IO 复用区别](./assets/diff_select_poll_epoll.jpg)
+
+## 扩展 
+
+### epoll 内部实现
+
+> 来自 《深入理解 Nginx》
+ 
+ select 和 poll 存在的明显问题是：
+
+- 系统调用时传入了所有的 fd，发生了用户态内存到内核态内存的大量拷贝
+- 内核会遍历这些事件造成资源浪费。
+
+上文中提到了，epoll 将这个过程分为了三个函数，那 epoll 是如何高效处理事件的呢？
+
+- 当调用 epoll_create 时会创建 epoll 对象 eventpoll 结构体。
+- epoll_ctl 方法会向 epoll 对象中添加事件，挂到 rbr 红黑树中。
+- 所有向 epoll 添加的事件都会与设备（如网卡）驱动程序建立回调关系.
+- 当有事件发生时会调用这里的回调方法 ep_poll_callback.
+- ep_poll_callback 方法会为事件创建一个 opitem 结构体并放到一个双向链表 rdllist 中
+- 当调用 epoll_wait 时，只是检查 eventpoll 对象中的 rdllist 是否有 epitem 元素
+- 当 rdllist 非空时，内核把事件复制到用户态内存中（用户传入的第二个参数地址）同时返回事件数量
+
+```c
+struct eventpoll {
+    // 红黑树的根节点，挂载所有监控的事件
+    struct rb_root_rbr; 
+    // 双向列表，保存着已经发生的事件
+    struct list_head rdllist;
+    ...
+};
+
+struct epitem {
+    // 红黑树结点
+    struct rb_node rbn;
+    // 双向链表结点
+    struct list_head rdllink;
+    // 事件句柄等信息
+    struct epoll_filefd ffd;
+    // 指向所属的 eventpoll 对象
+    struct eventpoll *dp
+    // 期待的事件类型
+    struct epoll_event event;
+    ...
+};
+```
+
+![epoll 原理实现](./assets/epoll_internel_imp.png)
+
+### LT/ET 模式的比较
+
+> 来自 《深入理解 Nginx》
+
+默认 epoll 工作在 LT 模式下，可以处理阻塞和非阻塞的套接字；ET模式效率要比 LT 模式高，它只支持非阻塞套接字。
+
+ET 与 LT 模式的区别在于：
+- 当一个新的事件到来时， ET 模式下当然可以从 epoll_wait 调用中获取到这个事件，可是如果这次没有把这个事件对应的套接字缓冲区处理完，在这个套接字没有新的事件再次到来时，在 ET 模式下是无法再次从 epoll_wait 中获取到这个事件的；
+- 而 LT 模式则相反，只要一个事件对应的套接字缓冲区还有数据，就总能从 epoll_wait 中获取这个事件。
+
+因此 LT 模式下的开发相对简单一些，不容易出错。Nginx 是工作在 ET 模式下的。

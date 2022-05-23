@@ -23,7 +23,7 @@ int pipe(int fd[2]) // 返回成功或失败
 
 如果要实现双向通道，需要用两个 pipe 函数。
 
-pipe 的两个 fd 有默认 65536 字节的缓冲区，整体来说类似于 Go 语言中 channel 的读写。
+pipe 的两个 fd 有默认 65536 字节的缓冲区（整体来说类似于 Go 语言中 channel 的读写）。
 
 socket 的基础API 还有个方便创建双向管道的函数：
 ```c
@@ -36,7 +36,7 @@ int socketpair(int domain, int type, int protocol, int fd[2]) // domain 只可�
 
 ```c
 int dup(int fd) // 返回相同的 fd 指向
-int dup2(int fd_one, int fd_two)
+int dup2(int fd_one, int fd_two) // 返回相同的 fd 指向，且描述符>=fd_two
 ```
 
 dup 返回相同的 fd 指向，可用于文件、管道或网络连接，且返回的 fd 总是取系统当前可用的最小值。

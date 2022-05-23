@@ -1,7 +1,21 @@
-# 第五章 Linux 网络编程基础 API
+# 第五章 Linux 网络编程基础 API {ignore=true}
+
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [主机字节序和网络字节序](#主机字节序和网络字节序)
+- [IP地址转换函数](#ip地址转换函数)
+- [socket 连接类函数](#socket-连接类函数)
+- [socket 的读写](#socket-的读写)
+
+<!-- /code_chunk_output -->
 
 
 ## 主机字节序和网络字节序
+
+> 友链： [TCP/IP网络编程#字节序与网络字节序](../tcpIpNetProgramming/README.md#字节序与网络字节序)
 
 在 32位机中，CPU 的累加器一次能装载 4 字节。那么这 4 字节在内存中的排序将影响它被累加器装在成的证书值。这就是字节序问题。
 
