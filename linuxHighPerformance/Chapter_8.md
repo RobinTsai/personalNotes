@@ -2,6 +2,15 @@
 
 （全书核心）
 
+要点：
+1. 服务器模型：CS / P2P
+2. IO 模型：阻塞/非阻塞、IO 复用/SIGIO、同步 IO/异步 IO
+3. 高效事件处理模式：Reactor、Proactor
+4. 高效并发模式：半同步/半异步模式、领导者/追随者模式
+5. 性能的其他方面考虑：池化、数据复制、上下文切换和锁
+
+---
+
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 
 <!-- code_chunk_output -->

@@ -1,5 +1,10 @@
 # 第六章 高级IO函数
 
+要点：
+1. 零拷贝概念
+2. 零拷贝相关函数： sendfile / splice / tee
+3. pipe / dup / dup2 / readv / writev / mmap / munmap / fcntl
+
 这些函数在特定条件下有优秀的性能。
 
 

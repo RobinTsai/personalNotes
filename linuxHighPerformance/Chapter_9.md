@@ -1,5 +1,13 @@
 # I/O 复用
 
+要点：
+1. select 函数定义及工作原理
+2. poll 函数定义及工作原理
+3. epoll 函数定义及工作原理
+4. 三者优劣
+
+---
+
 Linux 实现I/O复用的系统调用主要有 select、poll 和 epoll。
 
 ## select 系统调用

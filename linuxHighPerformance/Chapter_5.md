@@ -1,5 +1,11 @@
 # 第五章 Linux 网络编程基础 API {ignore=true}
 
+要点：
+1. 字节序（主机字节序、网络字节序、大端字节序、小端字节序）
+2. socket 连接类函数
+3. accept 函数内部实现
+
+---
 
 <!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
 

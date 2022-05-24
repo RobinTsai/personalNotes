@@ -400,6 +400,9 @@ TCP_NODELAY 控制禁用 Nagle 算法
 
 解决 Time-wait 导致的地址被占用需要用到 SO_REUSEADDR 选项，此选项用于可将 Time-wait 状态的套接字端口号重新分配给新的套接字。
 
+> 为什么是 2MSL？
+> MSL，Maximum Segment Lifetime，报文最大生存时间。一个报文消息在网络上传播最长经过 1MSL 就会消失，这里设置为 2MSL 是为了等待对端的重传消息，2MSL 的时间正好是一来一往的时间。设置的再长的话副作用会大于正作用，有异常可以通过 RST 状态来应答。
+
 ### Nagle 算法
 
 TCP 默认使用了 Nagle 算法。Nagle 是为了防止因数据包过多而发生网络过载而存在的。
