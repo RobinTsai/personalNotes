@@ -93,7 +93,7 @@ TODO...
     - select / poll / epoll
 - 第十章 信号
 - [第十一章 定时器](./linuxHighPerformance/Chapter_11.md)
-    - 时间轮、时间堆
+    - 时间轮 / 时间堆
 - 第十二章 高性能 I/O 框架库 Libevent
 - 第十三章 多进程编程
 - 第十四章 多线程编程
