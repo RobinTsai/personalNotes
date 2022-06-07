@@ -1,14 +1,11 @@
 # redo 日志
 
-为何用，通过 Buffer Pool 的 flush 链表刷盘（刷脏）：
-- 一次修改一点也要刷一页的数据，太浪费（每次刷盘是以页为单位的）
+为何用，因为通过 Buffer Pool 的 flush 链表刷盘（刷脏）有以下问题没解决：
+- 一次修改一点也要刷一页的数据，太浪费（每次刷盘是以页为单位的），如果不及时刷盘又无法保证持久性
 - 随机 IO 慢，尤其是机械硬盘
 
-由上，需要一种机制，保证**快速高效**地刷盘且保证持久性。mysql 依然使用 flush 链表进行刷盘，不过这里刷盘并不保证持久性；而是使用了 redo 日志保证持久性。
+由上，需要一种机制，能 **快速高效地保证持久性**。mysql 使用 **WAL（write ahead log，先写日志）** 机制，在提交事务时，修改内容会保证记录到 redo log 文件中，之后在某个时机将 flush 链表同步到磁盘中，这块日志就没用了，如果系统崩溃，可以从 redo log 文件中恢复。
 
-即，当提交事务后，先写 redo 日志，然后修改 flush 链表，之后在某个时机将 flush 链表同步到磁盘中。
-
-> 通常的做法是 **先写日志机制（WAL，write ahead log）**，这里 redo log 就是。
 > redo 日志保证持久性，undo 日志保证原子性。
 
 优点：
@@ -23,13 +20,18 @@
 
 **redo log 组**：mysql 中一个 MTR （Mini-transaction，一个事务单元、一个原子操作）对应一组 redo 日志，刷盘或恢复时同样是按组进行的。 
 
-**redo 日志缓冲区**（log buffer）：log buffer 是连续的内存空间，被划分为若干个 512K 大小的 block，每个 block 记录了多条 redo log，每次刷盘按 block 为单位进行刷盘（log buffer 的 block 是日志文件 block 的镜像）。
+**redo 日志缓冲区**（log buffer）：log buffer 是连续的内存空间，被划分为若干个 512K 大小的 block，每个 block 记录了多条 redo log，每次刷盘按 block 为单位进行刷盘（log buffer 是日志文件的映射，所有 block 是日志文件 block 的镜像）。
 
-**redo 日志文件**：每个 redo 日志文件格式都一样，前 4 个 block 用来存储一些管理信息，后面则是 redo log 数据信息。前 4 个block 依次是 log file header、checkpoint1、无用块、checkpoint2。
+**redo 日志文件**：redo 日志文件是 log buffer 的映射，分有多个文件，每个文件格式都一样，前 4 个 block 用来存储一些管理信息，后面则是 redo log 数据信息。前 4 个block 依次是 log file header、checkpoint1、无用块、checkpoint2。
 
 需要注意的是**仅第一个文件的 checkpointN 是有用的**。他们记录了 checkpoint 信息，在恢复流程中会用到。
 
 > 使用 `SHOW VARIABLES LIKE 'datadir'` 查看存放目录，默认名为 `ib_logfile0`, `ib_logfile1` 文件。
+
+> 乐观插入和悲观插入
+>
+> 在介绍 reod log 组的时候有涉及到这两个概念，在这里说一下：
+> 乐观插入就是页中空间充足，直接插入；悲观插入就是页中空间不足，需要进行页分裂后再插入，需要申请数据页、改动各种段、区的统计信息等许多操作，所以涉及 redo 日志的条目也很多。
 
 ## 工作方式
 
@@ -42,30 +44,43 @@
 
 - 当执行命令时，同步收集 redo 日志（成组记录）
 - 当事务提交时，将记录成组复制到 **redo 日志缓冲区**中（log buffer，顺序的内存）
-- 写入到 redo 日志后，增长 lsn（按字节数增长）
+- 写入到 redo 日志后，增长 lsn（一个记录当前写入位置的编号，按字节数增长）
+
+> 为什么这里只讲写到缓冲区，而不是讲到写到磁盘日志中？
+>
+> 因为事务提交后 redo 日志立即刷盘也会影响性能，所以提供给开发者通过配置进行设置。
+> 配置项 `innodb_flush_log_at_trx_commit`：
+> - 0：写到 log buffer 后就不管了，由后台线程去处理（服务正常关闭下保证持久性）
+> - 1：在事务提交时**立即刷盘**（保证持久性）
+> - 2：事务提交时保证写入**操作系统缓存**，但不保证刷盘（只要操作系统不挂，就可以保证持久性）
 
 ### redo 日志刷盘时机
 
 - log buffer 空间不足时
 - 事务提交时
-- 某个脏页刷盘前，要将此脏页前方和自己的所有 redo 日志刷盘
+- 某个脏页刷盘前，要将此脏页对应的 redo 日志刷盘（redo 日志是顺序的，所以如果此脏页最大 lsn 是8，那小于此 lsn 的都会 redo 日志都会刷到文件中）
 - 后台线程，每秒一次将 log buffer 刷盘
 - 正常关闭服务器时
 - 做 checkpoint 时（后面讲）
 
 ### 刷盘过程
 
-刷盘过程是 log buffer 和 磁盘文件的协作，程序需要知道从哪里开始刷盘。
+刷盘过程是 log buffer 和 磁盘文件的协作，程序需要知道从哪里开始刷盘，刷到哪里。
 
-四个全局变量（前两个是记录，后两个是地址）：
+刷到哪里应该是根据 log buffer 和 磁盘文件 是按 block 映射关系刷就行。（没有具体参考，自己推导的）
+
+从哪里开始刷，是由四个全局变量（前两个是记录，后两个是地址）记录：
 
 - `lsn`，用来记录当前写入 log buffer 的 redo log 的日志量。
 - `flushed_to_disk_lsn`，表示已经同步到磁盘的 redo log 的日志量。
 - `buf_free`，当前写到 log buffer 空间的地址。
-- `buf_next_to_write`，当前写到磁盘的 log buffer 空间的地址。
+- `buf_next_to_write`，指示 buf next to write to disk，下一个要写磁盘的 log buffer 空间的地址。
 
 > lsn，log sequence number。
-> log buffer 中 `lsn` 的下一条地址就是 `buf_free`，`flushed_to_disk_lsn` 的位置就是 `buf_next_to_write`
+>
+> log buffer 中 `lsn` 后对应的地址就是 `buf_free`，`flushed_to_disk_lsn` 后对应的地址就是 `buf_next_to_write`
+> 
+> 记录是用来做匹配用的，地址是用来快速定位用的。
 
 刷盘过程就是从 `buf_next_to_write` 处开始刷盘，刷了多少字节记录到 `flushed_to_disk_lsn` 中。
 
