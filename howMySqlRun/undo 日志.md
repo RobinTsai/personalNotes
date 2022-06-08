@@ -82,9 +82,28 @@ Update 要分情况讨论：
 - undo 日志在 undo 页中是紧密排列的，undo 页面是形成链表的；
 - 一个 undo 页面链表形成一组 undo 日志；但还有重用的情况，导致页面链表被多个事务公用了。
 
+- 一个 undo 页面链表对应一个段（一个段对应一个页面链表）；
+- 链表的基节点放在段中首个页的 段Header 中
+
 ## undo 页面重用
 
-略
+条件：
+
+- 链表中只有一个页
+- 页面使用空间不多于 3/4
+
+重用：
+
+- 对于 insert 链表，可以直接覆盖（因为事务提交后就没用了）
+- 对于 update 链表，按组存入后方（每组 undo 日志会有 undo log Header，记录信息）
+
+## 回滚段 
+
+- 一个 Rollback Segment Header 对应一个回滚段；
+- 回滚段中存放许多 undo slot
+- 每一个 undo slot 对应一个 undo 页面链表的头节点
+
+系统一个 128 个回滚段，每个回滚段可支持 1024 个 undo slot，所以系统共支持 128 * 1024 个回滚页面链表。
 
 ## undo 日志与崩溃恢复
 
@@ -95,5 +114,6 @@ Update 要分情况讨论：
 这是就用到 undo 日志进行回滚处理了：
 
 1. 遍历回滚段
-2. 从 UNDO LOG FREGMENT HEADER 中找到 TRX_UNDO_ACTIE（活跃状态的事务）的 TRX_UNDO_STATE 属性
-3. 从 UNDO LOG HEADER 中找到对应 事务 ID 并开始回滚
+2. 遍历回滚段中的 undo slot（非空对应一个 undo 页面链表）
+3. 从页面链表的 UNDO LOG FREGMENT HEADER 中找到 TRX_UNDO_ACTIE（活跃状态的事务）的 TRX_UNDO_STATE 属性
+4. 从 UNDO LOG HEADER 中找到对应 事务 ID 并开始回滚
