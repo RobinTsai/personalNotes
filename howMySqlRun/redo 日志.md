@@ -18,9 +18,12 @@
 
 **redo log 数据**：其中记录了类型、表ID、页号以及数据信息（展开说太复杂了，知道这个就好）。type 类型定义了多种格式，不同类型对应的记录格式不一样。
 
-**redo log 组**：mysql 中一个 MTR （Mini-transaction，一个事务单元、一个原子操作）对应一组 redo 日志，刷盘或恢复时同样是按组进行的。 
+**redo log 组**：mysql 中一个 MTR （Mini-transaction，对**底层操作的**一个原子访问）对应一组 redo 日志，刷盘或恢复时同样是按组进行的。 
 
-**redo 日志缓冲区**（log buffer）：log buffer 是连续的内存空间，被划分为若干个 512K 大小的 block，每个 block 记录了多条 redo log，每次刷盘按 block 为单位进行刷盘（log buffer 是日志文件的映射，所有 block 是日志文件 block 的镜像）。
+> 注意，一个 MTR 是对底层操作的一个原子访问，而不是 mysql 概念的整个事务。
+> 关系：一个mysql 事务由好多语句组成，每个语句可以有多个 MTR，一个 MTR 是一个 redo log 组，每个 MTR 有多个 redo log。
+
+**redo 日志缓冲区**（**log buffer**）：log buffer 是连续的内存空间，被划分为若干个 512K 大小的 block，每个 block 记录了多条 redo log，每次刷盘按 block 为单位进行刷盘（log buffer 是日志文件的映射，所有 block 是日志文件 block 的镜像）。
 
 **redo 日志文件**：redo 日志文件是 log buffer 的映射，分有多个文件，每个文件格式都一样，前 4 个 block 用来存储一些管理信息，后面则是 redo log 数据信息。前 4 个block 依次是 log file header、checkpoint1、无用块、checkpoint2。
 
@@ -56,18 +59,17 @@
 
 ### redo 日志刷盘时机
 
-- log buffer 空间不足时
-- 事务提交时
-- 某个脏页刷盘前，要将此脏页对应的 redo 日志刷盘（redo 日志是顺序的，所以如果此脏页最大 lsn 是8，那小于此 lsn 的都会 redo 日志都会刷到文件中）
-- 后台线程，每秒一次将 log buffer 刷盘
-- 正常关闭服务器时
-- 做 checkpoint 时（后面讲）
+- log buffer 空间不足时。（重用 redo 日志缓存）
+- 事务提交时。（配置）
+- 某个脏页刷盘前，要将此脏页对应的 redo 日志刷盘。
+    > （这点在逻辑上还没相通其必要性，先当作是约定吧。） redo 日志是顺序的，所以如果此脏页最大 lsn 是 8，那小于此 lsn 的都会 redo 日志都会刷到文件中。
+- 后台线程，每秒一次将 log buffer 刷盘。
+- 正常关闭服务器时。
+- 做 checkpoint 时。（后面讲）
 
 ### 刷盘过程
 
-刷盘过程是 log buffer 和 磁盘文件的协作，程序需要知道从哪里开始刷盘，刷到哪里。
-
-刷到哪里应该是根据 log buffer 和 磁盘文件 是按 block 映射关系刷就行。（没有具体参考，自己推导的）
+刷盘过程是 log buffer 和 磁盘文件的协作，程序需要知道从哪里开始刷盘，到哪里结束。
 
 从哪里开始刷，是由四个全局变量（前两个是记录，后两个是地址）记录：
 
@@ -94,7 +96,7 @@ flush 链表中每个节点中存放了两个 lsn 记录：
 - `oldest_moidfication`，记录第一次写此页的 lsn 值
 - `newest_modification`，记录最后一次写此页的 lsn 值
 
-并且 flush 链表是按 **第一次修改时间** （`oldest_modification`）**逆序**排序的。
+并且 flush 链表是按 **第一次修改时间** （等效于 `oldest_modification`）**逆序**排序的。
 
 这两个值和排序信息在用 redo 日志恢复数据时很重要！
 
@@ -153,3 +155,11 @@ redo 日志只用在 崩溃恢复，不用在正常运行过程中用户数据�
 > 如果 flush 链表在 checkpoint 之后刷盘，那在磁盘上存放的此页信息`n_m`、`o_m`，且一定存在关系：`n_m >= o_m > c_l`。
 > 所以磁盘上页记录的区间 `[o_m, n_m]` 表示此区间内的 lsn 记录都已经刷盘了。
 > 即：要恢复此页的数据只需要恢复 lsn > n_m 的写操作就好了。 
+
+
+# 总结
+
+- redo 日志存在的意义
+- redo 日志收集的过程
+- redo 日志刷盘的时机及过程
+- redo 日志恢复的过程
