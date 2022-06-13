@@ -1,4 +1,42 @@
-# go语言设计与实现（上）
+# go语言设计与实现（上） {ignore=true}
+
+
+<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
+
+<!-- code_chunk_output -->
+
+- [编译原理](#编译原理)
+- [数据结构](#数据结构)
+  - [数组](#数组)
+  - [切片](#切片)
+  - [哈希表](#哈希表)
+  - [字符串](#字符串)
+- [语言基础](#语言基础)
+  - [函数调用](#函数调用)
+  - [接口](#接口)
+  - [反射](#反射)
+- [常用关键字](#常用关键字)
+  - [for range](#for-range)
+  - [select](#select)
+  - [defer](#defer)
+  - [panic 和 recover](#panic-和-recover)
+  - [make 和 new](#make-和-new)
+- [并发编程](#并发编程)
+  - [context.Context](#contextcontext)
+  - [锁](#锁)
+    - [互斥锁](#互斥锁)
+    - [读写锁](#读写锁)
+  - [sync.WaitGroup](#syncwaitgroup)
+  - [sync.Once](#synconce)
+  - [sync.Cond](#synccond)
+  - [sync.Map](#syncmap)
+  - [sync.Pool](#syncpool)
+  - [扩展包中的 ErrGroup](#扩展包中的-errgroup)
+  - [扩展包中的 Semaphore](#扩展包中的-semaphore)
+  - [扩展包中的 SingleFlight](#扩展包中的-singleflight)
+
+<!-- /code_chunk_output -->
+
 
 为原书从开头到 6.2 章内容的笔记，同时同步到 [简书：go语言设计与实现（上）](https://www.jianshu.com/p/275b6f3ba7b0)
 
@@ -252,7 +290,7 @@ type _panic struct {
 
 ## 并发编程
 
-### Context
+### context.Context
 
 - Context 让多个协程的终止时间归一。
 
@@ -440,7 +478,7 @@ type RWMutex struct {
 
 > 忽然想到一个疑问点，这样的设计是不是也包含了 读-写-读-写 这样的顺序的锁，支持多少个呢，是不是与 `const rwmutexMaxReaders = 1 << 30` 有关？（待分析）
 
-### WaitGroup
+### sync.WaitGroup
 
 作用：等待一组协程结束，且可以有多个等待者。
 
@@ -481,7 +519,7 @@ func (wg *WaitGroup) Wait()
 - 信号量
 - 计数器 * 2 个
 
-### Once
+### sync.Once
 
 设计思路：
 
@@ -536,7 +574,7 @@ func (o *Once) doSlow(f func()) {
 
 > 源码注释中 `niladic function` 的意思为“没有参数的函数”
 
-### Cond
+### sync.Cond
 
 让多协程任务的开始执行时间可控（按顺序或归一）。（Context 是控制结束时间）
 
@@ -636,6 +674,36 @@ func (c *Cond) Broadcast()   // 广播，让所有的协程都开始执行
 >	c        *hchan // channel
 >}
 >```
+
+
+### sync.Map
+
+> 本节内容不在《go语言设计与实现》中。
+
+> 为了保持了基本类型操作的简洁性，go 团队设计的 map 类型是不支持并发读写的，但同时也提供了一种高效支持并发的 sync.Map 类型。
+
+这里先来讨论一下一般设计思路：map + RWMutex 实现。在这种实现下还有可优化的空间，如：
+
+- 每次读都需要上读锁，上读读的锁定是一个 CAS 的过程，并发下肯定没有不上锁快，而读在并发时不上锁肯定没问题
+- 写的情况下，每次都完整地加写锁阻止了不相干字段的读操作也过于重了，是不是可以分块处理，写时只部分加锁，读先尝试从另一块不加锁的空间读
+
+针于此 sync.Map 就是优化了上述两点，sync.Map 更高效在：
+
+(1) when the entry for a given key is only ever written once but read many times, as in caches that only grow
+(2) when multiple goroutines read, write, and overwrite entries for disjoint sets of keys.
+
+```go
+func (m *Map) Load(key interface{}) (value interface{}, ok bool)
+func (m *Map) Store(key, value interface{})
+func (m *Map) LoadOrStore(key, value interface{})
+func (m *Map) Delete(key interface{}) 
+func (m *Map) LoadAndDelete(key interface{})
+func (m *Map) Range(f func(key, value interface{}) bool)
+```
+
+待续。。。
+
+### sync.Pool
 
 ### 扩展包中的 ErrGroup
 
