@@ -2,7 +2,92 @@
 
 阅读 [grpc-go/helloworld](https://github.com/grpc/grpc-go/tree/master/examples/helloworld) 的源码，看服务是怎么处理程序的。时间及实践关系，先不纠结更深层的。
 
-## Server
+## Client 端部分
+
+通过 protobuf 能生成 XXXClient 接口。接口对应的是实现的方法，如：
+
+```go
+type GreeterClient interface {
+	// Sends a greeting
+	SayHello(ctx context.Context, in *HelloRequest, opts ...grpc.CallOption) (*HelloReply, error)
+}
+```
+
+但 `GreeterClient` 这个接口不够通用，所以用 **嵌入接口** 的方式让 `GreeterClient` 接口实现了更底层的 `grpc.ClientConnInterface` 接口：
+
+```go
+type greeterClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewGreeterClient(cc grpc.ClientConnInterface) GreeterClient {
+	return &greeterClient{cc}
+}
+```
+
+客户端就是通过 `grpc.ClientConnInterface` 的封装进行与服务端访问的
+
+- cc 对象是创建连接时生成的 conn：`conn, err := grpc.DialContext(*addr, opts...)`
+- 访问入口：`c.cc.Invoke(ctx, "/helloworld.Greeter/SayHello", in, out, opts...)`
+
+### grpc.DialContext
+
+`grpc.DialContext` 方法签名：`func DialContext(ctx context.Context, target string, opts ...DialOption) (conn *ClientConn, err error)`
+
+- `DialOptions` 有丰富的类型，在 dialoptions.go 中，可控制
+	- 读/写 buffer 的大小
+	- 初始流窗口的大小
+	- 初始连接窗口的大小
+	- 最大消息体的大小
+	- 设置压缩/解压方式
+	- 设置 ServiceConfig（弃用 opt 方式了，改为 name resolver 方式使用）
+	- 设置拦截器（Unary 的和 Stream 式的）
+	- 是否 block 
+	- 等等
+- target 是个地址，可以是 DNS resolver 地址，用于根据域名解析到真实的服务 IP 地址
+- *此处见下方 Resolver 工作原理*
+- DialContext 根据是否 `WithBlock()` 获取一个连接然后返回。非阻塞式在此时不会获取连接
+- 以上就是 连接 的初始化过程
+
+### Resolver 工作原理
+
+要注意以下几点：
+- 1. 如何从域名找到一个服务地址（连接的服务是多个 IP 映射到同一个 domain 中的）
+- 2. 如果运行过程中连接的服务挂了，如何换另一台机器 IP 连接
+
+- 通过 `DialContext()` 函数传入 target 指定待解析的域名地址
+- 通过 `ParseTarget()` 函数解析 target
+- `cc.getResolver()` 根据 `parsedTarget.Scheme` 获取 resolver.Builder
+	- rb 是通过 `WithResolvers() DialOption` 注册进来的，若没注册会查找内置的 scheme 对应的 rb
+	- Builder 是个接口，包含一个获取 scheme 的 `Scheme` 函数和一个构建 Resolver 的 `Build` 函数
+	- 如有 `dnsBuilder`，能解析配置的固定 IP:port 或 DNS 地址，固有的 IP+port 会返回一个 deadResolver，这里不再考虑
+- `dnsBuilder` 通过 Build 方法构建出一个 Resolver 接口的实例，并且会开启一个 watcher 协程每 30s 更新一次地址
+- `builder.Build()` 解析到的地址会通过 `cc.UpdateState()` 函数存储并更新
+- `cc.UpdateState()` 结束会通过 `updateResolverState()` 触发 `firstResolveEvent` 事件，在 Invoke 的 SendMsg 中会等此事件完成（chan）才发送请求
+
+### c.cc.Invoke
+
+经过拦截器后，会进入 invoke 函数：
+
+```Go
+func invoke(ctx context.Context, method string, req, reply interface{}, cc *ClientConn, opts ...CallOption) error {
+	cs, err := newClientStream(ctx, unaryStreamDesc, cc, method, opts...)
+	if err != nil {
+		return err
+	}
+	if err := cs.SendMsg(req); err != nil {
+		return err
+	}
+	return cs.RecvMsg(reply)
+}
+```
+
+- `newClientStream` 函数会阻塞等待 resolverBuilder 的 `firstResolveEvent` 事件触发
+- ... (会获取一个连接)
+- SendMsg
+- RecvMsg
+
+## Server 端部分
 
 ```go
 // server is used to implement helloworld.GreeterServer.
@@ -60,7 +145,7 @@ type Server struct {
 }
 ```
 
-在上方 `pb.RegisterGreeterServer(s, &server{})` 中注册了 `&server{}` 这个 `&server{}` 即注册服务的一个实例。其上挂着方法 `func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) `
+在上方 `pb.RegisterGreeterServer(s, &server{})` 中注册了 `&server{}`。 这个 `&server{}` 即注册服务的一个实例。其上挂着方法 `func (s *server) SayHello(ctx context.Context, in *pb.HelloRequest) (*pb.HelloReply, error) `
 
 
 请求进来时会进入 `s.serveStreams(st)`，其中有 `st.HandleStreams(func1, func2)` 方法。其中 func1 是包含主要处理程序
@@ -72,7 +157,8 @@ func(stream *transport.Stream) {
     if s.opts.numServerWorkers > 0 {
         data := &serverWorkerData{st: st, wg: &wg, stream: stream}
         select {
-        case s.serverWorkerChannels[atomic.AddUint32(&roundRobinCounter, 1)%s.opts.numServerWorkers] <- data: // 将数据放入固定 worker 池（初始化Server 的时候创建的）中，最后还是调用 s.handleStream()
+        // 将数据放入固定 worker 池（初始化Server 的时候创建的）中，最后还是调用 s.handleStream()
+        case s.serverWorkerChannels[atomic.AddUint32(&roundRobinCounter, 1)%s.opts.numServerWorkers] <- data: 
         default: // worker 中如果已满开户新协程执行
             go func() {
                 s.handleStream(st, stream, s.traceInfo(st, stream))
