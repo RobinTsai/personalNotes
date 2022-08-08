@@ -149,3 +149,9 @@ TODO...
 ## MongoDB
 
 - [MongoDB](./MongoDB/)
+
+---
+
+Markdown 中引入图片的示例
+
+<img src='https://g.gravizo.com/svg?digraph G {label = "";labelloc = "t";Start -> Start [label="EC_Create (EC=ChannelEvt)"];Start -> UserAnswer [label=EC_Answer];Start -> FailEnd [label=EC_Hangup];UserAnswer -> UserAnswer [label=EC_Create];UserAnswer -> Talking [label=EC_Answer];UserAnswer -> FailEnd [label=EC_Hangup];Talking -> SuccEnd [label=FsEvtChannelHangup];}'/>
