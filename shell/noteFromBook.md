@@ -4,17 +4,17 @@ Book Name: Linux命令行与shell脚本编程大全(第3版)
 
 ## command
 
-- `ls` 
+- `ls`
     + `-a`: all
     + `-l`: long info
     + `-F`: classify 分类
     + `-R`: recursion (这个好用，嵌套文件也能找)
 
-- `ln` 
+- `ln`
     + `-s`: 软链
     + 无 `-s`: 硬链，但不可链文件夹，同样是同一个文件，因为inode相同，可用 `ls -i` 查看
 
-- `cat` 
+- `cat`
     + `-n`: 行号
     + `-b`: 空行无行号
     + `-s`: 压缩连续的空行为一个
@@ -69,7 +69,7 @@ Book Name: Linux命令行与shell脚本编程大全(第3版)
     + 3. 作为运行脚本的非交互式 shell
 
 - 1. 默认登陆shell
-    + 五个不同的启动文件入口 
+    + 五个不同的启动文件入口
         * `/etc/profile` 主启动文件, 所有user都会读
         * 1, `~/.bash_profile`; `~/`即 `$HOME/`, 每个用户有自己的 `$HOME`
         * 2, `~/.bash_login`
@@ -94,12 +94,13 @@ Book Name: Linux命令行与shell脚本编程大全(第3版)
 
 ## scripts
 
-- 命令替换: 命令赋值给变量。
-    + 反引号包裹
-    + `$()`包裹
-    + 上两个命令是不一样的。当赋值给变量时，用反引号只将命令赋值，不执行命令。而 `$()`将执行结果赋值
+- 将命令赋值给变量有以下两种方法，都是将执行结果赋值给变量。
+    + 用反引号包裹
+    + 用 `$()` 包裹
 
-- 命令替换会 **创建一个子shell**来运行命令。`./`会创建一个子shell，不加路径时不是子shell
+- 命令替换会 **创建一个子shell**来运行命令
+- `./`会创建一个子shell，不加路径时不是子shell
+- 用 `exec` 命令不会创建子 shell 去执行命令
 - `<<` 叫 **内联输入重定向**,真正的输入其实来自用户，它只是用来标记结束的字符(串)
 
 # Day 4
@@ -127,7 +128,7 @@ Book Name: Linux命令行与shell脚本编程大全(第3版)
         Commands
     elif Command2; then
         Commands
-    else 
+    else
         Commands
     fi
 ```
@@ -153,10 +154,10 @@ Book Name: Linux命令行与shell脚本编程大全(第3版)
 ### Case
 
 ```shell
-case $variable in 
-    pattern1 | pattern2) 
+case $variable in
+    pattern1 | pattern2)
         commands1;;     # can lay it in up one line
-    pattern3) 
+    pattern3)
         commands2
         ;;
     *) commands3;;
@@ -197,7 +198,7 @@ IFS=$IFS.OLD  # restore default value
 
 ```shell
 while Condition          # test or []
-do 
+do
     Commands
 done
 ```
@@ -207,8 +208,8 @@ done
 - 只有在退出状态码为0时终止
 
 ```shell
-until Condition          # test or []. 
-do 
+until Condition          # test or [].
+do
     Commands
 done
 ```
@@ -249,10 +250,10 @@ done
 
 ## 再探重定向
 
-- 文件描述符: 0, 1, 2; 自定义的:3~8 
+- 文件描述符: 0, 1, 2; 自定义的:3~8
     + `0`, STDIN
     + `1`, STDOUT; `1>`, `1>>` 将STDOUT重定向
-    + `2`, STDERR; `2>`, `2>>` 将STDERR重定向; 
+    + `2`, STDERR; `2>`, `2>>` 将STDERR重定向;
     + `cat file 1> file1 2> file2`, 分别重定向
     + `&>`, `&>>`; 将STDOUT和STDERR都重定向到一个文件。(自动地shell认为错误信息优先级高)
     + `>&2`, 改变重定向, 可以将STDOUT导向STDERR.(shell默认将STDERR导向STDOUT)
@@ -273,12 +274,12 @@ done
 outfile='members.sql'       # define output file
 IFS=','                     # redefine seperator ('cause it's from .csv file)
 while read lname fname address city state zip   # read each line into each variable
-do 
+do
     cat >> $outfile << EOF  # each line below as INPUT output to file, and end when EOF
     # the next lines till EOF will be as INPUT (STDIN),
     # so having spaces at front or not is different
 INSERT INTO members (lname,fname,address,city,state,zip) VALUES ('$lname','$fname','$address','$city','$state','$zip')  # $lname is variable, will be replaced
-EOF    # attention, this line must not have space at front. because ' EOF'!='EOF' 
+EOF    # attention, this line must not have space at front. because ' EOF'!='EOF'
 done < ${1}                 # read from $1 parameter (file)
 ```
 
@@ -302,7 +303,7 @@ done < ${1}                 # read from $1 parameter (file)
 - `kill -9 PID`, `-9` 无条件终止
 - `./shell.sh &`, `&` 后台运行脚本, (但此进程还是和当前终端会话连在一起, 终止会话->终止进程)
 - `nohup ./shell.sh &` 阻断SIGHUP信号 (退出终端依旧运行, 输出内容重定向到nohup.out)
-- `trap` 捕获信号 
+- `trap` 捕获信号
 - `jobs -l` 查看作业
 - `bg`, `fg`, 重启作业 (backgroud or frontground)
 - `nice`, `renice`, 调整优先级
@@ -311,14 +312,14 @@ done < ${1}                 # read from $1 parameter (file)
 
 ## function
 
-- 定义 
+- 定义
 
 ```shell
 function NAME {
     COMMANDS
 }
 ```
-or 
+or
 ```shell
 name() {
     COMMANDS
@@ -332,19 +333,19 @@ NAME # no need ()
 ```
 
 - `return` 退出并指定退出状态码 (0~255) (必须是numberic型的)
-- `local`声明的变量作用域是本函数 (果然实践才能发现很多奇怪的问题)
-    + 不要随意用local, 我将自己shell中的变量改成local，出现了很奇怪的现象
-    + 请在shell中试试 `files=$(ls)`和 `local files=$(ls)`.
-        + `local files=$(ls)` 等效于`local files=file1 file2 file3`, 会分别定义 `files=file1`, `file2=''`, `file3=''`, 而 `files=$(ls)`会存成一个变量
-- `return` 和 `exit`的异同：
+- `local` 声明的变量作用域是本函数 (果然实践才能发现很多奇怪的问题）
+    + 不要随意用 local, 我将自己 shell 中的变量改成 local，出现了很奇怪的现象
+    + 请在 shell 中试试 `files=$(ls)` 和 `local files=$(ls)`
+    + `local files=$(ls)` 等效于 `local files=file1 file2 file3`，会分别定义 `files=file1`, `file2=''`, `file3=''`, 而 `files=$(ls)` 才会存成一个变量
+- `return` 和 `exit` 的异同：
     + 都是退出，且返回退出码
-    + `return`仅仅退出函数，而 `exit`可能会退出shell
+    + `return` 仅仅退出函数，而 `exit` 会退出shell
 
 # Day 7
 
 ## Create Lib
 
-- `source` or `.`, Use `source ./shell` or `. ./shell`. 
+- `source` or `.`, Use `source ./shell` or `. ./shell`.
     + `source`与 `./shell.sh` 或 `sh shell.sh`的不同. 用 source是在当前shell中执行，而用另外两种方式其实是在子shell(bash)中进行的,子shell执行完退出后，方法、变量都不能被使用了
     + 但为什么 `source ~/.profile`等一些操作是系统级的呢？当前shell和再开一个shell，它们的关系是兄弟关系啊，肯定是系统对这些文件做了什么
 
@@ -355,15 +356,15 @@ NAME # no need ()
     + ```shell
     PS3='Enter the option:' # attention this
     select x in 'a' 'b' 'c' 'd'
-    do 
-        case $x in 
+    do
+        case $x in
             'a')
                 echo 'You chose A'; break;;
             'b')
                 echo 'You chose B'; break;;
-            'c') 
+            'c')
                 echo 'You chose C'; break;;
-            *) 
+            *)
                 clear
                 echo 'You chose other';;
         esac
