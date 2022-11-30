@@ -38,8 +38,8 @@ func main() {
 			return
 		}
 
-		// go handle(conn)
-		go handle2(conn)
+		go handle(conn)
+		// go handle2(conn)
 	}
 }
 
