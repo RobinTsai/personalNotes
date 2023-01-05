@@ -1,8 +1,32 @@
-Book Name: Linux命令行与shell脚本编程大全(第3版)
+- [《Linux 命令行与 shell 脚本编程大全》](#linux-命令行与-shell-脚本编程大全)
+  - [一些常用命令及参数](#一些常用命令及参数)
+  - [shell 基础](#shell-基础)
+  - [变量](#变量)
+  - [三种启动 shell 的方式](#三种启动-shell-的方式)
+  - [数组变量](#数组变量)
+  - [scripts](#scripts)
+  - [数学运算](#数学运算)
+  - [退出码](#退出码)
+  - [流程控制](#流程控制)
+    - [if-then](#if-then)
+    - [Case](#case)
+    - [For](#for)
+    - [While](#while)
+    - [until](#until)
+    - [break and continue](#break-and-continue)
+  - [用户输入](#用户输入)
+  - [再探重定向](#再探重定向)
+  - [临时文件 `mktemp`](#临时文件-mktemp)
+  - [控制脚本](#控制脚本)
+  - [函数](#函数)
+  - [创建库](#创建库)
+  - [有趣的脚本](#有趣的脚本)
+    - [send msg](#send-msg)
+- [《鸟哥的Linux私房菜》笔记](#鸟哥的linux私房菜笔记)
 
-# Day 1
+# 《Linux 命令行与 shell 脚本编程大全》
 
-## command
+## 一些常用命令及参数
 
 - `ls`
     + `-a`: all
@@ -12,7 +36,7 @@ Book Name: Linux命令行与shell脚本编程大全(第3版)
 
 - `ln`
     + `-s`: 软链
-    + 无 `-s`: 硬链，但不可链文件夹，同样是同一个文件，因为inode相同，可用 `ls -i` 查看
+    + 无 `-s`: 硬链，但不可链文件夹，同样是同一个文件，因为 inode 相同，可用 `ls -i` 查看
 
 - `cat`
     + `-n`: 行号
@@ -33,64 +57,67 @@ Book Name: Linux命令行与shell脚本编程大全(第3版)
 
 - `rm` 不进回收站，所以最好复写
 - `less` > `more`: 比more多了强大的键盘操作
-- `du`: 磁盘命令，可查看所有文件和大小（包括嵌套、隐藏文件）
+- `du`: 查看文件夹所有文件和大小（包括嵌套、隐藏文件）
+    + `--max-depth=1` 最大深度为 1
+    + `-h` 以易读的方式显示文件大小
+- `df -h`: 查看磁盘使用信息
 - `ps`: 只能看当前用户进程
     + `-ef`: 查看所有进程
 - `top`: 查看占用内存情况
 
-## shell
+## shell 基础
 
-- 外部命令：如 `ps`
-- 内部命令：如 `cd`. 以上两个用 `type/which (-a)`试试看，还有 `whereis`
-- `history`: 对应文件 `~/.zsh_history`. 在Terminal注销时，命令会更新到文件中
+- 外部命令（如 `ps`）和内部命令（如 `cd`），可用 `type/which -a` 查看
+- `history` 对应文件 `~/.zsh_history`. 在 Terminal 注销时，命令会更新到文件中
 - `;`: 单行命令的串行执行
-- `()`: 创建子shell执行命令。子shell的成本高，会拖慢速度
+- `()`: 创建子 shell 执行命令。子 shell 的成本高，会拖慢速度
 - `coproc`: 协程，并行方式执行命令
-- `(zsh; zsh; zsh; ps --forest)`分析
+- 示例 `(zsh; zsh; zsh; ps --forest)` 分析
     + 遇见 `(`，创建一个子shell, `)`结束这个子shell
-    + 执行第一个zsh。然而这个时候，已经进入了第一个zsh shell，所以后面的命令没有执行
-    + 当你按`CTRL+D`时，退出第一个zsh shell，执行第二个 zsh
+    + 执行第一个 zsh。这个时候已经进入了第一个 zsh shell，所以后面的命令没有执行
+    + 当你按`CTRL+D`时，退出第一个 zsh shell，执行第二个 zsh，……
     + 所以这个脚本从开始执行，你需要按三次 `CTRL+D`，才能输出命令 `ps --forest`的结果
 
-# Day 2
 
-## 环境变量
+## 变量
 
-- `set` 单独用是查看用户变量，加参数是用来设置shell的执行方式。另外还有 `env`, `printenv` 来查看环境变量。
-- 环境变量的设置要用 `=`，导成全局要用 `export`
-- subshell中修改全局环境变量，仅当前shell中有效，用 `export`覆盖也不行
-- subshell继承的变量只能是父shell导出(`export`)的
-- 一般地，使用变量用 `$`，操作变量不用 `$`，仅 `printenv`例外.如 `unset $my_var`
-    + 注意变量值为带有空格的字符串时，要使用 `"$var"`(带引号)
-- 单个点号加入 `$PATH`变量，执行本目录命令就不用 `./`了。但这样还有其他问题：重启系统后即丢失 => 持久化,即放入 `profile.d/`下的shell中。这关系到下面讲的三种shell不同的启动方式
-- 三种shell不同的启动方式
-    + 1. 登陆时作为默认登录 shell
-    + 2. 作为交互式 shell
-    + 3. 作为运行脚本的非交互式 shell
+- `set` 单独用是查看所有 *用户变量*，加参数是用来设置 shell 的执行方式。另外还有 `env`, `printenv` 来查看环境变量。
+- 环境变量的设置要用 `=`，导成全局要用 `export`，仅当前 shell 中有效
+- subshell 继承的变量只能是父 shell 导出（`export`）的变量
+- 一般地，使用变量用 `$`，修改变量不用前缀 `$`，如 `unset $my_var`，但 `printenv` 例外，用它查看环境变量不用前缀 `$`。
+    + 注意变量值为带有空格的字符串时，要使用引号 `"$var"`
+- 单个点号加入 `$PATH`变量，执行本目录命令就不用 `./`了。但这样还有其他问题：重启系统后即丢失 => 持久化需放入 `/etc/profile.d/` 下的 shell 文件中。这关系到下面讲的三种 shell 不同的启动方式
+-
+## 三种启动 shell 的方式
 
-- 1. 默认登陆shell
+- 登陆时作为默认登录 shell
+- 作为交互式 shell
+- 作为运行脚本的非交互式 shell
+
+<br>
+
+- 1. 非交互式 shell 最简单，就是 shell 直接读取存放在文件中的命令并执行；
+- 2. 交互式 shell
+    + 只运行 `~/.bashrc`文件。如每开一个 bash 就会执行 `~/.bashrc`
+- 3. 登陆 shell，需要用户名、密码登录才能进入的 shell
     + 五个不同的启动文件入口
-        * `/etc/profile` 主启动文件, 所有user都会读
+        * `/etc/profile` 主启动文件, 所有 user 都会读
         * 1, `~/.bash_profile`; `~/`即 `$HOME/`, 每个用户有自己的 `$HOME`
         * 2, `~/.bash_login`
         * 3, `~/.profile`(上面三个有顺序，且只会执行一个)
         * `~/.bashrc` (这个文件可储存 **个人用户永久性变量**)
     + `/etc/profile`，每个帐户登陆时会执行它，可顺此看代码。它主要迭代了所有 `/etc/profile.d/`下的 `.sh`文件
-    +  `$HOME/`下的文件一般只用到其中一到两个，这些文件定义了一些环境变量，并在每次启动bash shell时生效
+    +  `$HOME/` 下的文件一般只用到其中一到两个，这些文件定义了一些环境变量，并在每次启动 bash shell 时生效
 
-- 2. 交互式shell
-    + 只运行 `~/.bashrc`文件。(这就是为何我在这里引入项目build脚本时，每开一个shell都会执行的原因)
-
-- 3. 非交互式shell
+注：一般在首先登录之后，才能继续使用非登录 shell，`exit` 即可退出登录 shell，又可退出非登录 shell；而 `logout` 直接退出登录 shell。
 
 ## 数组变量
 
-- 定义: `myArr=(one two three)`注意:所有的空格有无是严格的
-- 输出所有：`echo ${myArr[*]}`(用 `*`可输出所有)
-- `unset myArr[2]`后，数组其他key->value不会变
+- 括号用于声明数组: `myArr=(one two three)`；注意：空格的有无
+- 输出所有：`echo ${myArr[*]}` （用 `*` 可输出所有）
+- `unset myArr[2]` 后，数组其他 key->value 不会变
 
 
-# Day 3
 
 ## scripts
 
@@ -101,22 +128,21 @@ Book Name: Linux命令行与shell脚本编程大全(第3版)
 - 命令替换会 **创建一个子shell**来运行命令
 - `./`会创建一个子shell，不加路径时不是子shell
 - 用 `exec` 命令不会创建子 shell 去执行命令
-- `<<` 叫 **内联输入重定向**,真正的输入其实来自用户，它只是用来标记结束的字符(串)
+- `<<` 叫 **内联输入重定向**，真正的输入其实来自用户，它只是用来标记结束的字符串
 
-# Day 4
 
-## Mathematics
+## 数学运算
 
-- `expr`不建议使用,弃学
-- `$[]`包裹。仅整数运算。(zsh提供了浮点数运算)
-- `bc` 命令,'bash calculator',支持浮点运算(内置变量 `scale`)
+- `expr` 不建议使用，弃学
+- `$[]`包裹。仅整数运算。（zsh 提供了浮点数运算）
+- `bc` 命令，'bash calculator'，支持浮点运算（内置变量 `scale`）
 
-## Exit Code
+## 退出码
 
-- 变量`$?` ，一个成功的退出应显示为0，否则是个正数值
+- 变量 `$?` ，一个成功的退出应显示为 0，否则是个正数值
 - `exit` 可自定义状态码(0~255)
 
-## Structured Commands
+## 流程控制
 
 ### if-then
 
@@ -219,9 +245,8 @@ done
 - `break N`
 - `continue N`
 
-# Day 5
 
-## User Input
+## 用户输入
 
 - `$0`, shell脚本名
 - `$$`, shell本身的PID
@@ -246,7 +271,6 @@ done
     + 读取文件
         * 技巧： `cat test | while read line ...` (read自动读取下一行)
 
-# Day 6
 
 ## 再探重定向
 
@@ -310,7 +334,7 @@ done < ${1}                 # read from $1 parameter (file)
 - `at` 定时作业 `atq`, `atrm`
 - `cron` 安排定时作业
 
-## function
+## 函数
 
 - 定义
 
@@ -341,17 +365,15 @@ NAME # no need ()
     + 都是退出，且返回退出码
     + `return` 仅仅退出函数，而 `exit` 会退出shell
 
-# Day 7
 
-## Create Lib
+## 创建库
 
-- `source` or `.`, Use `source ./shell` or `. ./shell`.
-    + `source`与 `./shell.sh` 或 `sh shell.sh`的不同. 用 source是在当前shell中执行，而用另外两种方式其实是在子shell(bash)中进行的,子shell执行完退出后，方法、变量都不能被使用了
-    + 但为什么 `source ~/.profile`等一些操作是系统级的呢？当前shell和再开一个shell，它们的关系是兄弟关系啊，肯定是系统对这些文件做了什么
+- 使用 `source` 或 `.`，如 `source ./script.sh` or `. ./script.sh`.
+    + 用 `source` 或 `.` 与单纯执行脚本不同。前者是在当前 shell 中执行脚本，而后者其实是在子 shell 中执行的，子 shell退出后，方法、变量会销毁
+    + 但为什么 `source ~/.profile` 等一些操作是系统级的呢？当前 shell 和再开一个 shell，它们的关系是兄弟关系啊，肯定是系统对这些文件做了什么
 
-# Day 8
 
-- `select` 会在shell中自动生成menu
+- `select` 会在shell中自动生成 menu
 - 例: (You can chose the Number before the menus)
     + ```shell
     PS3='Enter the option:' # attention this
@@ -373,28 +395,25 @@ NAME # no need ()
 
 - `sed`
 
-# Last Day (funny shell)
+## 有趣的脚本
 
-## send msg
+### send msg
 
 - `who` who is online; `who -T` check open 'mesg' or not;
 - `whoami` who am I
 - `mesg` check; `mesg y` open; `mesg n` close;
 - `write user pts/1` open to send msg to 'user pts/1'
 
-<hr>
-
-bookFrom<鸟哥的Linux私房菜>
+# 《鸟哥的Linux私房菜》笔记
 
 找到了可能是他的博客: [link](http://www.cnblogs.com/ningvsban/category/423741.html)
 
-# Day 1
 
 - `cal`: calendar
-- `man`等命令中，用 `/STR`来搜索字符串(向下), `?`是向上, `n`next, `N`last
-- `nl -w N FILE`可带补0的行号输出文件内容
-- `find`比 `whereis/locate`搜文件慢，后者是从数据库中查的
-- 还记得字符串的 **部分裁剪**吗？ `#`, `##`, `%`, `%%`(修改ozsh时用了)
+- `man` 等命令中，用 `/STR`来搜索字符串(向下)，`?`是向上, `n`next，`N`last
+- `nl -w N FILE` 可带补0的行号输出文件内容
+- `find` 比 `whereis/locate` 搜文件慢，后者是从数据库中查的
+- 还记得字符串的 **部分裁剪** 吗？ `#`, `##`, `%`, `%%` （修改ozsh时用了）
     + `#`, `##` 是从左往右
     + `%`, `%%` 是从右往左
     + `#`, `%`, 最短匹配
@@ -415,7 +434,6 @@ bookFrom<鸟哥的Linux私房菜>
     + `=`/ `:=`把旧变量 `OLD_VAR`也变成 `NEW_VALUE`
     + `?`/ `:?` 为空时报出错误, 否则进行赋值
 
-# Day 2
 
 - `ls ./test || mkdir test` 利用的是返回的错误码 `$?`
 - `cut -d CHAR -f NUMBER` **选取命令**和 `grep`功能相似. 这个很有用啊，你可以按每一行固定格式进行解析后显示
@@ -433,7 +451,6 @@ bookFrom<鸟哥的Linux私房菜>
     + `paste` 将两个文件按行以tab分隔联结
     + `expand` [tab]转空格
 
-# Day 3
 
 - `seq [FROM] [STEP] [LAST]`, 生成连续的数字, 这个功能和 for一起使用挺好的
 - `sh [-nvx] script.sh`可用来查询语法
