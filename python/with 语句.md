@@ -33,3 +33,39 @@ def manage_something():
 ...     f.write('hello, world!')
 ...     f.write('bye now')
 ```
+
+## 小技巧
+
+- 可以同时有多个上下文：
+
+```python
+with open('a.txt', 'r') as a, open('b.txt', 'r') as b:
+    print(a.read())
+    print(b.read())
+```
+
+- 可以多次 with 某一个对象：
+
+```python
+class Indenter:
+    def __init__(self):
+        self.level = 0
+
+    def __enter__(self):
+        self.level += 1
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.level -= 1
+
+    def print(self, text):
+        print('   ' * self.level + text)
+
+with Indenter() as indent:
+    indent.print('hi!')
+    with indent:
+        indent.print('hello')
+        with indent:
+            indent.print('bonjour')
+    indent.print('hey')
+```
