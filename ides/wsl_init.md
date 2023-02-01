@@ -312,3 +312,11 @@ windows 的 keymaps 配置文件在 `"~\AppData\Roaming\JetBrains\GoLand2021.2\k
     { "keys": ["ctrl+b"], "command": "toggle_side_bar" },
 ]
 ```
+
+# 注：
+
+## Windows 休眠后 WSL 无法进入
+
+WSL 时常在 Windows 休眠醒来后会有卡住的情况，当前可以通过杀死此进程处理：任务管理器-详细信息-vmwp.exe。它会自动启动起来。
+
+如果重启也不行的话，可以在 启用或关闭 Windows 功能 处 勾选/取消勾选 “适用于 Linux 的 Windows 子系统”（切换就行）然后重启。
