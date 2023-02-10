@@ -30,7 +30,7 @@ rsyslogd 获取到日之后，会把他们输出到特定的日志文件中。�
 ```c
 void syslog(int priority, const char* message, ...); // 打印日志
 // 改变 syslog 的默认输出方式，近一步格式化日志内容
-void openlog(const char* ident, int logopt, int facility); 
+void openlog(const char* ident, int logopt, int facility);
 int setlogmask(int maskpri); // 设置日志级别掩码
 void clostlog(); // 关闭日志
 ```
