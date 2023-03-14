@@ -41,7 +41,7 @@ WiredTiger 由一个块设备管理器模块，用于为 page 分配 block。
 
 ### 内存中的基础数据结构
 
-WiredTiger 会按需将磁盘中的数据以 page 为单位加载到内存，同时在内存中构造出响应的 B-Tree 来存储。
+WiredTiger 会按需将磁盘中的数据以 page 为单位加载到内存，同时在内存中构造出相应的 B-Tree 来存储。
 
 内存中的页
 
