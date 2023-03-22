@@ -3,6 +3,7 @@ alias ccps="cd /usr/local/kylin_cti/current; pwd"
 alias logCcps="cd /var/log/kylin_cti; pwd"
 alias logFs="cd /usr/local/freeswitch/log; pwd"
 alias ll="ls -htrl"
+alias l="ll"
 
 ossBin="echo" # as default
 for name in "oss2mgr-linux" "oss2mgr"
@@ -28,4 +29,13 @@ function ossDownload {
     cmdStr="${ossBin} -cmd down -obj ccps/robincai/${filename} -file ${1}"
     echo ">>> run ${cmdStr}"
     sh -c "${cmdStr}"
+}
+
+function updateSelf {
+    cd /tmp/webuser/robincai
+    curl "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/knife.tar" --output /tmp/webuser/robincai/knife.tar
+    rm -f ./knife.sh
+    tar -zxvf knife.tar
+    rm -f ./knife.tar
+    . ./knife.sh
 }

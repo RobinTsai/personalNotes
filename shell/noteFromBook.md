@@ -254,6 +254,7 @@ done > output.log       # 重定向(非必需)可以写这里
     + `$list` use variables. `list=ele1 ele2 ele3`, `list=$list" ele4"`(字串拼接)
     + `$(cat $file)` 从命令中读. 以上说过`$()`是一种命令替换符
     + `/home/robin/test/*` 用通配符. 这时应该将 `commands1`中所有用到 `$var`的地方用引号括起来(避免空格)
+    + `{1..10}` 表示 1 到 10
 
 ```shell
 IFS.OLD=$IFS  # store default value for restore
