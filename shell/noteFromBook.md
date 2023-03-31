@@ -10,6 +10,7 @@
   - [退出码](#退出码)
   - [流程控制](#流程控制)
     - [if-then](#if-then)
+    - [条件测试](#条件测试)
     - [Case](#case)
     - [For](#for)
     - [While](#while)
@@ -177,7 +178,7 @@
 ## 数学运算
 
 - `expr` 不建议使用，弃学
-- `$[]`包裹。仅整数运算。（zsh 提供了浮点数运算）
+- `$[]`包裹。仅整数运算，如 `a=5; echo $[a-1]`。（zsh 提供了浮点数运算）
 - `bc` 命令，'bash calculator'，支持浮点运算（内置变量 `scale`）
 
 ## 退出码
@@ -189,7 +190,7 @@
 
 ### if-then
 
-- `if-then(-elif-then)(-else)-fi`: `if`后面必须是命令(不是0或非0)，按退出状态码(0表示成功)判断. if的命令后有分号 `;`，可以把 `then`放在同行
+- `if-then(-elif-then)(-else)-fi`: `if` 后面必须是命令（不能是数字），按退出状态码（0 表示成功）判断。if的命令后有分号 `;` 时可以把 `then`放在同行
 
 ```shell
     if Condition
@@ -202,20 +203,24 @@
     fi
 ```
 
-- Condition: `test`和 `[ CONDITION ]`. 用于条件测试(数值、字符串、文件)，可和if一起使用，弥补if缺陷. (注意严格的空格)
-    + `test $var1`,只要变量不为空，都通过（应该是这样）
-    + 数值比较. `[ n1 -eq n2 ]`. `-eq`,`-ge`,`-gt`,`-le`,`-lt`,`-ne`
-    + 字符串比较. `[ str1 = str2 ]`. `=`/ `==`,`!=`,`<`,`>`; `-n str1`（非空）,`-z`（为0）
-        * 未定义的变量用字符串长度测试，输出为0
-        * `>`, `<`在使用时大多情况下要加转义符，否则认为是重定向
-    + 文件比较.
-        * `-d` is directory?
-        * `-e` is existent?
-        * `-f` is a file?
-        * `-r`, `-w`, `-x` is readable/writable/executable
-        * `-s` is empty?
-        * `-nt` is newer than
-        * `-ot` is older than
+### 条件测试
+
+用 `test` 或 `[ CONDITION ]`（严格空格）。用于条件测试（数值、字符串、文件），可和if一起使用。
+
++ `test $var1`，只要变量不为空都通过（应该是这样）
++ 数值比较（注意不能用 > 号等）： `[ n1 -eq n2 ]`. `-eq`,`-ge`,`-gt`,`-le`,`-lt`,`-ne`
++ 字符串比较：`[ str1 = str2 ]`. `=`/`==`（是的，单个 `=` 就可以，zsh 不支持 `==`）,`!=`,`<`,`>`; `-n str1`（非空）,`-z`（为0）
+    * 未定义的变量用字符串长度测试，输出为 0
+    * `>`, `<`在使用时大多情况下要加转义符，否则认为是重定向
++ 文件比较.
+    * `-d` is directory?
+    * `-e` is existent?
+    * `-f` is a file?
+    * `-r`, `-w`, `-x` is readable/writable/executable
+    * `-s` is empty?
+    * `-nt` is newer than
+    * `-ot` is older than
+
 - 复合条件. `&&` and `||`.`[ condition1 ] && [ condition2 ]`.
 - `(( EXPRESSION ))`. 高级 **数学**表达式. 支持 `++`, `--`, `!`, `~`, `**`(幂), `<<`, `>>`, `&`, `|`, `&&`, `||`
 - `[[ EXPRESSION ]]`. 高级 **字符串**表达式. 支持模式匹配 (有些shell可能不支持)

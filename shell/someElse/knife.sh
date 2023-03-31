@@ -2,8 +2,13 @@ alias self="mkdir -p /tmp/webuser/robincai; cd /tmp/webuser/robincai; pwd"
 alias ccps="cd /usr/local/kylin_cti/current; pwd"
 alias logCcps="cd /var/log/kylin_cti; pwd"
 alias logFs="cd /usr/local/freeswitch/log; pwd"
+alias logApigw="cd /var/log/udesk_api_gtw; pwd"
+alias logOpenresty=logApigw
 alias ll="ls -htrl"
 alias l="ll"
+alias psUdesk="ps -ef | grep -v grep | grep udesk"
+alias cdOpenresty="cd /usr/local/openresty; pwd"
+alias grepv="| grep -v grep | grep "
 
 ossBin="echo" # as default
 for name in "oss2mgr-linux" "oss2mgr"
@@ -26,7 +31,7 @@ function ossUpload {
 
 function ossDownload {
     filename=${1##*\/}
-    cmdStr="${ossBin} -cmd down -obj ccps/robincai/${filename} -file ${1}"
+    cmdStr="${ossBin} -cmd down -obj ccps/robincai/${1} -file ${filename}"
     echo ">>> run ${cmdStr}"
     sh -c "${cmdStr}"
 }

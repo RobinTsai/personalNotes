@@ -1,0 +1,43 @@
+# netcat 的使用
+
+- 监听端口： `nc -lp 8080`（只接受一次连接）
+- 安全巨洞：`nc -lp 8080 -e '/bin/sh -i'`（之前可用，现在不可用了）
+- 监听端口允许多次连接需要 openbsd-netcat 版本，gnu-netcat 版本做了修剪
+
+## nc 版本切换
+
+可通过 `whereis nc` 查看本地中 nc。
+
+```sh
+❯ whereis nc
+nc: /bin/nc.traditional /bin/nc.openbsd /bin/nc /usr/share/man/man1/nc.1.gz # 本地存在多个版本
+```
+
+本地应该有多个 cn 版本，如果没有，可能需要安装进一步安装
+
+```sh
+apt-get install -y netcat-traditional
+```
+
+通过定位可见 nc 默认使用的是 nc.traditional 版本：
+
+```sh
+❯ ll /bin/nc
+lrwxrwxrwx 1 root root 20 Jun 24  2019 /bin/nc -> /etc/alternatives/nc
+❯ ll /etc/alternatives/nc*
+lrwxrwxrwx 1 root root 19 Feb  6 17:27 /etc/alternatives/nc -> /bin/nc.traditional # nc 默认使用次版本
+lrwxrwxrwx 1 root root 39 Feb  6 17:27 /etc/alternatives/nc.1.gz -> /usr/share/man/man1/nc.traditional.1.gz
+```
+
+切换版本
+
+```sh
+sudo update-alternatives --config nc
+```
+
+通过 `man nc.openbsd` 可查看具体的使用指导：
+
+- C/S 模型（此 nc 中没有 -e 或 -c 选项，但你仍可以通过创建 fifo 的文件让客户端任意命令）
+- 文件传输
+- 对话
+- 端口扫描（-z 选项使 nc 报告开放的端口，最好加 -v 开启详细信息）
