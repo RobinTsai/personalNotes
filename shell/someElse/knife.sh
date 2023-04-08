@@ -1,9 +1,13 @@
 alias self="mkdir -p /tmp/webuser/robincai; cd /tmp/webuser/robincai; pwd"
 alias ccps="cd /usr/local/kylin_cti/current; pwd"
+alias cdOpenresty="cd /usr/local/openresty"
+alias cdFreeswitch="cd /usr/local/freeswitch/conf"
+
 alias logCcps="cd /var/log/kylin_cti; pwd"
 alias logFs="cd /usr/local/freeswitch/log; pwd"
 alias logApigw="cd /var/log/udesk_api_gtw; pwd"
 alias logOpenresty=logApigw
+
 alias ll="ls -htrl"
 alias l="ll"
 alias psUdesk="ps -ef | grep -v grep | grep udesk"
@@ -37,10 +41,15 @@ function ossDownload {
 }
 
 function updateSelf {
-    cd /tmp/webuser/robincai
+    mkdir -p /tmp/webuser/robincai && cd /tmp/webuser/robincai
     curl "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/knife.tar" --output /tmp/webuser/robincai/knife.tar
     rm -f ./knife.sh
     tar -zxvf knife.tar
     rm -f ./knife.tar
     . ./knife.sh
+}
+
+function tarSelf {
+    ls /tmp/webuser/robincai/knife.sh &&
+    tar -zcf /tmp/webuser/robincai/knife.tar -P /tmp/webuser/robincai/knife.sh
 }
