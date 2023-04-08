@@ -41,15 +41,16 @@ function ossDownload {
 }
 
 function updateSelf {
-    mkdir -p /tmp/webuser/robincai && cd /tmp/webuser/robincai
-    curl "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/knife.tar" --output /tmp/webuser/robincai/knife.tar
-    rm -f ./knife.sh
-    tar -zxvf knife.tar
+    mkdir -p /tmp/webuser/robincai && cd /tmp/webuser/robincai &&
+    curl "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/knife.tar" --output /tmp/webuser/robincai/knife.tar &&
+    rm -f ./knife.sh 2>/dev/null
+    tar -zxvf knife.tar &&
     rm -f ./knife.tar
-    . ./knife.sh
+    . ./knife.sh && echo "Done"
 }
 
 function tarSelf {
-    ls /tmp/webuser/robincai/knife.sh &&
-    tar -zcf /tmp/webuser/robincai/knife.tar -P /tmp/webuser/robincai/knife.sh
+    cur=`pwd`
+    cd /tmp/webuser/robincai/ && tar -zcf knife.tar knife.sh && echo "Done"
+    cd $cur
 }
