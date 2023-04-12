@@ -251,15 +251,17 @@ done > output.log       # 重定向(非必需)可以写这里
 
 - `LIST` can be:
     + `str1 str2 str3` elements seperate by SPACE by default, or use quotes for a sentence as one element
-    + SPACE means 空格，制表符，换行符. 更改 `IFS`的值来更改这个符号.
+    + SPACE 是空格，制表符，换行符. 更改 `IFS`的值来更改这个符号.
         * IFS(Internal Field Separator), 内部字段分割符
         * `IFS=:`
         * `IFS=$'\n'`. 至于为什么用 `$`，自己用到的时候查吧
         * `IFS=$'\n':;`. 指定多种分隔符
-    + `$list` use variables. `list=ele1 ele2 ele3`, `list=$list" ele4"`(字串拼接)
-    + `$(cat $file)` 从命令中读. 以上说过`$()`是一种命令替换符
+    + `$list` use variables. `list="ele1 ele2 ele3"`, `list=$list" ele4"`(字串拼接)
+        + 如果没有按空格迭代（bash 可以，zsh 不可以），可以再用 `echo $list` 表示
+    + `$(cat $file)` 从命令中读。 以上说过`$()`是一种命令替换符
     + `/home/robin/test/*` 用通配符. 这时应该将 `commands1`中所有用到 `$var`的地方用引号括起来(避免空格)
     + `{1..10}` 表示 1 到 10
+    + `$(seq 1 2 10)` 从 1 到 10 步长 2
 
 ```shell
 IFS.OLD=$IFS  # store default value for restore
