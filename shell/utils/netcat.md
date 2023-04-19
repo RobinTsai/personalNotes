@@ -35,6 +35,8 @@ lrwxrwxrwx 1 root root 39 Feb  6 17:27 /etc/alternatives/nc.1.gz -> /usr/share/m
 sudo update-alternatives --config nc
 ```
 
+## 使用指导
+
 通过 `man nc.openbsd` 可查看具体的使用指导：
 
 - C/S 模型（此 nc 中没有 -e 或 -c 选项，但你仍可以通过创建 fifo 的文件让客户端任意命令）
