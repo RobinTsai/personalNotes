@@ -54,3 +54,5 @@ function tarSelf {
     cd /tmp/webuser/robincai/ && tar -zcf knife.tar knife.sh && echo "Done"
     cd $cur
 }
+
+# grep -v '^#' ./conf/slave1/redis.conf | grep -E '[a-zA-Z]'
