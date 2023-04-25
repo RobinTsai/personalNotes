@@ -40,12 +40,42 @@ function ossDownload {
     sh -c "${cmdStr}"
 }
 
+function enableSelf {
+    curShell=`echo $SHELL`
+    curShell=${curShell##*\/}
+    if [ $curShell = "zsh" ]; then
+        shrc="$HOME/.zshrc";
+    elif [ $curShell = "bash" ]; then
+        shrc="$HOME/.bashrc";
+    else
+        return
+    fi
+    exists=`grep -E "robincai=[\"\']\. \/tmp/webuser/robincai/knife.sh" $shrc | wc | awk '{print $1}'`
+    if [ $exists -ge 1 ]; then
+        . $shrc && echo "enabled at $shrc"
+        return
+    fi
+
+    bak=$shrc.bak-`date +%Y%m%d`
+    cp $shrc $bak && echo "backed up at $bak" # backup
+    if [ $? -ne 0 ]; then
+        echo "back up $shrc failed, return enableSelf"
+        return
+    fi
+    sed '/alias\ robincai=/d' $shrc > $shrc.swp # edit and output to $shrc.swp
+    mv $shrc{.swp,}                             # replace
+
+    echo "alias robincai='. /tmp/webuser/robincai/knife.sh'" >> $shrc
+    . $shrc && echo "enabled at $shrc"
+}
+
 function updateSelf {
     mkdir -p /tmp/webuser/robincai && cd /tmp/webuser/robincai &&
     curl "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/knife.tar" --output /tmp/webuser/robincai/knife.tar &&
     rm -f ./knife.sh 2>/dev/null
     tar -zxvf knife.tar &&
     rm -f ./knife.tar
+    enableSelf
     . ./knife.sh && echo "Done"
 }
 
