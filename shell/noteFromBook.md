@@ -280,6 +280,11 @@ do
 done
 ```
 
+```sh
+# 例，从 input 中读每行
+grep -Eo '[0-9]*' a05 | while read line; do; echo got_$line; done;
+```
+
 ### until
 
 - 只有在退出状态码为0时终止
@@ -295,7 +300,6 @@ done
 
 - `break N`
 - `continue N`
-
 
 ## 用户输入
 

@@ -12,7 +12,14 @@ sed，Stream EDitor，命令行式的文本编辑器。
 - 复杂的编辑命令
 - 单次扫描文件，多个编辑命令
 
-注意：sed 只对缓冲区进行编辑，不直接编辑原始文件，所以需要重定向保存更改结果。（疑问，今天的尝试没有啊，Win 环境 Git bash）
+注意：sed 默认只对缓冲区进行编辑，加上 `-i` 后可直接编辑原始文件，这样是危险的，但可以用 `-i[SUFFIX]` 在编辑前备份原文件。（因此 `-i -e` 不能合并成 `-ie`）
+
+```sh
+# sed -i 's/PATTERN/STR/g' FILE           # 将 FILE 中 PATTERN 替换为 STR
+sed -i 's/level.*FindLocation//g' z05.log # 替换字符
+# sed '/PATTERN/d' FILE                   # 删除 FILE 匹配 PATTERN 的行
+sed '/alias\ robincai=/d' testrc          # 删除匹配行
+```
 
 ## 基本用法
 

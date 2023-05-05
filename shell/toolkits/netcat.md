@@ -1,5 +1,10 @@
 # netcat 的使用
 
+```sh
+# 端口扫描，n ip地址 no dns, v verbose, z 不进行 IO 只报告端口是否开放
+nc -nvz 183.20.29.234 1025-65534
+```
+
 - 监听端口： `nc -lp 8080`（只接受一次连接）
 - 安全巨洞：`nc -lp 8080 -e '/bin/sh -i'`（之前可用，现在不可用了）
 - 监听端口允许多次连接需要 openbsd-netcat 版本，gnu-netcat 版本做了修剪
