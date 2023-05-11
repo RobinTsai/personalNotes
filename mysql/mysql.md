@@ -1,9 +1,9 @@
 ## 连接
 
 ```sh
-mysql -uUSERNAME -pPASSWORD -hHOST DB_NAME                      # DB 名直接加即可
-mysql -uUSERNAME --password='WITH_SPECIAL_CHAR_PASSWORD' -hHOST # 特殊符号的密码用参数名的全称，用单引号（双引号有时候不好）
-mysql -uUSERNAME -pPASSWORD -hHOST DB_NAME -e 'MYSQL CMD'       # 执行命令用 -e
+mysql -hHOST -uUSERNAME -pPASSWORD DB_NAME                      # DB 名直接加即可
+mysql -hHOST -uUSERNAME --password='WITH_SPECIAL_CHAR_PASSWORD' # 特殊符号的密码用参数名的全称，用单引号（双引号有时候不好）
+mysql -hHOST -uUSERNAME -pPASSWORD DB_NAME -e 'MYSQL CMD'       # 执行命令用 -e
 mysqldump -h 192.168.2.184 -u root -p password --databases db_name > db_name.sql             # 导出 db_name 数据库
 mysqldump -h 192.168.2.184 -u root -p password --databases db_name users > db_name_users.sql # 导出 db_name 数据库 users 表
 mysqldump --default-character-set=utf8 ... # 指定 utf8 字符集
