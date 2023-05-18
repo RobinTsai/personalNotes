@@ -1,21 +1,22 @@
 # 添加节点操作流程
 
-
 ## ETCD 添加节点执行操作的整体策略
 
 1. 集群中三个 etcd 服务，先上线一个新的 etcd 服务（加入集群并启动成功），然后下线一个旧的，再次重复一次以使三个服务分布到三台机器上。
 2. 两台新机器一个是从机器 sh-xcc1-etcd01 镜像来的，所以可以在两台新机器上 **分别** 用 /usr/local/etcd 下 etcd2、etcd3 目录
 
-
+ --initial-cluster-state new --initial-cluster-token s2-etcd-cluster
 
 ## 预备命令检查信息
 
 依次执行，记录并观察结果：
 
+```sh
 export ETCDCTL_API=3 # 设置变量
-etcdctl --endpoints="http://10.11.54.187:2379,http://10.11.54.187:2389,http://10.11.54.187:2399" member list
-etcdctl --endpoints="http://10.11.54.187:2379,http://10.11.54.187:2389,http://10.11.54.187:2399" endpoint status --write-out=table
-etcdctl --endpoints="http://10.11.54.187:2379,http://10.11.54.187:2389,http://10.11.54.187:2399" endpoint health --write-out=table
+etcdctl --endpoints="http://10.90.88.28:2380,http://10.90.254.41:2380,http://10.90.91.36:2380" member list
+etcdctl --endpoints="http://10.90.88.28:2380,http://10.90.254.41:2380,http://10.90.91.36:2380" endpoint status --write-out=table
+etcdctl --endpoints="http://10.90.88.28:2380,http://10.90.254.41:2380,http://10.90.91.36:2380" endpoint health --write-out=table
+```
 
 获取信息：那个 etcd 是主节点（0921日是 infra1）、另外两个节点的 ID、 PEER_URL 信息
 获取主机 IP 信息： ifconfig eth0
@@ -31,9 +32,12 @@ etcdctl --endpoints="http://10.11.54.187:2389" member add {NEW_NAME} --peer-urls
 ---
 
 查看节点列表、状态（注意 endpoints 的变化）：
+
+```sh
 etcdctl --endpoints="http://10.11.54.187:2379,http://10.11.54.187:2389,http://10.11.54.187:2399" member list
 etcdctl --endpoints="http://10.11.54.187:2379,http://10.11.54.187:2389,http://10.11.54.187:2399" endpoint status --write-out=table
 etcdctl --endpoints="http://10.11.54.187:2379,http://10.11.54.187:2389,http://10.11.54.187:2399" endpoint health --write-out=table
+```
 
 ---
 
@@ -92,3 +96,40 @@ etcdctl --endpoints="http://10.11.54.187:2379,http://10.11.54.187:2389,http://10
 
 下线一个旧 etcd 服务：
 执行命令： etcdctl --endpoints="http://10.11.54.187:2389" member remove <OLD_ID>
+
+## 检查节点命令
+
+```sh
+#!/bin/bash
+ep=`ps -ef | grep etcd | grep -Eo 'advertise-client-urls [^ ]*' | head -n 1 | grep -Eo 'http.*'`
+
+if [[ $ep =~ ^http://[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}:[0-9]{4,5}$ ]]; then
+    echo -e "one endpoint is: $ep"
+else
+    echo "ERR: got endpoint $ep, you can get and set ep by manual"
+    exit 1
+fi
+
+echo "cluster-health"
+sudo docker run --rm registry.cn-hangzhou.aliyuncs.com/udesk-cicd/etcd:3.3.20-v2 /usr/local/bin/etcdctl --endpoints "$ep" cluster-health
+
+memList=`sudo docker run --rm registry.cn-hangzhou.aliyuncs.com/udesk-cicd/etcd:3.3.20-v2 /usr/local/bin/etcdctl --endpoints "$ep" member list`
+echo -e "\nmember list:"
+echo -e "$memList\n"
+
+lineCount=`echo "$memList" | wc -l`
+if [ $lineCount -lt 2 ]; then
+    echo "ERR: etcd member list less than 2, please check the endpoint"
+    exit 1
+fi
+
+eps=`echo $memList | grep -Eo 'client[^ ]* ' | grep -Eo 'http:[^ ]*' | tr '\n' ','`
+eps=${eps%,}
+echo -e "endpoints are: $eps\n"
+
+echo -e "endpoint status:"
+sudo docker run -e ETCDCTL_API=3 --rm registry.cn-hangzhou.aliyuncs.com/udesk-cicd/etcd:3.3.20-v2 /usr/local/bin/etcdctl --endpoints "$eps" endpoint status --write-out=table
+
+echo -e "\nendpoint health:"
+sudo docker run -e ETCDCTL_API=3 --rm registry.cn-hangzhou.aliyuncs.com/udesk-cicd/etcd:3.3.20-v2 /usr/local/bin/etcdctl --endpoints "$eps" endpoint health --write-out=table
+```
