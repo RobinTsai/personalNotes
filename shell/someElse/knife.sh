@@ -12,7 +12,8 @@ alias ll="ls -htrl"
 alias l="ll"
 alias psUdesk="ps -ef | grep -v grep | grep udesk"
 alias cdOpenresty="cd /usr/local/openresty; pwd"
-alias grepv="| grep -v grep | grep "
+alias grepv="grep -v grep | grep "
+alias tarx="tar -zxvf"
 
 ossBin="echo" # as default
 for name in "oss2mgr-linux" "oss2mgr"
@@ -75,8 +76,8 @@ function updateSelf {
     rm -f ./knife.sh 2>/dev/null
     tar -zxvf knife.tar &&
     rm -f ./knife.tar
+    . /tmp/webuser/robincai/knife.sh && echo "Done"
     enableSelf
-    . ./knife.sh && echo "Done"
 }
 
 function tarSelf {

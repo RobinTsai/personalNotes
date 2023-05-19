@@ -3,6 +3,7 @@
   - [shell 基础](#shell-基础)
   - [变量](#变量)
     - [字符串操作](#字符串操作)
+    - [将多行文本变为单行的方法](#将多行文本变为单行的方法)
   - [三种启动 shell 的方式](#三种启动-shell-的方式)
   - [数组变量](#数组变量)
   - [scripts](#scripts)
@@ -25,6 +26,7 @@
   - [有趣的脚本](#有趣的脚本)
     - [send msg](#send-msg)
 - [《鸟哥的Linux私房菜》笔记](#鸟哥的linux私房菜笔记)
+  - [bash 和 zsh 的差别](#bash-和-zsh-的差别)
 
 # 《Linux 命令行与 shell 脚本编程大全》
 
@@ -100,7 +102,7 @@
   - 从左到右删除长匹配 *str：`${varible##*str}`
   - 从左到右删除短匹配 *str：`${varible#*str}`
   - 从右向左删除长匹配 str*：`${varible%%str*}`
-  - 从右向左删除短匹配str*：`${varible%str*}`
+  - 从右向左删除短匹配 str*：`${varible%str*}`
 - 按下标读取：
   - `${varible:START}`，从下表 START 始，截取到最后（下标从 0 开始计数）
   - `${varible:START:LEN}`，从下表 START 始，长度为 LEN
@@ -123,7 +125,7 @@
   - 后缀匹配替换：`${string/%substring/replacement}`
 - 比较
   - 规则：可以用通配，放在 `[[ ` 和 ` ]]` 中间，要用空格
-  - `[[ "a.txt" == a* ]]`        # 逻辑真 (pattern matching)
+  - `[[ "a.txt" == a* ]]`        # 逻辑真 (pattern matching，注意正则没有引号)
   - `[[ "a.txt" =~ .*\.txt ]]`   # 逻辑真 (regex matching)
 - 获取匹配的字符串
   - 这需要用到 `expr match`
@@ -131,6 +133,13 @@
   - `expr $string : '\([a-c]*[0-9]\)'`
   - `expr $string : '.*\([0-9][0-9][0-9]\)'` // 只显示括号中匹配的内容
 
+### 将多行文本变为单行的方法
+
+三种方式（以下示例用逗号拼接）：
+
+- 用 `sed`：`echo "$multi_line_str" | sed ':a;N;$!ba;s/\n/,/g'`
+- 用 `tr`：`echo "$multi_line_str" | tr '\n' ','` （注意删除最后一个逗号）
+- 转为数组 ```IFS=$'\n' clientUrls=(`echo $clientUrls`);```，再用 for 循环拼接字符串到变量
 
 ## 三种启动 shell 的方式
 
@@ -160,7 +169,12 @@
 - 括号用于声明数组: `myArr=(one two three)`；注意：空格的有无
 - 输出所有：`echo ${myArr[*]}` （用 `*` 可输出所有）
 - `unset myArr[2]` 后，数组其他 key->value 不会变
-
+- TODO：带空格的文本被认为是一个变量怎么处理
+- 多行的文本变更为数组：
+    - bash 可用 readarray，但 zsh 无法用
+    - 使用 IFS 变量，`IFS=$'\n' my_array=($(echo $lines_txt))`
+    - 使用 IFS 变量，```IFS=$'\n' my_array=(`echo $lines_txt`)```
+    - 注意备份 IFS ，`IFS_OLD=$IFS; IFS=$'\n' my_array=($(echo $lines_txt)); IFS=$IFS_OLD`
 
 
 ## scripts
@@ -169,8 +183,8 @@
     + 用反引号包裹
     + 用 `$()` 包裹
 
-- 命令替换会 **创建一个子shell**来运行命令
-- `./`会创建一个子shell，不加路径时不是子shell
+- 命令替换会 **创建一个子shell** 来运行命令
+- `./` 会创建一个子shell，不加路径时不是子shell
 - 用 `exec` 命令不会创建子 shell 去执行命令
 - `<<` 叫 **内联输入重定向**，真正的输入其实来自用户，它只是用来标记结束的字符串
 
@@ -190,7 +204,7 @@
 
 ### if-then
 
-- `if-then(-elif-then)(-else)-fi`: `if` 后面必须是命令（不能是数字），按退出状态码（0 表示成功）判断。if的命令后有分号 `;` 时可以把 `then`放在同行
+- `if-then(-elif-then)(-else)-fi`：`if` 后面必须是命令（不能是数字），按退出状态码（0 表示成功）判断。if的命令后有分号 `;` 时可以把 `then`放在同行
 
 ```shell
     if Condition
@@ -212,7 +226,7 @@
 + 字符串比较：`[ str1 = str2 ]`. `=`/`==`（是的，单个 `=` 就可以，zsh 不支持 `==`）,`!=`,`<`,`>`; `-n str1`（非空）,`-z`（为0）
     * 未定义的变量用字符串长度测试，输出为 0
     * `>`, `<`在使用时大多情况下要加转义符，否则认为是重定向
-+ 文件比较.
++ 文件比较
     * `-d` is directory?
     * `-e` is existent?
     * `-f` is a file?
@@ -221,7 +235,9 @@
     * `-nt` is newer than
     * `-ot` is older than
 
-- 复合条件. `&&` and `||`.`[ condition1 ] && [ condition2 ]`.
+- 复合条件： `&&`、`||`、`!`，`[ condition1 ] && [ condition2 ]`，示例：
+    - `if [ $num1 -gt 5 ] && [ $num2 -lt 50 ]; then`
+    - `if ! [ $num1 -eq $num2 ]; then`
 - `(( EXPRESSION ))`. 高级 **数学**表达式. 支持 `++`, `--`, `!`, `~`, `**`(幂), `<<`, `>>`, `&`, `|`, `&&`, `||`
 - `[[ EXPRESSION ]]`. 高级 **字符串**表达式. 支持模式匹配 (有些shell可能不支持)
 
@@ -263,10 +279,13 @@ done > output.log       # 重定向(非必需)可以写这里
     + `{1..10}` 表示 1 到 10
     + `$(seq 1 2 10)` 从 1 到 10 步长 2
 
+- for 中将多行的字符串转换为数组（或单行用空格分割）的方法：
+    - `IFS_OLD=$IFS; IFS=$'\n' my_array=($(echo $lines_txt)); IFS=$IFS_OLD`
+
 ```shell
-IFS.OLD=$IFS  # store default value for restore
-IFS=$'\n'     # set customized value
-IFS=$IFS.OLD  # restore default value
+IFS_OLD=$IFS  # backup old IFS
+IFS=$'\n'     # set new IFS
+IFS=$IFS_OLD  # restore old IFS
 ```
 
 - For as C lang `for (( i = 1; i <= 10; i++ ))`
@@ -512,3 +531,11 @@ NAME # no need ()
     + `-n`, 不执行script, 只查询语法问题
     + `-v`, 执行前先输出script内容
     + `-x`, 执行的过程(包含代码)全列出来
+
+## bash 和 zsh 的差别
+
+- `echo` 在 `zsh` 中默认使用了 `-e` 参数，在 `bash` 中没有，所以在 `bash` 中要输出换行，记得加 `-e`
+- `#!/bin/bash` 一定要在行首，前面也不能有空行。否则会用 `/bin/sh` 解释器运行脚本，语法不同会发生异常
+- 此外，对于没有可执行权限的 `.sh` 文件，它的运行默认也会是 `/bin/sh`（不论是否加正确 `#!/bin/bash`）
+- 用 `sh ./xx.sh` 时，实际是在当前 Shell 环境启动了一个新的 Shell 进程直接读取内容并执行
+- `chmod +x xx.sh; ./xx.sh` 运行可以按 `xx.sh` 内 shebang 指定的解释器运行，这种方式比 `sh xx.sh` 更安全
