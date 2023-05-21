@@ -11,6 +11,7 @@ alias logOpenresty=logApigw
 alias ll="ls -htrl"
 alias l="ll"
 alias psUdesk="ps -ef | grep -v grep | grep udesk"
+alias pseo="ps -eo lstart,cmd"
 alias cdOpenresty="cd /usr/local/openresty; pwd"
 alias grepv="grep -v grep | grep "
 alias tarx="tar -zxvf"
