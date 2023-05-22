@@ -28,3 +28,17 @@ docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 \
 mysql -uroot -p123456                          # 在 docker 内连接
 source /var/lib/mysql/udesk_phone_location.sql # 在 mysql 交互页中执行导入
 ```
+
+## 高级
+
+```sh
+# 使用 prepare
+PREPARE stmt1 from "select agent_id,id,ready_at from agents where ready_at> ? limit 1;";
+SET @pc = '2023-05-10';
+EXECUTE stmt1 USING @pc;
+DEALLOCATE PREPARE stmt1;
+# 查看当前状态：准备语句 的个数
+SHOW GLOBAL STATUS LIKE 'Prepared_stmt_count';
+# 查看 mysql 准备语句 最大配置数
+SHOW VARIABLES LIKE 'max_prepared_stmt_count';
+```
