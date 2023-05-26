@@ -1,9 +1,9 @@
 # group and count by match
 
 ```sh
-awk '
-{
-    group_key=$1;
+input_file=""
+awk '{
+    group_key=substr($1,1,3);
 
     # 如果尚未处理该分组，请将其初始化为 0
     if (!group_total[group_key]) {
@@ -19,7 +19,7 @@ END {
     for (group_key in group_total) {
         print group_key, group_total[group_key];
     }
-}' input_file
+}' $input_file | sort
 ```
 
 思路：
