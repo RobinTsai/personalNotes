@@ -41,4 +41,7 @@ DEALLOCATE PREPARE stmt1;
 SHOW GLOBAL STATUS LIKE 'Prepared_stmt_count';
 # 查看 mysql 准备语句 最大配置数
 SHOW VARIABLES LIKE 'max_prepared_stmt_count';
+
+# 设置 max_prepared_stmt_count （默认 16382）
+SET GLOBAL max_prepared_stmt_count = 16382;
 ```
