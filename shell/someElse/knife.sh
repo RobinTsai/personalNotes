@@ -97,9 +97,12 @@ function ossPushSelf {
 
 # ------------- cti 日志相关 ------------
 
-function grepCtiIvr { # 过滤 ivr 相关消息
+function grep_cti_ivr { # 过滤 ivr 相关消息
     grep 'callworker.publishAppMsg' "$1"  | sed 's/.*"_time":"//g' | sed 's/","msg":"publishAppMsg success://g' | sed 's/appID.*//g'
 }
-function grepCtiAcd { # 过滤和 acd 的交互
+function grep_cti_acd { # 过滤和 acd 的交互
     sed '/acd.sendHttp/{s/.*_time":"//g;s/\+08:00.*method://g;s/, url://g;s/, params://g;s/\?.*$//g;s/, body.*$//gp}' -n "$1"
+}
+function grep_tower_call {
+    grep 'Method' "$1" | sed -e 's/.*_time":"//g' -e 's/+08:00".*Method\\":\\"/ /g' -e 's/\\",.*//g' | awk '{printf "%s\t%s\n",$1, $2}'
 }
