@@ -79,7 +79,7 @@ function enableSelf {
 function updateSelf {
     mkdir -p /tmp/webuser/robincai && cd /tmp/webuser/robincai &&
     curl "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/knife.tar" --output /tmp/webuser/robincai/knife.tar &&
-    rm -f ./knife.sh 2>/dev/null
+    mv ./knife{,.bak}.sh 2>/dev/null
     tar -zxvf knife.tar &&
     rm -f ./knife.tar
     . /tmp/webuser/robincai/knife.sh && echo "Done"
