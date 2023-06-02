@@ -28,6 +28,11 @@ done
 
 echo "oss bin is ${ossBin}"
 
+function whoAmi {
+    1=`uname -a | awk '{print $2 }'`; 2=`ifconfig eth0| awk '/inet /{print $2 }'`; 3=`curl cip.cc -s | awk '/IP/{print $3}'`
+    echo $1 $2 $3
+}
+
 function ossUpload {
     filename=${1##*\/}
     cmdStr="${ossBin} -cmd up -obj ccps/robincai/${filename} -file ${1}"
@@ -81,10 +86,20 @@ function updateSelf {
     enableSelf
 }
 
-function tarSelf {
+function ossPushSelf {
     cur=`pwd`
-    cd /tmp/webuser/robincai/ && tar -zcf knife.tar knife.sh && echo "Done"
+    cd /tmp/webuser/robincai/ && tar -zcf knife.tar knife.sh && echo "tar done"
+    cmdStr="${ossBin} -cmd up -obj ccps/robincai/bak/knife.tar -file knife.tar"
+    echo ">>> run ${cmdStr}"
+    sh -c "${cmdStr}"
     cd $cur
 }
 
-# grep -v '^#' ./conf/slave1/redis.conf | grep -E '[a-zA-Z]'
+# ------------- cti 日志相关 ------------
+
+function grepCtiIvr { # 过滤 ivr 相关消息
+    grep 'callworker.publishAppMsg' "$1"  | sed 's/.*"_time":"//g' | sed 's/","msg":"publishAppMsg success://g' | sed 's/appID.*//g'
+}
+function grepCtiAcd { # 过滤和 acd 的交互
+    sed '/acd.sendHttp/{s/.*_time":"//g;s/\+08:00.*method://g;s/, url://g;s/, params://g;s/\?.*$//g;s/, body.*$//gp}' -n "$1"
+}
