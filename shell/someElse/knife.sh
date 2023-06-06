@@ -33,6 +33,15 @@ function whoAmi {
     echo -e "$a\t$b\t$c"
 }
 
+function whois {
+    res=`curl -s "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/4.0_prod_host.md" | grep "$1"`
+    if [[ ${res} > "  " ]]; then
+        echo $res
+        return
+    fi
+    curl -s "cip.cc/$1" | head -3
+}
+
 function ossUpload {
     filename=${1##*\/}
     cmdStr="${ossBin} -cmd up -obj ccps/robincai/${filename} -file ${1}"
