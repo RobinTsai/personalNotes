@@ -20,6 +20,29 @@ END {
         print group_key, group_total[group_key];
     }
 }' $input_file | sort
+
+
+
+awk 'BEGIN {
+    group_total["InvalidChar"] = 0;
+    group_total["TokenWrong"] = 0;
+}
+
+{
+    if ($0 ~ /looking for beginning of value/) {
+        group_total["InvalidChar"] += 1;
+    } else if ($0 ~ /Connect Token Wrong/) {
+        group_total["TokenWrong"] += 1;
+    } else {
+        group_total["else"] += 1;
+    }
+}
+
+END {
+    for (group_key in group_total) {
+        print group_key, group_total[group_key];
+    }
+}' tower-err-3w.log
 ```
 
 思路：
