@@ -29,7 +29,7 @@ done
 echo "oss bin is ${ossBin}"
 
 function whoAmi {
-    a=`uname -a | awk '{print $2 }'`; b=`ifconfig eth0| awk '/inet /{print $2 }'`; c=`curl cip.cc -s | awk '/IP/{print $3}'`
+    a=`uname -a | awk '{print $2 }'`; b=`ifconfig eth0| awk '/inet /{print $2 }' | grep -Eo "[0-9.]*"`; c=`curl cip.cc -s | awk '/IP/{print $3}'`
     echo -e "$a\t$b\t$c"
 }
 
