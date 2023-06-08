@@ -116,5 +116,9 @@ function grep_cti_acd { # 过滤和 acd 的交互
 function grep_tower_call {
     grep 'Method' "$1" | sed -e 's/.*_time":"//g' -e 's/+08:00".*Method\\":\\"/ /g' -e 's/\\",.*//g' | awk '{printf "%s\t%s\n",$1, $2}'
 }
+function grep_cti_http {
+    sed '/BasicAuthMiddleware.*URL Info/{s/.*_time\":\"//g; s/\+08:00.*URL Info: / /g; s/\?.*//g; s/\// \//; p}' "$callLog" -n |
+    awk '{printf "%s\t%s\t%s\n",$1,$2,$3}'
+}
 # TODO：坐席状态变化的日志
 # TODO: cti 中有 acd 调过来的日志，这个也需要记在 acd 中
