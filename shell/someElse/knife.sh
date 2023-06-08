@@ -123,4 +123,8 @@ function grep_cti_http {
 function grep_cti_channel_id {
     grep -Eo 'channel_[0-9]_id":"[^"]*"' "$1" | sed '{s/.*://g;s/"//g}' | sort -u
 }
+function grep_cti_fs_event {
+    sed '/Event\]\[Received/{s/.*_time\":\"//g; s/\+08:00.*\] / /g;s/\\n.*//g;p}' $callLog  -n  |
+    awk '{printf "%s\t%s\n",$1,$2}'
+}
 # TODO：坐席状态变化的日志
