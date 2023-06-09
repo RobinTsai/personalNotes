@@ -15,6 +15,9 @@ alias pseo="ps -eo lstart,cmd"
 alias cdOpenresty="cd /usr/local/openresty; pwd"
 alias grepv="grep -v grep | grep "
 alias tarx="tar -zxvf"
+alias loadRecord=". /tmp/webuser/robincai/record"
+alias clearRecord="echo > /tmp/webuser/robincai/record"
+alias catRecord="cat /tmp/webuser/robincai/record"
 
 ossBin="echo" # as default
 for name in "oss2mgr-linux" "oss2mgr"
@@ -126,5 +129,8 @@ function grep_cti_channel_id {
 function grep_cti_fs_event {
     sed '/Event\]\[Received/{s/.*_time\":\"//g; s/\+08:00.*\] / /g;s/\\n.*//g;p}' $callLog  -n  |
     awk '{printf "%s\t%s\n",$1,$2}'
+}
+function rec {
+    echo "$@" >> /tmp/webuser/robincai/record
 }
 # TODO：坐席状态变化的日志
