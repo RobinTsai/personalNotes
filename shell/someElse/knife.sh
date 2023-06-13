@@ -144,7 +144,7 @@ function gen_monitor_sql {
         return
     fi
 
-    sed '/\[udesk_monitor\]/,/\[/{s/[ ]*=[ ]*/=/gp}' "$config_file" -n | awk '
+    sed '/\[udesk_monitor\]/,/\[/{s/#.*//g; s/ *= */=/gp}' "$config_file" -n | awk '
         { m[substr($0, 0, index($0, "="))]=substr($0, index($0, "=")+1) }
         END { printf "mysql -h%s -p%d -u%s -p%s -D%s\n", m["mysql_host"], m["mysql_port"], m["mysql_user"], m["mysql_password"], m["mysql_db_name"] }
     '
