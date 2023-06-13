@@ -133,4 +133,20 @@ function grep_cti_fs_event {
 function rec {
     echo "$@" >> /tmp/webuser/robincai/record
 }
+function gen_monitor_sql {
+    config_file=$1
+    if [[ $config_file < "    " ]]; then
+        config_file="/usr/local/kylin_cti/current/config/cti.toml"
+    fi
+
+    if ! [ -e $config_file ]; then
+        echo "file not exists: $config_file"
+        return
+    fi
+
+    sed '/\[udesk_monitor\]/,/\[/{s/[ ]*=[ ]*/=/gp}' "$config_file" -n | awk '
+        { m[substr($0, 0, index($0, "="))]=substr($0, index($0, "=")+1) }
+        END { printf "mysql -h%s -p%d -u%s -p%s -D%s\n", m["mysql_host"], m["mysql_port"], m["mysql_user"], m["mysql_password"], m["mysql_db_name"] }
+    '
+}
 # TODO：坐席状态变化的日志
