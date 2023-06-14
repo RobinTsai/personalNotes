@@ -185,7 +185,7 @@ function gen_sql_monitor {
         END { printf "mysql -h%s -p%d -u%s -p%s -D%s\n", m["mysql_host"], m["mysql_port"], m["mysql_user"], m["mysql_password"], m["mysql_db_name"] }
     '
 }
-function gen_redis_sentinel {
+function gen_redis_conn {
     local sec_conf=`read_toml_section "redis"`
     local template=`echo $sec_conf | awk '
         { m[substr($0, 1, index($0, "=")-1)]=substr($0, index($0, "=")+1) }
