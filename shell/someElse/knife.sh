@@ -133,20 +133,64 @@ function grep_cti_fs_event {
 function rec {
     echo "$@" >> /tmp/webuser/robincai/record
 }
-function gen_monitor_sql {
-    config_file=$1
-    if [[ $config_file < "    " ]]; then
+# TODO：坐席状态变化的日志
+
+TMP_TOML_FILE="/tmp/webuser/robincai/tmp.toml"
+
+# format_cti_toml 格式化 toml 并复制到文件 $TMP_TOML_FILE
+# input : toml_cnf_file output_file
+function format_cti_toml {
+    mkdir -p /tmp/webuser/robincai
+    echo > $TMP_TOML_FILE
+
+    local config_file=$1
+    if [[ "$config_file" < "    " ]]; then
         config_file="/usr/local/kylin_cti/current/config/cti.toml"
     fi
-
-    if ! [ -e $config_file ]; then
+    if ! [ -e "$config_file" ]; then
         echo "file not exists: $config_file"
         return
     fi
 
-    sed '/\[udesk_monitor\]/,/\[/{s/ # .*//g; s/ *= */=/gp}' "$config_file" -n | awk '
+    # 删除行前空格
+    # 移除注释（`#` 为行开头或 `#` 前后有空格的就当作注释符，可能不全，但不再进一步处理）
+    # 删除行末空格
+    # 删除空行
+    # 移除 `=` 前后空格
+    cat "$config_file" | sed 's/^ *//g; /^#.*/d; s/ #.*$//g; s/# .*//g; s/ *$//g; /^$/d; s/ *= */=/g' > "$TMP_TOML_FILE"
+}
+
+# input : toml_cfg_file section
+# output: senction内容（不包含 section）
+function read_toml_section {
+    local confFile=$1
+    local section=$2
+    if [ "$#" = 1 ]; then
+        confFile=""
+        section=$1
+    fi
+
+    format_cti_toml $confFile
+    sed "/^\[$section\]$/,/^\[.*\]$/p" "$TMP_TOML_FILE" -n # 只输出当前 section 中的内容（不包含 section）
+}
+function gen_sql_base {
+    read_toml_section "mysql" | awk '
+        { m[substr($0, 1, index($0, "=")-1)]=substr($0, index($0, "=")+1) }
+        END { printf "mysql -h%s -p%d -u%s -p%s -D%s\n", m["host"], m["port"], m["user"], m["password"], m["db_name"] }
+    '
+}
+function gen_sql_monitor {
+    read_toml_section "udesk_monitor" | awk '
         { m[substr($0, 1, index($0, "=")-1)]=substr($0, index($0, "=")+1) }
         END { printf "mysql -h%s -p%d -u%s -p%s -D%s\n", m["mysql_host"], m["mysql_port"], m["mysql_user"], m["mysql_password"], m["mysql_db_name"] }
     '
 }
-# TODO：坐席状态变化的日志
+function gen_redis_sentinel {
+    local sec_conf=`read_toml_section "redis"`
+    local template=`echo $sec_conf | awk '
+        { m[substr($0, 1, index($0, "=")-1)]=substr($0, index($0, "=")+1) }
+        END { printf "redis-cli -h %s -a %s --no-auth-warning\n", "HOSTPORT", m["password"] }
+    '`
+    echo $sec_conf | grep '^sentinel_addresses=' | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}:[0-9]{4,5}' | # 筛选出多个 sentinel HOSTPORT (IP:PORT)
+    awk -v tpl=$template '{ gsub(":", " -p " ,$0); gsub("HOSTPORT", $0 ,tpl); print tpl }'
+}
