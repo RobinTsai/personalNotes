@@ -198,6 +198,7 @@ function gen_redis_conn {
 
     conn_cmd=`echo $sentinels | grep '' -m 1`
     info_sentinel_cmd="$conn_cmd info sentinel"
+    # 连到 sentinel 并查到 master 连接命令（密码可能不对，因为用的 sentinel 的）
     eval $info_sentinel_cmd | grep -E '^master[0-9]' | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}:[0-9]{4,5}' |
     awk -v tpl=$template 'BEGIN {print "[master conn]"} { gsub(":", " -p " ,$0); gsub("HOSTPORT", $0, tpl); print tpl }'
 }
