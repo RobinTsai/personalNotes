@@ -58,7 +58,21 @@ function ossDownload {
     echo ">>> run ${cmdStr}"
     sh -c "${cmdStr}"
 }
+function downloadBak {
+    local supported=" easy-deploy.tar etcd-chk.tar oss2mgr-linux.zip etcd-chk.tar ";
+    local help="only support:$supported"
+    if [ ${#1} -eq 0 ]; then
+        echo $help
+        return
+    fi
 
+    local filename="$1"
+    if [ "${#filename}" -gt 0 ] && [[ $supported =~ " $filename " ]]; then
+        curl "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/$filename" --output /tmp/webuser/robincai/bak_$filename
+        return
+    fi
+    echo $help
+}
 function enableSelf {
     curShell=`echo $SHELL`
     curShell=${curShell##*\/}

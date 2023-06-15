@@ -99,7 +99,7 @@
 
 ### 字符串操作
 
-- 取长度：`{#var}`
+- 取长度：`${#var}`
 - 按匹配删除：
   - 规则：`#` 从左到右、`%` 从右到左、两个按最长、一个按最短、`*` 只是通配
   - 从左到右删除长匹配 *str：`${varible##*str}`
@@ -178,12 +178,19 @@
     - 使用 IFS 变量，`IFS=$'\n' my_array=($(echo $lines_txt))`
     - 使用 IFS 变量，```IFS=$'\n' my_array=(`echo $lines_txt`)```
     - 注意备份 IFS ，`IFS_OLD=$IFS; IFS=$'\n' my_array=($(echo $lines_txt)); IFS=$IFS_OLD`
+- 关联数组
 
+```sh
+declare -A supported            # 定义
+supported[easy-deploy.tar]=1    # 注意 key 不能有引号
+echo ${supported[etcd-chk.tar]} # 注意使用时一定要用 ${}
+# zsh histchars 会让 ! 意义变化导致 ${!supported[@]} 无法正常工作（获取关联数组的 key）
+```
 
 ## scripts
 
 - 将命令赋值给变量有以下两种方法，都是将执行结果赋值给变量。
-    + 用反引号包裹
+    + 用 `反引号` 包裹
     + 用 `$()` 包裹
 - 在脚本中使用字符串拼接命令，如果内部有引号，则默认会进行转义，如果执行失败可以用 `eval $cmd_str` 来执行
 - 命令替换会 **创建一个子shell** 来运行命令
