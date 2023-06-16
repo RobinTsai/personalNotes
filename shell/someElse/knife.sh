@@ -103,8 +103,11 @@ function enableSelf {
 }
 
 function updateSelf {
-    mkdir -p /tmp/webuser/robincai && cd /tmp/webuser/robincai &&
-    curl "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/knife.tar" --output /tmp/webuser/robincai/knife.tar &&
+    cmd='curl "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/knife.tar" --output /tmp/webuser/robincai/knife.tar'
+    if [ $1 = "wget" ]; then
+        cmd='wget "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/knife.tar" -O /tmp/webuser/robincai/knife.tar '
+    fi
+    mkdir -p /tmp/webuser/robincai && cd /tmp/webuser/robincai && eval "${cmd}" &&
     mv ./knife{,.bak}.sh 2>/dev/null
     tar -zxvf knife.tar &&
     rm -f ./knife.tar
