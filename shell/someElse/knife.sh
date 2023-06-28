@@ -133,19 +133,22 @@ function grep_cti_acd { # 过滤和 acd 的交互
      sed -e '/acd.sendHttp.*sendHttp, method: .*:5001/{s/.*_time":"/acd.sendHttp/g;s/\+08:00.*method://g;s/, url://g;s/, params://g;s/\?.*$//g;s/, body.*$//g; /\/asr/d; s/acd.sendHttp//gp}' -n "$1" |
      awk '{ printf "%s\t%s\t%s\t%s\n",$1,$2,$3,$4}'
 }
-function grep_tower_call {
+function grep_tower_events {
     grep 'Method' "$1" | sed -e 's/.*_time":"//g' -e 's/+08:00".*Method\\":\\"/ /g' -e 's/\\",.*//g' | awk '{printf "%s\t%s\n",$1, $2}'
 }
 function grep_cti_http {
     sed '/BasicAuthMiddleware.*URL Info/{s/.*_time\":\"//g; s/\+08:00.*URL Info: / /g; s/\?.*//g; s/\// \//; p}' "$1" -n |
     awk '{printf "%s\t%s\t%s\n",$1,$2,$3}'
 }
-function grep_cti_channel_id {
+function grep_cti_channels { # 查看 channelIDs
     grep -Eo 'channel_[0-9]_id":"[^"]*"' "$1" | sed '{s/.*://g;s/"//g}' | sort -u
 }
-function grep_cti_fs_event {
-    sed '/Event\]\[Received/{s/.*_time\":\"//g; s/\+08:00.*\] / /g;s/\\n.*//g;p}' $callLog  -n  |
+function grep_cti_fs_event { # 过滤 fs 事件
+    sed '/Event\]\[Received/{s/.*_time\":\"//g; s/\+08:00.*\] / /g;s/\\n.*//g;p}' "$1"  -n  |
     awk '{printf "%s\t%s\n",$1,$2}'
+}
+function grep_cti_esl { # 过滤和 esl 交互
+    sed '/cti\/esl.(\*Client)/{s/.*_time\":\"//g; s/+08:00.*api\]\[/\t/g; s/\]/\t/; s/"\}$//g p}' "$1" -n | sed -E 's/[^\t ]{50,}//g'
 }
 function rec {
     echo "$@" >> /tmp/webuser/robincai/record
@@ -193,13 +196,13 @@ function read_toml_section {
 function gen_sql_base {
     read_toml_section "mysql" | awk '
         { m[substr($0, 1, index($0, "=")-1)]=substr($0, index($0, "=")+1) }
-        END { printf "mysql -h%s -p%d -u%s -p%s -D%s\n", m["host"], m["port"], m["user"], m["password"], m["db_name"] }
+        END { printf "mysql -h%s -P%d -u%s -p%s -D%s\n", m["host"], m["port"], m["user"], m["password"], m["db_name"] }
     '
 }
 function gen_sql_monitor {
     read_toml_section "udesk_monitor" | awk '
         { m[substr($0, 1, index($0, "=")-1)]=substr($0, index($0, "=")+1) }
-        END { printf "mysql -h%s -p%d -u%s -p%s -D%s\n", m["mysql_host"], m["mysql_port"], m["mysql_user"], m["mysql_password"], m["mysql_db_name"] }
+        END { printf "mysql -h%s -P%d -u%s -p%s -D%s\n", m["mysql_host"], m["mysql_port"], m["mysql_user"], m["mysql_password"], m["mysql_db_name"] }
     '
 }
 function gen_redis_conn {
