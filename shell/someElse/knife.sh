@@ -1,4 +1,5 @@
-alias self="mkdir -p /tmp/webuser/robincai; cd /tmp/webuser/robincai; pwd"
+alias self="mkdir -p /home/webuser/robincai; cd /home/webuser/robincai; pwd"
+alias selfTmp="mkdir -p /tmp/webuser/robincai_tmp; cd /tmp/webuser/robincai_tmp; pwd"
 alias ccps="cd /usr/local/kylin_cti/current; pwd"
 alias cdOpenresty="cd /usr/local/openresty"
 alias cdFreeswitch="cd /usr/local/freeswitch/conf"
@@ -15,9 +16,9 @@ alias pseo="ps -eo lstart,cmd"
 alias cdOpenresty="cd /usr/local/openresty; pwd"
 alias grepv="grep -v grep | grep "
 alias tarx="tar -zxvf"
-alias loadRecord=". /tmp/webuser/robincai/record"
-alias clearRecord="echo > /tmp/webuser/robincai/record"
-alias catRecord="cat /tmp/webuser/robincai/record"
+alias loadRecord=". /tmp/webuser/robincai_tmp/record"
+alias clearRecord="echo > /tmp/webuser/robincai_tmp/record"
+alias catRecord="cat /tmp/webuser/robincai_tmp/record"
 
 ossBin="echo" # as default
 for name in "oss2mgr-linux" "oss2mgr"
@@ -58,7 +59,7 @@ function ossDownload {
     echo ">>> run ${cmdStr}"
     sh -c "${cmdStr}"
 }
-function downloadBak {
+function ossDownloadBak {
     local supported=" easy-deploy.tar etcd-chk.tar oss2mgr-linux.zip etcd-chk.tar ";
     local help="only support:$supported"
     if [ ${#1} -eq 0 ]; then
@@ -68,7 +69,7 @@ function downloadBak {
 
     local filename="$1"
     if [ "${#filename}" -gt 0 ] && [[ $supported =~ " $filename " ]]; then
-        curl "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/$filename" --output /tmp/webuser/robincai/bak_$filename
+        curl "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/$filename" --output /tmp/webuser/robincai_tmp/bak_$filename
         return
     fi
     echo $help
@@ -83,7 +84,7 @@ function enableSelf {
     else
         return
     fi
-    exists=`grep -E "robincai=[\"\']\. \/tmp/webuser/robincai/knife.sh" $shrc | wc | awk '{print $1}'`
+    exists=`grep -E "robincai=[\"\']\. \/home/webuser/robincai/knife.sh" "$shrc" | wc | awk '{print $1}'`
     if [ $exists -ge 1 ]; then
         . $shrc && echo "enabled at $shrc"
         return
@@ -98,26 +99,28 @@ function enableSelf {
     sed '/alias\ robincai=/d' $shrc > $shrc.swp # edit and output to $shrc.swp
     mv $shrc{.swp,}                             # replace
 
-    echo "alias robincai='. /tmp/webuser/robincai/knife.sh'" >> $shrc
+    echo "alias robincai='. /home/webuser/robincai/knife.sh'" >> $shrc
     . $shrc && echo "enabled at $shrc"
 }
 
 function updateSelf {
-    cmd='curl "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/knife.tar" --output /tmp/webuser/robincai/knife.tar'
+    cmd='curl "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/knife.tar" --output /home/webuser/robincai/knife.tar'
     if [ $1 = "wget" ]; then
-        cmd='wget "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/knife.tar" -O /tmp/webuser/robincai/knife.tar '
+        cmd='wget "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/knife.tar" -O /home/webuser/robincai/knife.tar '
     fi
-    mkdir -p /tmp/webuser/robincai && cd /tmp/webuser/robincai && eval "${cmd}" &&
+    mkdir -p /home/webuser/robincai && cd /home/webuser/robincai && eval "${cmd}" &&
     mv ./knife{,.bak}.sh 2>/dev/null
     tar -zxvf knife.tar &&
     rm -f ./knife.tar
-    . /tmp/webuser/robincai/knife.sh && echo "Done"
+    . /home/webuser/robincai/knife.sh && echo "Done"
     enableSelf
 }
 
 function ossPushSelf {
+    echo "do nothing"
+    return
     cur=`pwd`
-    cd /tmp/webuser/robincai/ && tar -zcf knife.tar knife.sh && echo "tar done"
+    cd /tmp/webuser/robincai_tmp/ && tar -zcf knife.tar knife.sh && echo "tar done"
     cmdStr="${ossBin} -cmd up -obj ccps/robincai/bak/knife.tar -file knife.tar"
     echo ">>> run ${cmdStr}"
     sh -c "${cmdStr}"
@@ -127,7 +130,7 @@ function ossPushSelf {
 # ------------- cti 日志相关 ------------
 
 function grep_cti_ivr { # 过滤 ivr 相关消息
-    grep 'callworker.publishAppMsg' "$1"  | sed 's/.*"_time":"//g' | sed 's/","msg":"publishAppMsg success://g' | sed 's/appID.*//g'
+    grep 'callworker.publishAppMsg' "$1"  | sed 's/.*"_time":"//g' | sed 's/","msg":"publishAppMsg success:/\t/g' | sed 's/appID.*//g'
 }
 function grep_cti_acd { # 过滤和 acd 的交互
      sed -e '/acd.sendHttp.*sendHttp, method: .*:5001/{s/.*_time":"/acd.sendHttp/g;s/\+08:00.*method://g;s/, url://g;s/, params://g;s/\?.*$//g;s/, body.*$//g; /\/asr/d; s/acd.sendHttp//gp}' -n "$1" |
@@ -151,16 +154,16 @@ function grep_cti_esl { # 过滤和 esl 交互
     sed '/cti\/esl.(\*Client)/{s/.*_time\":\"//g; s/+08:00.*api\]\[/\t/g; s/\]/\t/; s/"\}$//g p}' "$1" -n | sed -E 's/[^\t ]{50,}//g'
 }
 function rec {
-    echo "$@" >> /tmp/webuser/robincai/record
+    echo "$@" >> /home/webuser/robincai/record
 }
 # TODO：坐席状态变化的日志
 
-TMP_TOML_FILE="/tmp/webuser/robincai/tmp.toml"
+TMP_TOML_FILE="/home/webuser/robincai/tmp.toml"
 
-# format_cti_toml 格式化 toml 并复制到文件 $TMP_TOML_FILE
+# toml_format 格式化 toml 并复制到文件 $TMP_TOML_FILE
 # input : toml_cnf_file output_file
-function format_cti_toml {
-    mkdir -p /tmp/webuser/robincai
+function toml_format {
+    mkdir -p /home/webuser/robincai
     echo > $TMP_TOML_FILE
 
     local config_file=$1
@@ -178,11 +181,16 @@ function format_cti_toml {
     # 删除空行
     # 移除 `=` 前后空格
     cat "$config_file" | sed 's/^ *//g; /^#.*/d; s/ #.*$//g; s/# .*//g; s/ *$//g; /^$/d; s/ *= */=/g' > "$TMP_TOML_FILE"
+    # 用 sed ""s/\r//g"" 可以替换了 \r 符号
+}
+
+function toml_list_sections {
+    grep -Eo '^\[.*\]$' "$TMP_TOML_FILE"
 }
 
 # input : toml_cfg_file section
 # output: senction内容（不包含 section）
-function read_toml_section {
+function toml_read_section {
     local confFile=$1
     local section=$2
     if [ "$#" = 1 ]; then
@@ -190,23 +198,25 @@ function read_toml_section {
         section=$1
     fi
 
-    format_cti_toml $confFile
+    if ! [ -e "$config_file" ]; then
+        toml_format "$config_file"
+    fi
     sed "/^\[$section\]$/,/^\[.*\]$/p" "$TMP_TOML_FILE" -n # 只输出当前 section 中的内容（不包含 section）
 }
 function gen_sql_base {
-    read_toml_section "mysql" | awk '
+    toml_read_section "mysql" | awk '
         { m[substr($0, 1, index($0, "=")-1)]=substr($0, index($0, "=")+1) }
         END { printf "mysql -h%s -P%d -u%s -p%s -D%s\n", m["host"], m["port"], m["user"], m["password"], m["db_name"] }
     '
 }
 function gen_sql_monitor {
-    read_toml_section "udesk_monitor" | awk '
+    toml_read_section "udesk_monitor" | awk '
         { m[substr($0, 1, index($0, "=")-1)]=substr($0, index($0, "=")+1) }
         END { printf "mysql -h%s -P%d -u%s -p%s -D%s\n", m["mysql_host"], m["mysql_port"], m["mysql_user"], m["mysql_password"], m["mysql_db_name"] }
     '
 }
 function gen_redis_conn {
-    local sec_conf=`read_toml_section "redis"`
+    local sec_conf=`toml_read_section "redis"`
     local template=`echo $sec_conf | awk '
         { m[substr($0, 1, index($0, "=")-1)]=substr($0, index($0, "=")+1) }
         END { printf "redis-cli -h %s -a %s --no-auth-warning\n", "HOSTPORT", m["password"] }
