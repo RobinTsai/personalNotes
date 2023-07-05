@@ -137,7 +137,32 @@ function grep_cti_acd { # 过滤和 acd 的交互
      awk '{ printf "%s\t%s\t%s\t%s\n",$1,$2,$3,$4}'
 }
 function grep_tower_events {
-    grep 'Method' "$1" | sed -e 's/.*_time":"//g' -e 's/+08:00".*Method\\":\\"/ /g' -e 's/\\",.*//g' | awk '{printf "%s\t%s\n",$1, $2}'
+    grep 'Method' "$1" | sed -e 's/.*_time":"//g' -e '/SignalHub-msgMap/d' -e '/Inbox/d' -e '/GetAgentStatusOptions/d' -e '/+++Read/d' -e 's/+08:00".*Method\\":\\"/ /g' -e 's/\\":\\"/:/g' -e 's/\\",\\"/ /' -e 's/\\",\\"/,/g' |
+    awk 'function get(raw, start, end){
+            startIdx=index(raw, start)
+            len=index(substr(raw, startIdx), end)
+            result=substr(raw, startIdx, len-length(end))
+            return result
+        }
+    {
+        if ($2 ~ /GetState/) {
+            state=get($3, "CurState:", ",")
+            mode=get($3, "CurMode:", ",")
+            printf "%-29s\t%-20s\t%s,%s\n", $1, $2, state, mode
+        } else if ($2 ~ /AgentCallModeChange/) {
+            mode=get($3, "CurContact:", ",")
+            extState=get($3, "CurExtState:", ",")
+            printf "%-29s\t%-20s\t%s,%s\n", $1, $2, mode, extState
+        # } else if ($2 ~ /Delivered/) {
+        # } else if ($2 ~ /AgentStateChange/) {
+        # } else if ($2 ~ /Originated/) {
+        # } else if ($2 ~ /SetCallMode/) {
+        # } else if ($2 ~ /TransferQueue/) {
+        # } else if ($2 ~ /UserAnswered/) {
+        } else {
+            printf "%-29s\t%-20s\n", $1, $2
+        }
+    }'
 }
 function grep_cti_http {
     sed '/BasicAuthMiddleware.*URL Info/{s/.*_time\":\"//g; s/\+08:00.*URL Info: / /g; s/\?.*//g; s/\// \//; p}' "$1" -n |
