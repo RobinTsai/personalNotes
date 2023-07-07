@@ -19,6 +19,7 @@ alias tarx="tar -zxvf"
 alias loadRecord=". /tmp/webuser/robincai_tmp/record"
 alias clearRecord="echo > /tmp/webuser/robincai_tmp/record"
 alias catRecord="cat /tmp/webuser/robincai_tmp/record"
+alias grep_tower_conns="grep -Eo 'conn_id[^,]*' "
 
 ossBin="echo" # as default
 for name in "oss2mgr-linux" "oss2mgr"
@@ -105,7 +106,7 @@ function enableSelf {
 
 function updateSelf {
     cmd='curl "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/knife.tar" --output /home/webuser/robincai/knife.tar'
-    if [ $1 = "wget" ]; then
+    if [ "$1" = "wget" ]; then
         cmd='wget "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/knife.tar" -O /home/webuser/robincai/knife.tar '
     fi
     mkdir -p /home/webuser/robincai && cd /home/webuser/robincai && eval "${cmd}" &&
