@@ -245,7 +245,7 @@ function gen_redis_conn {
     local sec_conf=`toml_read_section "redis"`
     local template=`echo $sec_conf | awk '
         { m[substr($0, 1, index($0, "=")-1)]=substr($0, index($0, "=")+1) }
-        END { printf "redis-cli -h %s -a %s --no-auth-warning\n", "HOSTPORT", m["password"] }
+        END { printf "redis-cli -h %s -a %s\n", "HOSTPORT", m["password"] }
     '`
     # 生成连接 sentinels 命令
     sentinels=`echo $sec_conf | grep '^sentinel_addresses=' | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}:[0-9]{4,5}' |
