@@ -19,7 +19,11 @@ alias tarx="tar -zxvf"
 alias loadRecord=". /tmp/webuser/robincai_tmp/record"
 alias clearRecord="echo > /tmp/webuser/robincai_tmp/record"
 alias catRecord="cat /tmp/webuser/robincai_tmp/record"
+
 alias grep_tower_conns="grep -Eo 'conn_id[^,]*' "
+
+alias grep_fs_hangup="grep 'Hangup sofia/' "
+alias grep_fs_new_channel="grep 'New Channel sofia/' "
 
 ossBin="echo" # as default
 for name in "oss2mgr-linux" "oss2mgr"
@@ -128,15 +132,7 @@ function ossPushSelf {
     cd $cur
 }
 
-# ------------- cti 日志相关 ------------
-
-function grep_cti_ivr { # 过滤 ivr 相关消息
-    grep 'callworker.publishAppMsg' "$1"  | sed 's/.*"_time":"//g' | sed 's/","msg":"publishAppMsg success:/\t/g' | sed 's/appID.*//g'
-}
-function grep_cti_acd { # 过滤和 acd 的交互
-     sed -e '/acd.sendHttp.*sendHttp, method: .*:5001/{s/.*_time":"/acd.sendHttp/g;s/\+08:00.*method://g;s/, url://g;s/, params://g;s/\?.*$//g;s/, body.*$//g; /\/asr/d; s/acd.sendHttp//gp}' -n "$1" |
-     awk '{ printf "%s\t%s\t%s\t%s\n",$1,$2,$3,$4}'
-}
+# ------------- tower 日志相关 -------------
 function grep_tower_events {
     grep 'Method' "$1" | sed -e 's/.*_time":"//g' -e '/SignalHub-msgMap/d' -e '/Inbox/d' -e '/GetAgentStatusOptions/d' -e '/+++Read/d' -e 's/+08:00".*Method\\":\\"/ /g' -e 's/\\":\\"/:/g' -e 's/\\",\\"/ /' -e 's/\\",\\"/,/g' |
     awk 'function get(raw, start, end){
@@ -164,6 +160,18 @@ function grep_tower_events {
             printf "%-29s\t%-20s\n", $1, $2
         }
     }'
+}
+# ------------- cti 日志相关 ------------
+
+function grep_cti_ivr { # 过滤 ivr 相关消息
+    grep 'callworker.publishAppMsg' "$1"  | sed 's/.*"_time":"//g' | sed 's/","msg":"publishAppMsg success:/\t/g' | sed 's/appID.*//g'
+}
+function grep_cti_acd { # 过滤和 acd 的交互
+     sed -e '/acd.sendHttp.*sendHttp, method: .*:5001/{s/.*_time":"/acd.sendHttp/g;s/\+08:00.*method://g;s/, url://g;s/, params://g;s/\?.*$//g;s/, body.*$//g; /\/asr/d; s/acd.sendHttp//gp}' -n "$1" |
+     awk '{ printf "%s\t%s\t%s\t%s\n",$1,$2,$3,$4}'
+}
+function grep_cti_events {
+    grep generalPublish "$1" | sed 's/.*_time":"//g; s/+08:00.*payload {\\"type\\":\\"/ /g; s/\\",\\".*\\"call_event\\":\\"/ /g; s/\\".*//g; s/ /\t/g'
 }
 function grep_cti_http {
     sed '/BasicAuthMiddleware.*URL Info/{s/.*_time\":\"//g; s/\+08:00.*URL Info: / /g; s/\?.*//g; s/\// \//; p}' "$1" -n |

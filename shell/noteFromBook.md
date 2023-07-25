@@ -96,6 +96,7 @@
 - 一般地，使用变量用 `$`，修改变量不用前缀 `$`，如 `unset $my_var`，但 `printenv` 例外，用它查看环境变量不用前缀 `$`。
     + 注意变量值为带有空格的字符串时，要使用引号 `"$var"`
 - 单个点号加入 `$PATH`变量，执行本目录命令就不用 `./`了。但这样还有其他问题：重启系统后即丢失 => 持久化需放入 `/etc/profile.d/` 下的 shell 文件中。这关系到下面讲的三种 shell 不同的启动方式
+- `let` 只用于基本的算数运算并赋值，不能用于字符串赋值
 
 ### 字符串操作
 
@@ -171,6 +172,7 @@
 
 - 括号用于声明数组: `myArr=(one two three)`；注意：空格的有无
 - 输出所有：`echo ${myArr[*]}` （用 `*` 可输出所有）
+- 数组长度：`echo ${#myArr[*]}`
 - `unset myArr[2]` 后，数组其他 key->value 不会变
 - TODO：带空格的文本被认为是一个变量怎么处理
 - 多行的文本变更为数组：
@@ -316,6 +318,7 @@ done
 ```sh
 # 例，从 input 中读每行
 grep -Eo '[0-9]*' a05 | while read line; do; echo got_$line; done;
+# 注意在写脚本的时候， line 的作用域问题，若子函数也用到了 while read line 会覆盖父函数的值
 ```
 
 ### until
@@ -553,3 +556,5 @@ NAME # no need ()
 - 此外，对于没有可执行权限的 `.sh` 文件，它的运行默认也会是 `/bin/sh`（不论是否加正确 `#!/bin/bash`）
 - 用 `sh ./xx.sh` 时，实际是在当前 Shell 环境启动了一个新的 Shell 进程直接读取内容并执行
 - `chmod +x xx.sh; ./xx.sh` 运行可以按 `xx.sh` 内 shebang 指定的解释器运行，这种方式比 `sh xx.sh` 更安全
+- zsh 中数组下标从 1 开始， bash 中数组下标从 0 开始
+- zsh 中数组 $arr 取所有值，但 bash 中只取 0 下标的值
