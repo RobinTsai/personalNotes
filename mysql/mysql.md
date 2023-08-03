@@ -30,6 +30,27 @@ mysql -uroot -p123456                          # 在 docker 内连接
 source /var/lib/mysql/udesk_phone_location.sql # 在 mysql 交互页中执行导入
 ```
 
+mysql 操作
+
+```sql
+# 创建 DB
+CREATE DATABASE test_db;
+CREATE DATABASE IF NOT EXISTS test_db;
+# 创建表
+CREATE TABLE `kefu` (
+  `sid` varchar(255) DEFAULT NULL,
+  `name_from_kefu` varchar(255) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+# 导入 csv（注意表头和表字段一致）
+# shell 中将文件放到对应目录 cp train.csv /var/lib/mysql-files/
+LOAD DATA INFILE '/var/lib/mysql-files/crm.csv'
+    INTO TABLE crm
+    FIELDS TERMINATED BY ','
+    ENCLOSED BY '"'
+    LINES TERMINATED BY '\n'
+    IGNORE 1 ROWS;
+```
+
 ## 高级
 
 ```sh
@@ -46,3 +67,5 @@ SHOW VARIABLES LIKE 'max_prepared_stmt_count';
 # 设置 max_prepared_stmt_count （默认 16382）
 SET GLOBAL max_prepared_stmt_count = 16382;
 ```
+
+select ccps.sid,ccps.name_from_ccps,crm.name_from_crm,kefu.name_from_kefu from ccps left join crm on ccps.sid=crm.sid left join kefu on ccps.sid=kefu.sid;
