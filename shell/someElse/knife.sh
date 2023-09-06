@@ -162,10 +162,22 @@ function grep_tower_events {
     }'
 }
 # ------------- cti 日志相关 ------------
+function grep_cti_ivr {
+    sed -n '/callworker\.(\*ReportSend)\.post/{
+        s/.*","_time":"/post_app\t/g;
+        s/+08:00.*v1\/call/\tv1\/call/g;
+        s/\?app_id.*\\"type\\":\\"/\t/g;
+        s/\\".*//g;
+        p};
+	/appRespProcess/{s/.*","_time":"/app_resp\t/g;
+        s/+08:00.*\\"order\\":\\"/\t/g;
+        s/\\".*//g;
+        p}' "$1"
+}
 function grep_cti_app_resp {
     grep 'appRespProcess' "$1" | sed 's/.*"_time":"//g; s/+08:00.*orders/+08:00/g; s/+08:00.*order\\":\\"/\t/g; s/\\".*//g'
 }
-function grep_cti_ivr { # 过滤 ivr 相关消息
+function grep_cti_ivr_pub { # 过滤 ivr 相关消息
     grep 'callworker.publishAppMsg' "$1"  | sed 's/.*"_time":"//g' | sed 's/","msg":"publishAppMsg success:/\t/g' | sed 's/appID.*//g'
 }
 function grep_cti_acd { # 过滤和 acd 的交互
