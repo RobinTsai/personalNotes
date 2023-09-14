@@ -1,4 +1,4 @@
-alias self="mkdir -p /tmp/webuser/robincai; cd /tmp/webuser/robincai; pwd"
+alias self="mkdir -p /tmp/webuser/ccps; cd /tmp/webuser/ccps; pwd"
 
 alias cdAcd="cd /app/udesk/cti-acd/; pwd"
 alias cdAgent="cd /app/udesk/cti-agent/; pwd"
@@ -6,6 +6,7 @@ alias cdAsr="cd /app/udesk/cti-asr/; pwd"
 alias cdMonitor="cd /app/udesk/cti-cc-monitor/; pwd"
 alias cdCti="cd /app/udesk/cti-cti/; pwd"
 alias cdFreeswitch="cd /app/udesk/cti-freeswitch-local/; pwd"
+alias cdTrunk="cd /app/udesk/cti-freeswitch-trunk"
 alias cdIvr="cd /app/udesk/cti-ivr/; pwd"
 alias cdLogservice="cd /app/udesk/cti-logservice/; pwd"
 alias cdMsgPusher="cd /app/udesk/cti-msg-pusher/; pwd"
@@ -56,11 +57,22 @@ function grep_tower_events {
     }'
 }
 # ------------- cti 日志相关 ------------
-
+function grep_cti_ivr {
+    sed -n '/callworker\.(\*ReportSend)\.post/{
+        s/.*","_time":"/post_app\t/g;
+        s/+08:00.*v1\/call/\tv1\/call/g;
+        s/\?app_id.*\\"type\\":\\"/\t/g;
+        s/\\".*//g;
+        p};
+	/appRespProcess/{s/.*","_time":"/app_resp\t/g;
+        s/+08:00.*\\"order\\":\\"/\t/g;
+        s/\\".*//g;
+        p}' "$1"
+}
 function grep_cti_app_resp {
     grep 'appRespProcess' "$1" | sed 's/.*"_time":"//g; s/+08:00.*orders/+08:00/g; s/+08:00.*order\\":\\"/\t/g; s/\\".*//g'
 }
-function grep_cti_ivr { # 过滤 ivr 相关消息
+function grep_cti_app_msg { # 过滤 ivr 相关消息
     grep 'callworker.publishAppMsg' "$1"  | sed 's/.*"_time":"//g' | sed 's/","msg":"publishAppMsg success:/\t/g' | sed 's/appID.*//g'
 }
 function grep_cti_acd { # 过滤和 acd 的交互
@@ -85,12 +97,12 @@ function grep_cti_esl { # 过滤和 esl 交互
     sed '/cti\/esl.(\*Client)/{s/.*_time\":\"//g; s/+08:00.*api\]\[/\t/g; s/\]/\t/; s/"\}$//g p}' "$1" -n | sed -E 's/[^\t ]{50,}//g'
 }
 
-TMP_TOML_FILE="/tmp/webuser/robincai/tmp.toml"
+TMP_TOML_FILE="/tmp/webuser/ccps/tmp.toml"
 
 # toml_format 格式化 toml 并复制到文件 $TMP_TOML_FILE
 # input : toml_cnf_file output_file
 function toml_format {
-    mkdir -p /tmp/webuser/robincai
+    mkdir -p /tmp/webuser/ccps
     echo > $TMP_TOML_FILE
 
     local config_file=$1

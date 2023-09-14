@@ -1,5 +1,5 @@
-alias self="mkdir -p /home/webuser/robincai; cd /home/webuser/robincai; pwd"
-alias selfTmp="mkdir -p /tmp/webuser/robincai_tmp; cd /tmp/webuser/robincai_tmp; pwd"
+alias self="mkdir -p /tmp/webuser/ccps; cd /tmp/webuser/ccps; pwd"
+
 alias ccps="cd /usr/local/kylin_cti/current; pwd"
 alias cdOpenresty="cd /usr/local/openresty"
 alias cdFreeswitch="cd /usr/local/freeswitch/conf"
@@ -11,127 +11,11 @@ alias logOpenresty=logApigw
 
 alias ll="ls -htrl"
 alias l="ll"
-alias psUdesk="ps -ef | grep -v grep | grep udesk"
-alias pseo="ps -eo lstart,cmd"
-alias cdOpenresty="cd /usr/local/openresty; pwd"
 alias grepv="grep -v grep | grep "
-alias tarx="tar -zxvf"
-alias loadRecord=". /tmp/webuser/robincai_tmp/record"
-alias clearRecord="echo > /tmp/webuser/robincai_tmp/record"
-alias catRecord="cat /tmp/webuser/robincai_tmp/record"
 
 alias grep_tower_conns="grep -Eo 'conn_id[^,]*' "
-
 alias grep_fs_hangup="grep 'Hangup sofia/' "
 alias grep_fs_new_channel="grep 'New Channel sofia/' "
-alias grep_acd_agent="grep 'PubAgentState payload' "
-
-ossBin="echo" # as default
-for name in "oss2mgr-linux" "oss2mgr"
-do
-    res=`whereis ${name}`
-    if [[ ${res##*:} > "   " ]]; then
-        ossBin=`expr match "$res" ".*: \(\/[^ ]*${name}\)"`
-        break
-    fi
-done
-
-echo "oss bin is ${ossBin}"
-
-function whoAmi {
-    a=`uname -a | awk '{print $2 }'`; b=`ifconfig eth0| awk '/inet /{print $2 }' | grep -Eo "[0-9.]*"`; c=`curl cip.cc -s | awk '/IP/{print $3}'`
-    echo -e "$a\t$b\t$c"
-}
-
-function whois {
-    res=`curl -s "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/4.0_prod_host.md" | grep "$1"`
-    if [[ ${res} > "  " ]]; then
-        echo $res
-        return
-    fi
-    curl -s "cip.cc/$1" | head -3
-}
-
-function ossUpload {
-    filename=${1##*\/}
-    cmdStr="${ossBin} -cmd up -obj ccps/robincai/${filename} -file ${1}"
-    echo ">>> run ${cmdStr}"
-    sh -c "${cmdStr}"
-}
-
-function ossDownload {
-    filename=${1##*\/}
-    cmdStr="${ossBin} -cmd down -obj ccps/robincai/${1} -file ${filename}"
-    echo ">>> run ${cmdStr}"
-    sh -c "${cmdStr}"
-}
-function ossDownloadBak {
-    local supported=" easy-deploy.tar etcd-chk.tar oss2mgr-linux.zip etcd-chk.tar ";
-    local help="only support:$supported"
-    if [ ${#1} -eq 0 ]; then
-        echo $help
-        return
-    fi
-
-    local filename="$1"
-    if [ "${#filename}" -gt 0 ] && [[ $supported =~ " $filename " ]]; then
-        curl "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/$filename" --output /tmp/webuser/robincai_tmp/bak_$filename
-        return
-    fi
-    echo $help
-}
-function enableSelf {
-    curShell=`echo $SHELL`
-    curShell=${curShell##*\/}
-    if [ $curShell = "zsh" ]; then
-        shrc="$HOME/.zshrc";
-    elif [ $curShell = "bash" ]; then
-        shrc="$HOME/.bashrc";
-    else
-        return
-    fi
-    exists=`grep -E "robincai=[\"\']\. \/home/webuser/robincai/knife.sh" "$shrc" | wc | awk '{print $1}'`
-    if [ $exists -ge 1 ]; then
-        . $shrc && echo "enabled at $shrc"
-        return
-    fi
-
-    bak=$shrc.bak-`date +%Y%m%d`
-    cp $shrc $bak && echo "backed up at $bak" # backup
-    if [ $? -ne 0 ]; then
-        echo "back up $shrc failed, return enableSelf"
-        return
-    fi
-    sed '/alias\ robincai=/d' $shrc > $shrc.swp # edit and output to $shrc.swp
-    mv $shrc{.swp,}                             # replace
-
-    echo "alias robincai='. /home/webuser/robincai/knife.sh'" >> $shrc
-    . $shrc && echo "enabled at $shrc"
-}
-
-function updateSelf {
-    cmd='curl "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/knife.tar" --output /home/webuser/robincai/knife.tar'
-    if [ "$1" = "wget" ]; then
-        cmd='wget "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/knife.tar" -O /home/webuser/robincai/knife.tar '
-    fi
-    mkdir -p /home/webuser/robincai && cd /home/webuser/robincai && eval "${cmd}" &&
-    mv ./knife{,.bak}.sh 2>/dev/null
-    tar -zxvf knife.tar &&
-    rm -f ./knife.tar
-    . /home/webuser/robincai/knife.sh && echo "Done"
-    enableSelf
-}
-
-function ossPushSelf {
-    echo "do nothing"
-    return
-    cur=`pwd`
-    cd /tmp/webuser/robincai_tmp/ && tar -zcf knife.tar knife.sh && echo "tar done"
-    cmdStr="${ossBin} -cmd up -obj ccps/robincai/bak/knife.tar -file knife.tar"
-    echo ">>> run ${cmdStr}"
-    sh -c "${cmdStr}"
-    cd $cur
-}
 
 # ------------- tower 日志相关 -------------
 function grep_tower_events {
@@ -166,7 +50,7 @@ function grep_tower_events {
 function grep_cti_ivr {
     sed -n '/callworker\.(\*ReportSend)\.post/{
         s/.*","_time":"/post_app\t/g;
-        s/+08:00.*v1\/call/\tv1\/call/g;
+        s/+08:00.*v1\//\tv1\//g;
         s/\?app_id.*\\"type\\":\\"/\t/g;
         s/\\".*//g;
         p};
@@ -178,7 +62,7 @@ function grep_cti_ivr {
 function grep_cti_app_resp {
     grep 'appRespProcess' "$1" | sed 's/.*"_time":"//g; s/+08:00.*orders/+08:00/g; s/+08:00.*order\\":\\"/\t/g; s/\\".*//g'
 }
-function grep_cti_ivr_pub { # 过滤 ivr 相关消息
+function grep_cti_app_msg { # 过滤 ivr 相关消息
     grep 'callworker.publishAppMsg' "$1"  | sed 's/.*"_time":"//g' | sed 's/","msg":"publishAppMsg success:/\t/g' | sed 's/appID.*//g'
 }
 function grep_cti_acd { # 过滤和 acd 的交互
@@ -202,17 +86,13 @@ function grep_cti_fs_event { # 过滤 fs 事件
 function grep_cti_esl { # 过滤和 esl 交互
     sed '/cti\/esl.(\*Client)/{s/.*_time\":\"//g; s/+08:00.*api\]\[/\t/g; s/\]/\t/; s/"\}$//g p}' "$1" -n | sed -E 's/[^\t ]{50,}//g'
 }
-function rec {
-    echo "$@" >> /home/webuser/robincai/record
-}
-# TODO：坐席状态变化的日志
 
-TMP_TOML_FILE="/home/webuser/robincai/tmp.toml"
+TMP_TOML_FILE="/tmp/webuser/ccps/tmp.toml"
 
 # toml_format 格式化 toml 并复制到文件 $TMP_TOML_FILE
 # input : toml_cnf_file output_file
 function toml_format {
-    mkdir -p /home/webuser/robincai
+    mkdir -p /tmp/webuser/ccps
     echo > $TMP_TOML_FILE
 
     local config_file=$1
