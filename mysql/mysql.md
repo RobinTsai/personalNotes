@@ -36,6 +36,10 @@ mysql 操作
 # 创建 DB
 CREATE DATABASE test_db;
 CREATE DATABASE IF NOT EXISTS test_db;
+CREATE DATABASE t1_freeswitch  DEFAULT CHARSET utf8;
+CREATE DATABASE t1_freeswitch  DEFAULT CHARSET utf8;
+CREATE DATABASE t1_freeswitch  DEFAULT CHARSET utf8mb4
+
 # 创建表
 CREATE TABLE `kefu` (
   `sid` varchar(255) DEFAULT NULL,

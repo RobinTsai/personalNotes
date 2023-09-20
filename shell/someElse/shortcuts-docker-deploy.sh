@@ -18,6 +18,7 @@ alias cdResource="cd /app/udesk/cti-resource/; pwd"
 alias cdSdiscovery="cd /app/udesk/cti-sdiscovery/; pwd"
 alias cdTower="cd /app/udesk/cti-tower/; pwd"
 alias cdTts="cd /app/udesk/cti-tts/; pwd"
+alias logCcps="cd /var/log/kylin_cti"
 
 alias ll="ls -htrl"
 alias l="ll"
@@ -26,6 +27,18 @@ alias grepv="grep -v grep | grep "
 alias grep_tower_conns="grep -Eo 'conn_id[^,]*' "
 alias grep_fs_hangup="grep 'Hangup sofia/' "
 alias grep_fs_new_channel="grep 'New Channel sofia/' "
+
+function dockerInto {
+    local id=`docker ps | grep "$1" | awk '{ print $1 }'`
+    local firstField=`echo $id | awk '{ print $1 }'`
+    if [[ "$id" < "    " ]] || [[ "$id" != "$firstField" ]]; then
+        echo "usage err, test and retry"
+        return
+    fi
+
+    echo '> docker exec -it "'$id'" bash'
+    docker exec -it "$id" bash
+}
 
 # ------------- tower 日志相关 -------------
 function grep_tower_events {
