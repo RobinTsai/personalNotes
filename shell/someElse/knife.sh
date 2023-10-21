@@ -49,7 +49,7 @@ function whois {
         echo $res
         return
     fi
-    curl -s "cip.cc/$1" | head -3
+    curl -s "cip.cc/$1" | grep -v '^$'
 }
 
 function ossUpload {
