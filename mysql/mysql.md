@@ -1,15 +1,27 @@
-## 连接
+## 命令
+
+### 连接
 
 ```sh
 mysql -hHOST -uUSERNAME -pPASSWORD DB_NAME                      # DB 名直接加即可
 mysql -hHOST -uUSERNAME --password='WITH_SPECIAL_CHAR_PASSWORD' # 特殊符号的密码用参数名的全称，用单引号（双引号有时候不好）
 mysql -hHOST -uUSERNAME -pPASSWORD DB_NAME -e 'MYSQL CMD'       # 执行命令用 -e
+```
+
+### 导出
+
+```sh
 mysqldump -h 192.168.2.184 -u root -p password --databases db_name > db_name.sql             # 导出 db_name 数据库
 mysqldump -h 192.168.2.184 -u root -p password --databases db_name users > db_name_users.sql # 导出 db_name 数据库 users 表
 mysqldump --default-character-set=utf8 ... # 指定 utf8 字符集
 # -s, silent, 只返回查询结果，不展示表头、分割线、行号等信息
 
-# 索引
+mysql -h$host -u$user -p$password -D$db -B -e "$sql" > export.csv
+```
+
+### 索引
+
+```sh
 show index from phone_location;
 DROP INDEX [indexName] ON mytable;
 CREATE INDEX indexName ON table_name (column_name)
@@ -38,7 +50,9 @@ CREATE DATABASE test_db;
 CREATE DATABASE IF NOT EXISTS test_db;
 CREATE DATABASE t1_freeswitch  DEFAULT CHARSET utf8;
 CREATE DATABASE t1_freeswitch  DEFAULT CHARSET utf8;
-CREATE DATABASE t1_freeswitch  DEFAULT CHARSET utf8mb4
+CREATE DATABASE t1_freeswitch  DEFAULT CHARSET utf8mb4;
+
+show create database t1_freeswitch;
 
 # 创建表
 CREATE TABLE `kefu` (
