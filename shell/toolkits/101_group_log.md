@@ -2,7 +2,7 @@
 
 ```sh
 # 按固定位置子字符串进行分组
-input_file=""
+input_file="monitor-chan-overflow-time.log"
 awk '{
     group_key=substr($1,1,3);
 
@@ -39,7 +39,7 @@ awk 'BEGIN {
 }
 END {
     for (group_key in group_total) {
-        print group_key, group_total[group_key];
+        printf("%10s %s\n", group_total[group_key], group_key);
     }
 }' tower-err-3w.log
 
