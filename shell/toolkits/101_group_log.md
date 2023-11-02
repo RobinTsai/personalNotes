@@ -4,7 +4,7 @@
 # 按固定位置子字符串进行分组
 input_file="monitor-chan-overflow-time.log"
 awk '{
-    group_key=substr($1,1,3);
+    group_key=substr($1,1,17);
 
     # 如果尚未处理该分组，请将其初始化为 0
     if (!group_total[group_key]) {
@@ -18,9 +18,9 @@ awk '{
 END {
     # 遍历每个分组并输出结果
     for (group_key in group_total) {
-        print group_key, group_total[group_key];
+        printf("%10s %s\n", group_total[group_key], group_key);
     }
-}' $input_file | sort
+}' $input_file | sort -n
 
 
 # 按不同的匹配模式进行分组
