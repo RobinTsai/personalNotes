@@ -26,6 +26,13 @@ alias grep_fs_hangup="grep 'Hangup sofia/' "
 alias grep_fs_new_channel="grep 'New Channel sofia/' "
 alias grep_acd_agent="grep 'PubAgentState payload' "
 
+alias sed_join_line='sed ":a;N;\$!ba;s/\n/|/g"'
+alias fs_status="fs_cli -x 'status'"
+alias fs_sofia_status="fs_cli -x 'sofia status'"
+alias fs_sofia_reg="fs_cli -x 'sofia status profile internal reg'"
+alias fs_calls_count="fs_cli -x 'show calls count'"
+alias fs_show_calls="fs_cli -x 'show calls'"
+
 ossBin="echo" # as default
 for name in "oss2mgr-linux" "oss2mgr"
 do
