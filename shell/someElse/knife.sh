@@ -45,6 +45,40 @@ done
 
 echo "oss bin is ${ossBin}"
 
+function grep_cti_call_log {
+    call_id=$1
+    if [[ ${call_id} < "  " ]]; then
+        return
+    fi
+    log_file=$2
+    if [[ ${log_file} < "  " ]]; then
+        log_file=/var/log/kylin_cti/udesk_cti.log
+    fi
+    cmd="grep $call_id $log_file > /tmp/webuser/robincai_tmp/cti-${call_id:0:3}.log"
+    echo "run: $cmd"
+    sh -c "${cmd}"
+}
+
+function grep_fs_channel_log {
+    channels=$1
+    if [[ ${channels} < "  " ]]; then
+        return
+    fi
+
+    cmd="grep -E $channels $2 $3 > /tmp/webuser/robincai_tmp/fs-${channels:0:3}.log"
+    echo "run: $cmd"
+    sh -c "${cmd}"
+}
+
+function grep_record_by_call {
+    call_id=$1
+    log_file=$2
+    if [[ ${call_id} < "  " ]]; then
+        return
+    fi
+    grep "${call_id}" "${log_file}" | grep upload_worker | grep -Eno 'https:[^,]*'
+}
+
 function whoAmi {
     a=`uname -a | awk '{print $2 }'`; b=`ifconfig eth0| awk '/inet /{print $2 }' | grep -Eo "[0-9.]*"`; c=`curl cip.cc -s | awk '/IP/{print $3}'`
     echo -e "$a\t$b\t$c"
@@ -287,4 +321,67 @@ function gen_redis_conn {
     # 连到 sentinel 并查到 master 连接命令（密码可能不对，因为用的 sentinel 的）
     eval $info_sentinel_cmd | grep -E '^master[0-9]' | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}:[0-9]{4,5}' |
     awk -v tpl=$template 'BEGIN {print "[master conn]"} { gsub(":", " -p " ,$0); gsub("HOSTPORT", $0, tpl); print tpl }'
+}
+
+function cat_fs_log {
+    sed -E 's/^freeswitch.log(.[0-9]*:)?//;/Dialplan: /d; / EXPORT /d; / SET /d;
+    s/EXECUTE \[depth=0\] [^ ]*/EXECUTE/g; /Running State Change (CS_EXECUTE)|(CS_ROUTING)/d' "$1" | gawk 'BEGIN {
+        RED="\033[31m";  GREEN="\033[32m";  YELLOW="\033[33m";  BLUE="\033[34m";  CYAN="\033[36m";  CLEAR="\033[0m";
+        COLOR[1]=RED;    COLOR[2]=GREEN;    COLOR[3]=YELLOW;    COLOR[4]=BLUE;    COLOR[5]=CYAN;    COLOR[0]=CLEAR;
+        used_color=0;
+    } {
+        ori_call_id=$1
+
+        # set color on ori_call_id
+        if (!color_group[ori_call_id]) {
+            used_color++;
+            cur_color = used_color
+            color_group[ori_call_id] = cur_color
+        } else {
+            cur_color = color_group[ori_call_id]
+        }
+        call_id=COLOR[cur_color]""ori_call_id""COLOR[0]
+
+        # store to username_info
+        if (!username_group[call_id] && match($0, "sofia/[^ ]*")) {
+            username = substr($0, RSTART, RLENGTH)
+            username_group[call_id] = username
+            username_info = (username_info?username_info "\n":"") call_id " " username
+        }
+
+        # if in SDP state
+        if ($0 ~ / Local SDP/) { state="LOCAL_SDP" }
+        else if ($0 ~ / Remote SDP:/) { state="REMOTE_SDP" }
+
+        # collect SDP info
+        if (state == "LOCAL_SDP" || state == "REMOTE_SDP") {
+            if (!$2) { sdp_group[call_id][state]=sdp; sdp = ""; state = ""; next; }
+            if (match($0, "c=IN IP.*")) { sdp = substr($0, RSTART+5, RLENGTH-6); next; }
+            if (match($0, " m=audio [0-9]*")) { sdp=sdp":"substr($0, RSTART+9, RLENGTH-9); next; }
+        }
+        gsub("\[[A-Z]*\] [a-z_]*.c:[0-9]* ", "", $0)
+
+        # collect state
+        if (match($0, "entering state \[[a-z]*\]\[[0-9]*\]")) {
+            fs_state = substr($0, RSTART, RLENGTH)
+            fs_state_info = (fs_state_info?fs_state_info"\n":"")call_id" "$2" "$3" "fs_state
+        }
+        if (match($0, "hanging up, cause: [A-Z_]*")) {
+            fs_state = substr($0, RSTART, RLENGTH)
+            fs_state_info = (fs_state_info?fs_state_info"\n":"")call_id" "$2" "$3" "fs_state
+        }
+
+        print COLOR[cur_color]""$0""COLOR[0]
+    }
+    END {
+        print "---- channels ----:"
+        print username_info;
+        print "---- sdp info ----:"
+        for (call_id in sdp_group) {
+            printf("%s [local]%s <-> [remote]%s\n",
+                call_id, sdp_group[call_id]["LOCAL_SDP"], sdp_group[call_id]["REMOTE_SDP"] ? sdp_group[call_id]["REMOTE_SDP"]:"x");
+        }
+        print "---- fs state info ----:"
+        print fs_state_info;
+    }'
 }

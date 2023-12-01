@@ -8,7 +8,7 @@ echo ${var}
 
 
 var2=5
-echo -e "\e[1;42mBoth of them can be used in double quote\e[0m"
+echo -e "\e[1;42mBoth of them can be used in double quote\e[0m" # \e 换成 \033 可以在 awk 脚本中用
 echo -e "\e[1;42mBut can not in sigle quote\e[0m"
 echo "$var2"    # => 5
 echo "${var2}"  # => 5
