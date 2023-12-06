@@ -223,7 +223,8 @@ function grep_cti_ivr_pub { # 过滤 ivr 相关消息
     grep 'callworker.publishAppMsg' "$1"  | sed 's/.*"_time":"//g' | sed 's/","msg":"publishAppMsg success:/\t/g' | sed 's/appID.*//g'
 }
 function grep_cti_acd { # 过滤和 acd 的交互
-     sed -e '/acd.sendHttp.*sendHttp, method: .*:5001/{s/.*_time":"/acd.sendHttp/g;s/\+08:00.*method://g;s/, url://g;s/, params://g;s/\?.*$//g;s/, body.*$//g; /\/asr/d; s/acd.sendHttp//gp}' -n "$1" |
+     sed -e '/acd.sendHttp.*sendHttp, method: .*:5001/{s/.*_time":"/acd.sendHttp/g;s/\+08:00.*method://g;s/, url://g;s/, params://g;s/\?.*$//g;s/, body.*$//g; /\/asr/d; s/acd.sendHttp//gp};
+        /BasicAuthMiddleware.*URL Info/{s/.*_time\":\"//g; s/\+08:00.*URL Info: / /g; s/\?.*//g; s/\// \//; p}' -n "$1" |
      awk '{ printf "%s\t%s\t%s\t%s\n",$1,$2,$3,$4}'
 }
 function grep_cti_events {
@@ -355,9 +356,9 @@ function cat_fs_log {
 
         # collect SDP info
         if (state == "LOCAL_SDP" || state == "REMOTE_SDP") {
-            if (!$2) { sdp_group[call_id][state]=sdp; sdp = ""; state = ""; next; }
-            if (match($0, "c=IN IP.*")) { sdp = substr($0, RSTART+5, RLENGTH-6); next; }
-            if (match($0, " m=audio [0-9]*")) { sdp=sdp":"substr($0, RSTART+9, RLENGTH-9); next; }
+            if (!$2) { sdp_group[call_id][state]=sdp; sdp = ""; state = ""; }
+            if (match($0, "c=IN IP.*")) { sdp = substr($0, RSTART+5, RLENGTH-6); }
+            if (match($0, " m=audio [0-9]*")) { sdp=sdp":"substr($0, RSTART+9, RLENGTH-9); }
         }
         gsub("\[[A-Z]*\] [a-z_]*.c:[0-9]* ", "", $0)
 
@@ -384,4 +385,17 @@ function cat_fs_log {
         print "---- fs state info ----:"
         print fs_state_info;
     }'
+}
+
+function get_callID_by_channelID {
+    channel_id=$1
+    if [[ ${channel_id} < "  " ]]; then
+        return
+    fi
+    log_file=$2
+    if [[ ${log_file} < "  " ]]; then
+        log_file=/var/log/kylin_cti/udesk_cti.log
+    fi
+
+    grep "$channel_id" "$log_file" | grep call_id -m 1
 }
