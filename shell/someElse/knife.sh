@@ -45,6 +45,36 @@ done
 
 echo "oss bin is ${ossBin}"
 
+function setIP {
+    IP=`ifconfig eth0 | grep inet | grep -v inet6 | awk '{ print $2 }'`
+}
+setIP
+
+function monitor_is_main {
+    if [[ ${IP} < "  " ]]; then
+        setIP
+    fi
+    curl "http://${IP}:4041/event_listen_status"
+}
+function monitor_is_chan_overflow {
+    local result=`grep 'output redis channel blocked msg from redis' /var/log/kylin_cti/udesk_cc_monitor.log -m 1`
+    if [[ "${result}" < "  " ]]; then
+        echo "no.";
+    else
+        echo "overflowed.";
+    fi
+}
+function monitor_is_evt_delay {
+    timespan=`date "+%Y-%m-%dT%H:%M"`
+    grep "\"_time\":\"${timespan}" udesk_cc_monitor.log | grep ',attime=' |
+        sed 's/.*","_time":"//g; s/+08:00",".* Timestame:/,/g; s/ .*//g; s/\.[^,]*,/ /g' |
+        while read line; do
+        t=`echo $line |awk '{print $1}'`;
+        t2=`echo $line | awk '{print $2}'`;
+        t2=${t2:0:10}; t1=`date +%s -d "${t}"`; d=$[t1 - t2];
+        if ! [ $d -eq 0 ]; then echo $t1 ${t2} $d $t; fi; done
+}
+
 function grep_cti_call_log {
     call_id=$1
     if [[ ${call_id} < "  " ]]; then
