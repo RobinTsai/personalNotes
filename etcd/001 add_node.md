@@ -95,7 +95,7 @@ etcdctl --endpoints="http://10.11.54.187:2379,http://10.11.54.187:2389,http://10
 ---
 
 下线一个旧 etcd 服务：
-执行命令： etcdctl --endpoints="http://10.11.54.187:2389" member remove <OLD_ID>
+执行命令： `etcdctl --endpoints="http://10.11.54.187:2389" member remove <OLD_ID>`
 
 ## 检查节点命令
 
