@@ -9,6 +9,13 @@ alias logFs="cd /usr/local/freeswitch/log; pwd"
 alias logApigw="cd /var/log/udesk_api_gtw; pwd"
 alias logOpenresty=logApigw
 
+LOG_CCPS="/var/log/kylin_cti"
+LOG_OPENREST="/var/log/udesk_api_gtw"
+LOG_FS="/usr/local/freeswitch/log"
+CONF_FS="/usr/local/freeswitch/conf"
+CCPS="/usr/local/kylin_cti/current"
+SELF_TMP="/tmp/webuser/robincai_tmp"
+
 alias ll="ls -htrl"
 alias l="ll"
 alias psUdesk="ps -ef | grep -v grep | grep udesk"
