@@ -10,7 +10,7 @@ alias logApigw="cd /var/log/udesk_api_gtw; pwd"
 alias logOpenresty=logApigw
 
 LOG_CCPS="/var/log/kylin_cti"
-LOG_OPENREST="/var/log/udesk_api_gtw"
+LOG_OPENRESTY="/var/log/udesk_api_gtw"
 LOG_FS="/usr/local/freeswitch/log"
 CONF_FS="/usr/local/freeswitch/conf"
 CCPS="/usr/local/kylin_cti/current"
