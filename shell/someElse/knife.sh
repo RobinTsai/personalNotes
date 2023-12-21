@@ -130,6 +130,11 @@ function whois {
     curl -s "cip.cc/$1" | grep -v '^$'
 }
 
+function whoisTenent {
+    res=`curl -s "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/tenents_info.csv" | grep "$1"`
+    echo $res
+}
+
 function ossUpload {
     filename=${1##*\/}
     cmdStr="${ossBin} -cmd up -obj ccps/robincai/${filename} -file ${1}"
