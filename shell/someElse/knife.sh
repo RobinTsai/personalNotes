@@ -131,7 +131,7 @@ function whois {
 }
 
 function whoisTenent {
-    res=`curl -s "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/tenents_info.csv" | grep "$1"`
+    res=`curl -s "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/tenents_info.csv" | grep "$1" | sed 's/,/ , /g'`
     echo $res
 }
 
