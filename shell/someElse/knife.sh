@@ -23,9 +23,6 @@ alias pseo="ps -eo lstart,cmd"
 alias cdOpenresty="cd /usr/local/openresty; pwd"
 alias grepv="grep -v grep | grep "
 alias tarx="tar -zxvf"
-alias loadRecord=". /tmp/webuser/robincai_tmp/record"
-alias clearRecord="echo > /tmp/webuser/robincai_tmp/record"
-alias catRecord="cat /tmp/webuser/robincai_tmp/record"
 
 alias grep_tower_conns="grep -Eo 'conn_id[^,]*' "
 
@@ -39,6 +36,9 @@ alias fs_sofia_status="fs_cli -x 'sofia status'"
 alias fs_sofia_reg="fs_cli -x 'sofia status profile internal reg'"
 alias fs_calls_count="fs_cli -x 'show calls count'"
 alias fs_show_calls="fs_cli -x 'show calls'"
+
+alias tail_openresty_acc_err="tail -f access.log | grep -v 'HTTP/1.0' | grep -v ' HTTP/1.1\" 200 '"
+alias tail_openresty_acc_errcodes="tail_openresty_acc_err | grep -Eo 'HTTP/1.1\"[^\"]*'"
 
 ossBin="echo" # as default
 for name in "oss2mgr-linux" "oss2mgr"
@@ -61,7 +61,7 @@ function monitor_is_main {
     if [[ ${IP} < "  " ]]; then
         setIP
     fi
-    curl "http://${IP}:4041/event_listen_status"
+    curl "http://${IP}:4041/event_listen_status"; echo '';
 }
 function monitor_is_chan_overflow {
     local result=`grep 'output redis channel blocked msg from redis' /var/log/kylin_cti/udesk_cc_monitor.log -m 1`
