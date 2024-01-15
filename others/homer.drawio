@@ -1,0 +1,63 @@
+<mxfile host="Electron" modified="2024-01-05T08:40:49.552Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/22.0.2 Chrome/114.0.5735.289 Electron/25.8.4 Safari/537.36" etag="bQQj26K6_2p32uKszLDp" version="22.0.2" type="device">
+  <diagram name="第 1 页" id="5B-FyK4oEg3hAJNtEVKM">
+    <mxGraphModel dx="1034" dy="700" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="poXBQ3MVGpoSIrmZTCRQ-23" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="490" y="260" width="260" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="poXBQ3MVGpoSIrmZTCRQ-5" value="" style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="poXBQ3MVGpoSIrmZTCRQ-23">
+          <mxGeometry width="260" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="poXBQ3MVGpoSIrmZTCRQ-6" value="s4-ccps-sipcapture001" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="poXBQ3MVGpoSIrmZTCRQ-23">
+          <mxGeometry x="50" y="150" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="poXBQ3MVGpoSIrmZTCRQ-26" value="9060(tcp/udp)&lt;br&gt;9096/9090(tcp)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="poXBQ3MVGpoSIrmZTCRQ-23">
+          <mxGeometry x="100" y="10" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="poXBQ3MVGpoSIrmZTCRQ-27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="poXBQ3MVGpoSIrmZTCRQ-10" target="poXBQ3MVGpoSIrmZTCRQ-24">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="poXBQ3MVGpoSIrmZTCRQ-10" value="heplify (go agent)" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="140" y="297" width="100" height="28" as="geometry" />
+        </mxCell>
+        <mxCell id="poXBQ3MVGpoSIrmZTCRQ-12" value="&lt;h1&gt;Homer&lt;/h1&gt;&lt;p&gt;homer-app 创建的 DB 库，分 config DB 和 data DB&lt;/p&gt;&lt;p&gt;HEP:Homer Encapsulation Protocol 是 VOIP 通信的协议，用于将 SIP 通信音频和信令数据封装和传输。&lt;/p&gt;&lt;p&gt;Web 通过 9080 访问，HEPv3 包通过 9060(UDP)/9061(TCP)&amp;nbsp;&lt;/p&gt;" style="text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="250" y="100" width="380" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="poXBQ3MVGpoSIrmZTCRQ-3" value="heplify-server" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="270" width="80" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="poXBQ3MVGpoSIrmZTCRQ-4" value="homer-app" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="650" y="310" width="80" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="poXBQ3MVGpoSIrmZTCRQ-13" value="caddy 服务器" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="500" y="310" width="80" height="27" as="geometry" />
+        </mxCell>
+        <mxCell id="poXBQ3MVGpoSIrmZTCRQ-21" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="500" y="337" width="150" height="63" as="geometry" />
+        </mxCell>
+        <mxCell id="poXBQ3MVGpoSIrmZTCRQ-14" value="9090 -&amp;gt; prometheus:9090&lt;br&gt;9093 -&amp;gt; alertmanager:9093&lt;br&gt;3000 -&amp;gt; grafana:3000&lt;br&gt;9080 -&amp;gt; homer-webapp:80" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="poXBQ3MVGpoSIrmZTCRQ-21">
+          <mxGeometry width="150" height="63" as="geometry" />
+        </mxCell>
+        <mxCell id="poXBQ3MVGpoSIrmZTCRQ-16" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=none;strokeColor=none;" vertex="1" parent="poXBQ3MVGpoSIrmZTCRQ-21">
+          <mxGeometry x="120" y="43" width="30" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="poXBQ3MVGpoSIrmZTCRQ-22" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="poXBQ3MVGpoSIrmZTCRQ-16" target="poXBQ3MVGpoSIrmZTCRQ-4">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="poXBQ3MVGpoSIrmZTCRQ-25" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="poXBQ3MVGpoSIrmZTCRQ-24" target="poXBQ3MVGpoSIrmZTCRQ-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <UserObject label="VPC 119.x.x.69:&lt;br&gt;3000/9060/9096/9080" link="119.3.249.69" id="poXBQ3MVGpoSIrmZTCRQ-24">
+          <mxCell style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+            <mxGeometry x="330" y="405" width="110" height="40" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <mxCell id="poXBQ3MVGpoSIrmZTCRQ-28" value="capture&amp;amp;push to 9060" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="1">
+          <mxGeometry x="190" y="400" width="140" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
