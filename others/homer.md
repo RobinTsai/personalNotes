@@ -41,6 +41,7 @@ psql postgres://root:@localhost:5432
 \d          -- list tables
 \d TABLE_NAME -- 查看表结构信息
             -- 其他语法和 MySQL 类似
+\x   -- 垂直模式查询
 
 -- 查询某数据库大小
 select pg_size_pretty(pg_database_size('DB_NAME')) as size;
@@ -55,6 +56,9 @@ SELECT table_name, pg_size_pretty(pg_total_relation_size(table_name)) AS table_s
     FROM information_schema.tables
     WHERE table_schema = 'public'
     ORDER BY pg_total_relation_size(table_name) DESC;
+
+-- 查询
+select protocol_header from hep_proto_1_registration_20240122_0000 where protocol_header::text LIKE '%10%' limit 1;
 ```
 
 当前 homer 数据表的大小如下（>1MB 以上的）：

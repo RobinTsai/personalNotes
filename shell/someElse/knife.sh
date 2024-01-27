@@ -350,20 +350,20 @@ function gen_sql_monitor {
 }
 function gen_redis_conn {
     local sec_conf=`toml_read_section "redis"`
-    local template=`echo $sec_conf | awk '
+    local template=`echo "$sec_conf" | awk '
         { m[substr($0, 1, index($0, "=")-1)]=substr($0, index($0, "=")+1) }
         END { printf "redis-cli -h %s -a %s\n", "HOSTPORT", m["password"] }
     '`
     # 生成连接 sentinels 命令
-    sentinels=`echo $sec_conf | grep '^sentinel_addresses=' | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}:[0-9]{4,5}' |
-    awk -v tpl=$template '{ gsub(":", " -p " ,$0); gsub("HOSTPORT", $0 ,tpl); print tpl }'`
+    sentinels=`echo "$sec_conf" | grep '^sentinel_addresses=' | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}:[0-9]{4,5}' |
+        awk -v tpl="$template" '{ gsub(":", " -p ", $0); tmp=tpl; gsub("HOSTPORT", $0, tmp); print tmp }'`
     echo -e "[sentinel conn]\n$sentinels"
 
-    conn_cmd=`echo $sentinels | grep '' -m 1`
+    conn_cmd=`echo "$sentinels" | grep '' -m 1`
     info_sentinel_cmd="$conn_cmd info sentinel"
     # 连到 sentinel 并查到 master 连接命令（密码可能不对，因为用的 sentinel 的）
-    eval $info_sentinel_cmd | grep -E '^master[0-9]' | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}:[0-9]{4,5}' |
-    awk -v tpl=$template 'BEGIN {print "[master conn]"} { gsub(":", " -p " ,$0); gsub("HOSTPORT", $0, tpl); print tpl }'
+    eval "$info_sentinel_cmd" | grep -E '^master[0-9]' | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}:[0-9]{4,5}' |
+    awk -v tpl="$template" 'BEGIN {print "[master conn]"} { gsub(":", " -p " ,$0); gsub("HOSTPORT", $0, tpl); print tpl }'
 }
 
 function cat_fs_log {
