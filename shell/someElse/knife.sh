@@ -258,6 +258,17 @@ function grep_cti_ivr {
         s/\\".*//g;
         p}' "$1"
 }
+grep_cti_ivr_kcc () {
+        sed -n '/callworker\.(\*ReportSend)\.post/{
+        s/.*","_time":"/post_app\t/g;
+        s/+08:00.*\\"type\\":\\"/\t/g;
+        s/\\".*//g;
+        p};
+        /appRespProcess/{s/.*","_time":"/app_resp\t/g;
+        s/+08:00.*\\"order\\":\\"/\t/g;
+        s/\\".*//g;
+        p}' "$1"
+}
 function grep_cti_app_resp {
     grep 'appRespProcess' "$1" | sed 's/.*"_time":"//g; s/+08:00.*orders/+08:00/g; s/+08:00.*order\\":\\"/\t/g; s/\\".*//g'
 }
