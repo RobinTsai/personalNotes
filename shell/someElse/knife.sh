@@ -30,6 +30,18 @@ alias grep_fs_hangup="grep 'Hangup sofia/' "
 alias grep_fs_new_channel="grep 'New Channel sofia/' "
 alias grep_acd_agent="grep 'PubAgentState payload' "
 
+function grep_acd_state_change {
+    grep 'PubAgentState payload' "${1}" | while read line; do
+        agent_id=`echo $line | grep -Eo '"agent_id":"[0-9]*@.{36}","msg"' | grep -Eo '[0-9]{2}@[0-9a-f-]*'`
+        src_state=`echo $line | grep -Eo '\\"src_state\\":\\"[^"]*' | grep -Eo ':\\"[^"]*$' | grep -Eo '[a-zA-Z]*'`
+        dst_state=`echo $line | grep -Eo '\\"state\\":\\"[^"]*' | grep -Eo ':\\"[^"]*$' | grep -Eo '[a-zA-Z]*'`
+        src_sub_state_id=`echo $line | grep -Eo '\\"src_sub_state_id\\":[0-9]*' | grep -Eo '[0-9]*'`
+        dst_sub_state_id=`echo $line | grep -Eo '\\"sub_state_id\\":[0-9]*' | grep -Eo '[0-9]*'`
+        echo "${agent_id} ${src_state} ${dst_state} ${src_sub_state_id} ${dst_sub_state_id}" |
+            awk '{ printf("%s, state: %8s -> %8s, subState: %d -> %d\n", $1, $2, $3, $4, $5) }'
+    done
+}
+
 alias sed_join_line='sed ":a;N;\$!ba;s/\n/|/g"'
 alias fs_status="fs_cli -x 'status'"
 alias fs_sofia_status="fs_cli -x 'sofia status'"
