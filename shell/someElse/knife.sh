@@ -28,7 +28,6 @@ alias grep_tower_conns="grep -Eo 'conn_id[^,]*' "
 
 alias grep_fs_hangup="grep 'Hangup sofia/' "
 alias grep_fs_new_channel="grep 'New Channel sofia/' "
-alias grep_acd_agent="grep 'PubAgentState payload' "
 
 function grep_acd_state_change {
     grep 'PubAgentState payload' "${1}" | while read line; do
