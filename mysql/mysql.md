@@ -8,6 +8,27 @@ mysql -hHOST -uUSERNAME --password='WITH_SPECIAL_CHAR_PASSWORD' # 特殊符号�
 mysql -hHOST -uUSERNAME -pPASSWORD DB_NAME -e 'MYSQL CMD'       # 执行命令用 -e
 ```
 
+### 表管理
+
+```sql
+ALTER table tableName ADD INDEX indexName(columnName)
+ALTER TABLE tableName ADD COLUMN column_name tinyint DEFAULT 0, ADD COLUMN column_name_2 tinyint DEFAULT 0;
+ALTER TABLE tableName MODIFY COLUMN column_name TINYINT DEFAULT 0;
+
+ALTER TABLE tableName CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
+ALTER TABLE tableName CONVERT TO CHARACTER SET utf8mb4;
+
+ALTER DATABASE db_name DEFAULT CHARACTER SET character_name
+```
+
+### 字符集
+
+- DB 内表的字符集不同会导致无法关联查询（Error: 1267）（遇到的情况是：甚至从 A 表查出后字段赋值给 B 表一个字段用于查询）
+- 字符集有 DB 的字符集、连接的字符集、还有个什么的字符集来着，要保持一致。
+
+```sql
+```
+
 ### 导出
 
 ```sh
@@ -21,11 +42,10 @@ mysql -h$host -u$user -p$password -D$db -B -e "$sql" > export.csv
 
 ### 索引
 
-```sh
+```sql
 show index from phone_location;
 DROP INDEX [indexName] ON mytable;
 CREATE INDEX indexName ON table_name (column_name)
-ALTER table tableName ADD INDEX indexName(columnName)
 ```
 
 ## 本地快速搭建
@@ -45,7 +65,7 @@ source /var/lib/mysql/udesk_phone_location.sql # 在 mysql 交互页中执行导
 mysql 操作
 
 ```sql
-# 创建 DB
+-- 创建 DB
 CREATE DATABASE test_db;
 CREATE DATABASE IF NOT EXISTS test_db;
 CREATE DATABASE t1_freeswitch  DEFAULT CHARSET utf8;
@@ -54,13 +74,14 @@ CREATE DATABASE t1_freeswitch  DEFAULT CHARSET utf8mb4;
 
 show create database t1_freeswitch;
 
-# 创建表
+-- 创建表
 CREATE TABLE `kefu` (
   `sid` varchar(255) DEFAULT NULL,
   `name_from_kefu` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-# 导入 csv（注意表头和表字段一致）
-# shell 中将文件放到对应目录 cp train.csv /var/lib/mysql-files/
+
+-- 导入 csv（注意表头和表字段一致）
+-- shell 中将文件放到对应目录 cp train.csv /var/lib/mysql-files/
 LOAD DATA INFILE '/var/lib/mysql-files/crm.csv'
     INTO TABLE crm
     FIELDS TERMINATED BY ','
