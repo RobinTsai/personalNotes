@@ -34,13 +34,18 @@ alias grep_fs_new_channel="grep 'New Channel sofia/' "
 function grep_acd_state_change {
     grep 'PubAgentState payload' "${1}" | while read line; do
         timestamp=`echo $line | grep -Eo '"_time":".*\+08:00' | grep -Eo '[^"]*$' | sed 's/+08:00//g'`
-        agent_id=`echo $line | grep -Eo '"agent_id":"[0-9]*@.{36}","timestamp' | grep -Eo '[0-9]{2}@[0-9a-f-]*'`
+        agent_id=`echo $line | grep -Eo '"agent_id":"[0-9]*@.{36}","timestamp' | grep -Eo '[0-9]+@[0-9a-f-]*'`
         src_state=`echo $line | grep -Eo '\\"src_state\\":\\"[^"]*' | grep -Eo ':\\"[^"]*$' | grep -Eo '[a-zA-Z]*'`
         dst_state=`echo $line | grep -Eo '\\"state\\":\\"[^"]*' | grep -Eo ':\\"[^"]*$' | grep -Eo '[a-zA-Z]*'`
         src_sub_state_id=`echo $line | grep -Eo '\\"src_sub_state_id\\":[0-9]*' | grep -Eo '[0-9]*'`
         dst_sub_state_id=`echo $line | grep -Eo '\\"sub_state_id\\":[0-9]*' | grep -Eo '[0-9]*'`
-        echo "${agent_id} ${src_state} ${dst_state} ${src_sub_state_id} ${dst_sub_state_id} ${timestamp}" |
-            awk '{ printf("%-29s %s, %7s -> %-7s, %3d -> %-3d\n", $6, $1, $2, $3, $4, $5) }'
+        call_id=`echo $line | grep -Eo '\\"call_id\\":\\"[^"]*' | grep -Eo ':.*' | grep -Eo '[0-9a-z-]*'`
+        if [[ ${call_id} < "  " ]]; then
+            call_id="null"
+        fi
+        wrapup_dur=`echo $line | grep -Eo '\\"wrapup_duration\\":[0-9]*' | grep -Eo '[0-9]*'`
+        echo "${agent_id} ${src_state} ${dst_state} ${src_sub_state_id} ${dst_sub_state_id} ${timestamp} ${call_id} ${wrapup_dur}" |
+            awk '{ printf("%-29s %s, %7s -> %-7s, %3d -> %-3d, %d, %s\n", $6, $1, $2, $3, $4, $5, $8, $7) }'
     done
 }
 
