@@ -45,7 +45,7 @@ function grep_acd_state_change {
         fi
         wrapup_dur=`echo $line | grep -Eo '\\"wrapup_duration\\":[0-9]*' | grep -Eo '[0-9]*'`
         echo "${agent_id} ${src_state} ${dst_state} ${src_sub_state_id} ${dst_sub_state_id} ${timestamp} ${call_id} ${wrapup_dur}" |
-            awk '{ printf("%-29s %s, %7s -> %-7s, %3d -> %-3d, %d, %s\n", $6, $1, $2, $3, $4, $5, $8, $7) }'
+            awk '{ printf("%-29s %s, %7s -> %-7s, %3d -> %-3d,%3d, %s\n", $6, $1, $2, $3, $4, $5, $8, $7) }'
     done
 }
 
