@@ -3,6 +3,8 @@ alias selfTmp="mkdir -p /tmp/webuser/robincai_tmp; cd /tmp/webuser/robincai_tmp;
 alias ccps="cd /usr/local/kylin_cti/current; pwd"
 alias cdOpenresty="cd /usr/local/openresty"
 alias cdFreeswitch="cd /usr/local/freeswitch/conf"
+alias esl-py="cd /usr/local/esl-python"
+alias ps-esl-py='ps -ef | grep recringing.py | grep -v grep  | awk '\''{ print $0 "\n\nPID: " $2 }'\'''
 
 alias logCcps="cd /var/log/kylin_cti; pwd"
 alias logFs="cd /usr/local/freeswitch/log; pwd"
@@ -45,7 +47,7 @@ function grep_acd_state_change {
         fi
         wrapup_dur=`echo $line | grep -Eo '\\"wrapup_duration\\":[0-9]*' | grep -Eo '[0-9]*'`
         echo "${agent_id} ${src_state} ${dst_state} ${src_sub_state_id} ${dst_sub_state_id} ${timestamp} ${call_id} ${wrapup_dur}" |
-            awk '{ printf("%-29s %s, %7s -> %-7s, %3d -> %-3d,%3d, %s\n", $6, $1, $2, $3, $4, $5, $8, $7) }'
+            awk '{ printf("%-029s %-44s, %7s -> %-7s, %3d -> %-3d,%3d, %s\n", $6, $1, $2, $3, $4, $5, $8, $7) }'
     done
 }
 
@@ -167,6 +169,22 @@ function ossDownload {
     echo ">>> run ${cmdStr}"
     sh -c "${cmdStr}"
 }
+
+function ossDownloads {
+    for name in $@
+    do
+        ossDownload ${name}
+    done
+}
+
+function ossUploads {
+    for name in $@
+    do
+        ossUpload ${name}
+    done
+}
+
+
 function ossDownloadBak {
     local supported=" easy-deploy.tar etcd-chk.tar oss2mgr-linux.zip etcd-chk.tar ";
     local help="only support:$supported"
@@ -275,7 +293,7 @@ function grep_cti_ivr {
 	/appRespProcess/{s/.*","_time":"/app_resp\t/g;
         s/+08:00.*\\"order\\":\\"/\t/g;
         s/\\".*//g;
-        p}' "$1"
+        p}' "$1" | grep -v '"'
 }
 grep_cti_ivr_kcc () {
         sed -n '/callworker\.(\*ReportSend)\.post/{

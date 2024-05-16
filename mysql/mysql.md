@@ -57,8 +57,15 @@ docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 \
     -v $PWD/conf:/etc/mysql/conf.d \
     -v $PWD/data:/var/lib/mysql \
     -v $PWD/logs:/logs \
-    --name test_mysql mysql:5.6 # 启动，注意创建本地 conf data logs 目录
+    --name test_mysql2 mysql:5.6 # 启动，注意创建本地 conf data logs 目录
 mysql -uroot -p123456                          # 在 docker 内连接
+
+mysql -h127.0.0.1 -u root -p
+
+# 三种方法解决：Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock'
+# 1. 一般自动生成 `/tmp/mysql.sock` 套接字，软链它（不可 copy）或使用 find / -name mysqld.sock 找到它后软链
+# 2. 修改配置文件 my.cnf，不要绑定 IP，然后指定 IP 登录：mysql -h127.0.0.1 -u root -p
+
 source /var/lib/mysql/udesk_phone_location.sql # 在 mysql 交互页中执行导入
 ```
 
@@ -107,4 +114,18 @@ SHOW VARIABLES LIKE 'max_prepared_stmt_count';
 SET GLOBAL max_prepared_stmt_count = 16382;
 ```
 
-select ccps.sid,ccps.name_from_ccps,crm.name_from_crm,kefu.name_from_kefu from ccps left join crm on ccps.sid=crm.sid left join kefu on ccps.sid=kefu.sid;
+## 运维
+
+```sh
+# MySQL数据库会以读取到的最后一个配置文件中的参数为准
+ 1. /etc/my.cnf
+ 2. /etc/mysql/my.cnf #
+ 3. /usr/local/mysql/etc/my.cnf
+ 4. ~/.my.cnf
+
+# 查看数据目录
+show global variables like "%datadir%" #  /var/lib/mysql
+
+# 从配置文件中查看日志文件配置
+log-error = /var/log/mysql/error.log
+```
