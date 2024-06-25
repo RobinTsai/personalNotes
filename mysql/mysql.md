@@ -8,6 +8,16 @@ mysql -hHOST -uUSERNAME --password='WITH_SPECIAL_CHAR_PASSWORD' # 特殊符号�
 mysql -hHOST -uUSERNAME -pPASSWORD DB_NAME -e 'MYSQL CMD'       # 执行命令用 -e
 ```
 
+### 用户管理
+
+```sh
+# mysql://USERNAME:PASSWORK@HOST:PORT/DB_NAME"
+update user set host = '%' where user = 'root';
+mysql -h localhost -uroot -pkamailio
+select Host,User from user;
+mysql -hlocalhost -ukamailio -pkamailio;
+```
+
 ### 表管理
 
 ```sql
@@ -27,6 +37,15 @@ ALTER DATABASE db_name DEFAULT CHARACTER SET character_name
 - 字符集有 DB 的字符集、连接的字符集、还有个什么的字符集来着，要保持一致。
 
 ```sql
+```
+
+### 行管理
+
+
+```sh
+INSERT INTO table_name (column1, column2, column3, ...) VALUES (value1, value2, value3, ...);
+
+INSERT INTO tenant_events (sub_id, `event`) VALUES (125, 'realtime_asr_result');
 ```
 
 ### 导出
