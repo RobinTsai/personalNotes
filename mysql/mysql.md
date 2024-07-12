@@ -25,6 +25,8 @@ ALTER table tableName ADD INDEX indexName(columnName)
 ALTER TABLE tableName ADD COLUMN column_name tinyint DEFAULT 0, ADD COLUMN column_name_2 tinyint DEFAULT 0;
 ALTER TABLE tableName MODIFY COLUMN column_name TINYINT DEFAULT 0;
 
+ALTER TABLE tiers ADD COLUMN auto_log tinyint DEFAULT 1;
+
 ALTER TABLE tableName CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
 ALTER TABLE tableName CONVERT TO CHARACTER SET utf8mb4;
 
