@@ -376,8 +376,8 @@ done
     + `1`, STDOUT; `1>`, `1>>` 将STDOUT重定向
     + `2`, STDERR; `2>`, `2>>` 将STDERR重定向;
     + `cat file 1> file1 2> file2`, 分别重定向
-    + `&>`, `&>>`; 将STDOUT和STDERR都重定向到一个文件。(自动地shell认为错误信息优先级高)
-    + `>&2`, 改变重定向, 可以将STDOUT导向STDERR.(shell默认将STDERR导向STDOUT)
+    + `&>`, `&>>`; 将 STDOUT 和 STDERR 都重定向到一个文件。(自动地shell认为错误信息优先级高)
+    + `>&2`, 改变重定向, 可以将 STDOUT 导向 STDERR（shell 默认将 STDERR 导向 STDOUT，**合并**，可能不用 & 时会覆盖）
 - 永久重定向 `exec 1>out.log`; 在脚本中某位置设定了它后，之后的STDOUT会重定向到out.log (恢复:中间量)
 - 输入重定向 `exec 0< file`; 可以在脚本中使用，把文件重定向到STDIN (之后可直接用read)
 - 自定义重定向 `exec 3>>test.log` ( `>>`比 `>`好), `echo '...' >&3`

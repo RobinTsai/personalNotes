@@ -22,6 +22,7 @@ alias ll="ls -htrl"
 alias l="ll"
 alias psUdesk="ps -ef | grep -v grep | grep udesk"
 alias pseo="ps -eo lstart,cmd"
+alias psgrep="ps -ef | grep -v ' grep ' | grep "
 alias cdOpenresty="cd /usr/local/openresty; pwd"
 alias grepv="grep -v grep | grep "
 alias tarx="tar -zxvf"
@@ -74,7 +75,7 @@ done
 echo "oss bin is ${ossBin}"
 
 function setIP {
-    IP=`ifconfig eth0 | grep inet | grep -v inet6 | awk '{ print $2 }'`
+    IP=`ifconfig eth0 2>&1 | grep inet | grep -v inet6 | awk '{ print $2 }'`
 }
 setIP
 
