@@ -25,12 +25,14 @@ ALTER table tableName ADD INDEX indexName(columnName)
 ALTER TABLE tableName ADD COLUMN column_name tinyint DEFAULT 0, ADD COLUMN column_name_2 tinyint DEFAULT 0;
 ALTER TABLE tableName MODIFY COLUMN column_name TINYINT DEFAULT 0;
 
-ALTER TABLE tiers ADD COLUMN auto_log tinyint DEFAULT 1;
+ALTER TABLE tiers MODIFY COLUMN `auto_login` tinyint(4) DEFAULT 1;
 
 ALTER TABLE tableName CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;
 ALTER TABLE tableName CONVERT TO CHARACTER SET utf8mb4;
 
 ALTER DATABASE db_name DEFAULT CHARACTER SET character_name
+
+DROP TABLE table_name;
 ```
 
 ### 字符集
@@ -108,6 +110,15 @@ CREATE TABLE `kefu` (
   `name_from_kefu` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `audio_subers` (
+  `id` INT PRIMARY KEY AUTO_INCREMENT,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `app_id` varchar(191) NOT NULL,
+  `sub_url` text,
+  `enabled` tinyint(1) DEFAULT '1'
+) DEFAULT CHARSET=utf8;
+
 -- 导入 csv（注意表头和表字段一致）
 -- shell 中将文件放到对应目录 cp train.csv /var/lib/mysql-files/
 LOAD DATA INFILE '/var/lib/mysql-files/crm.csv'
@@ -116,6 +127,24 @@ LOAD DATA INFILE '/var/lib/mysql-files/crm.csv'
     ENCLOSED BY '"'
     LINES TERMINATED BY '\n'
     IGNORE 1 ROWS;
+```
+
+## 状态统计
+
+```sql
+-- 表状态统计
+show table status where Name='apps'\G;
+--
+select
+table_schema as '数据库',
+table_name as '表名',
+table_rows as '记录数',
+truncate(data_length/1024/1024, 2) as '数据容量(MB)',
+truncate(index_length/1024/1024, 2) as '索引容量(MB)'
+from information_schema.tables
+where TABLE_SCHEMA='test_novel'
+order by table_rows desc, index_length desc;
+
 ```
 
 ## 高级
