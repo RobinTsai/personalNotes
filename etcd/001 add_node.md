@@ -13,9 +13,15 @@
 
 ```sh
 export ETCDCTL_API=3 # 设置变量
+# 下面是 s5 集群 etcd
 etcdctl --endpoints="http://10.90.88.28:2380,http://10.90.254.41:2380,http://10.90.91.36:2380" member list
 etcdctl --endpoints="http://10.90.88.28:2380,http://10.90.254.41:2380,http://10.90.91.36:2380" endpoint status --write-out=table
 etcdctl --endpoints="http://10.90.88.28:2380,http://10.90.254.41:2380,http://10.90.91.36:2380" endpoint health --write-out=table
+
+# 下面是 s2 集群，01: 187, 02: 215, 03: 216
+etcdctl --endpoints="http://10.11.54.187:2378,http://10.11.54.215:2378,http://10.11.54.216:2378" member list --write-out=table
+etcdctl --endpoints="http://10.11.54.187:2378,http://10.11.54.215:2378,http://10.11.54.216:2378" endpoint status --write-out=table
+etcdctl --endpoints="http://10.11.54.187:2378,http://10.11.54.215:2378,http://10.11.54.216:2378" endpoint health --write-out=table
 ```
 
 获取信息：那个 etcd 是主节点（0921日是 infra1）、另外两个节点的 ID、 PEER_URL 信息
@@ -34,9 +40,10 @@ etcdctl --endpoints="http://10.11.54.187:2389" member add {NEW_NAME} --peer-urls
 查看节点列表、状态（注意 endpoints 的变化）：
 
 ```sh
-etcdctl --endpoints="http://10.11.54.187:2379,http://10.11.54.187:2389,http://10.11.54.187:2399" member list
-etcdctl --endpoints="http://10.11.54.187:2379,http://10.11.54.187:2389,http://10.11.54.187:2399" endpoint status --write-out=table
-etcdctl --endpoints="http://10.11.54.187:2379,http://10.11.54.187:2389,http://10.11.54.187:2399" endpoint health --write-out=table
+export ETCDCTL_API=3 # 设置变量
+etcdctl --endpoints="http://10.11.54.215:2389,http://10.11.54.216:2389,http://10.11.54.187:2389" member list
+etcdctl --endpoints="http://10.11.54.215:2389,http://10.11.54.216:2389,http://10.11.54.187:2389" endpoint status --write-out=table
+etcdctl --endpoints="http://10.11.54.215:2389,http://10.11.54.216:2389,http://10.11.54.187:2389" endpoint health --write-out=table
 ```
 
 ---
@@ -132,4 +139,48 @@ sudo docker run -e ETCDCTL_API=3 --rm registry.cn-hangzhou.aliyuncs.com/udesk-ci
 
 echo -e "\nendpoint health:"
 sudo docker run -e ETCDCTL_API=3 --rm registry.cn-hangzhou.aliyuncs.com/udesk-cicd/etcd:3.3.20-v2 /usr/local/bin/etcdctl --endpoints "$eps" endpoint health --write-out=table
+```
+
+## 2024年9月12日
+
+### D3 环境中
+
+```sh
+# docker 的 etcd-node-1=http://10.1.163.116:12380,
+etcd-node-2=http://10.1.163.116:22380,etcd-node-4=http://10.1.17.83:2388,etcd-node-1=http://10.1.163.116:12380,etcd-node-5=http://10.1.17.83:2378
+
+export ETCDCTL_API=3 # 设置变量
+etcdctl --endpoints="http://10.1.163.116:32380,http://10.1.163.116:22380,http://10.1.17.83:2388,http://10.1.163.116:12380,http://10.1.17.83:2378" member list --write-out=table
+etcdctl --endpoints="http://10.1.163.116:32380,http://10.1.163.116:22380,http://10.1.17.83:2388,http://10.1.163.116:12380,http://10.1.17.83:2378" endpoint status --write-out=table
+etcdctl --endpoints="http://10.1.163.116:32380,http://10.1.163.116:22380,http://10.1.17.83:2388,http://10.1.163.116:12380,http://10.1.17.83:2378" endpoint health --write-out=table
+
+etcd --name etcd-node-3 --data-dir=/usr/local/etcd/etcd3/data --wal-dir=/usr/local/etcd/etcd3/wal --auto-compaction-retention=1m --snapshot-count=5000 --quota-backend-bytes=6442450944 --initial-advertise-peer-urls http://10.1.163.116:32380 --listen-peer-urls http://10.1.163.116:32380 --listen-client-urls http://10.1.163.116:32379 --advertise-client-urls http://10.1.163.116:32379 --initial-cluster-token etcd-cluster-1 --initial-cluster etcd-node-3=http://10.1.163.116:32380,etcd-node-2=http://10.1.163.116:22380,etcd-node-4=http://10.1.17.83:2388,etcd-node-1=http://10.1.163.116:12380,etcd-node-5=http://10.1.17.83:2378 --initial-cluster-state existing
+```
+
+### S2 线上环境
+
+```sh
+# 01: 187, 02: 215, 03: 216
+export ETCDCTL_API=3 # 设置变量
+etcdctl --endpoints="http://10.11.54.187:2378,http://10.11.54.215:2378,http://10.11.54.216:2378" member list --write-out=table
+etcdctl --endpoints="http://10.11.54.187:2378,http://10.11.54.215:2378,http://10.11.54.216:2378" endpoint status --write-out=table
+etcdctl --endpoints="http://10.11.54.187:2378,http://10.11.54.215:2378,http://10.11.54.216:2378" endpoint health --write-out=table
+
+# etcd03 上跑的命令
+etcd --name infra-3 --data-dir=/usr/local/etcd/data --wal-dir=/usr/local/etcd/wal --auto-compaction-retention=1m --snapshot-count=5000 --quota-backend-bytes=6442450944 --initial-advertise-peer-urls http://10.11.54.216:2378 --listen-peer-urls http://10.11.54.216:2378 --listen-client-urls http://10.11.54.216:2389 --advertise-client-urls http://10.11.54.216:2389 --initial-cluster-token etcd-cluster-1 --initial-cluster infra0=http://10.11.54.187:2388,infra1=http://10.11.54.187:2378,infra2=http://10.11.54.187:2368,infra-2=http://10.11.54.215:2378,infra-3=http://10.11.54.216:2378 --initial-cluster-state existing
+
+# 创建 etcd 01 命令
+nohup etcd --name infra0 --data-dir=/usr/local/etcd/data --wal-dir=/usr/local/etcd/wal --auto-compaction-retention=1m --snapshot-count=5000 --quota-backend-bytes=6442450944 --initial-advertise-peer-urls http://10.11.54.187:2378 --listen-peer-urls http://10.11.54.187:2378 --listen-client-urls http://10.11.54.187:2389 --advertise-client-urls http://10.11.54.187:2389 --initial-cluster-token etcd-cluster-1 --initial-cluster infra0=http://10.11.54.187:2378,infra-2=http://10.11.54.215:2378,infra-3=http://10.11.54.216:2378 --initial-cluster-state existing  > /var/log/etcd/etcd.log 2>&1 &
+# 执行 OK
+```
+
+### redis 操作
+
+redis6
+
+- 连接 sentinel 命令 `redis-cli -h 10.11.54.216 -p 27690 -a "ORjPtnqVDlrlnkP5KoT5"`
+- `sentinel_addresses6 = ['10.11.54.215:27690', '10.11.54.216:27690', '10.11.54.187:27690']`
+- 连接 server 命令 `redis-cli -h 10.11.54.216 -p 7790 -a "ORjPtnqVDlrlnkP5KoT5"`
+
+```
 ```
