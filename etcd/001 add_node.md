@@ -182,5 +182,21 @@ redis6
 - `sentinel_addresses6 = ['10.11.54.215:27690', '10.11.54.216:27690', '10.11.54.187:27690']`
 - 连接 server 命令 `redis-cli -h 10.11.54.216 -p 7790 -a "ORjPtnqVDlrlnkP5KoT5"`
 
+```sh
+# 03 机器的 sentinel 信息
+executable:/usr/local/redis6/redis/redis_27690/src/./redis-sentinel
+config_file:/usr/local/redis6/redis/redis_27690/sentinel.conf
+sentinel known-sentinel mymaster 10.11.54.187 27690 44cf50eb0aa10a328088384d09c51da0d65cd104
+sentinel known-sentinel mymaster 10.11.54.215 27690 6684dfffb9db8945f935f2f953c830717a1b3edf
+
+# 01 sentinel 启动前 conf 中 sentinel myid 44cf50eb0aa10a328088384d09c51da0d65cd104
 ```
-```
+
+
+etcd02
+
+etcd --name infra-2 --data-dir=/usr/local/etcd/data --wal-dir=/usr/local/etcd/wal --auto-compaction-retention=1m --snapshot-count=5000 --quota-backend-bytes=6442450944 --initial-advertise-peer-urls http://10.11.54.215:2378 --listen-peer-urls http://10.11.54.215:2378 --listen-client-urls http://10.11.54.215:2389 --advertise-client-urls http://10.11.54.215:2389 --initial-cluster-token etcd-cluster-1 --initial-cluster infra0=http://10.11.54.187:2388,infra1=http://10.11.54.187:2378,infra2=http://10.11.54.187:2368,infra-2=http://10.11.54.215:2378 --initial-cluster-state existing
+
+ETCD 03
+
+etcd --name infra-3 --data-dir=/usr/local/etcd/data --wal-dir=/usr/local/etcd/wal --auto-compaction-retention=1m --snapshot-count=5000 --quota-backend-bytes=6442450944 --initial-advertise-peer-urls http://10.11.54.216:2378 --listen-peer-urls http://10.11.54.216:2378 --listen-client-urls http://10.11.54.216:2389 --advertise-client-urls http://10.11.54.216:2389 --initial-cluster-token etcd-cluster-1 --initial-cluster infra0=http://10.11.54.187:2388,infra1=http://10.11.54.187:2378,infra2=http://10.11.54.187:2368,infra-2=http://10.11.54.215:2378,infra-3=http://10.11.54.216:2378 --initial-cluster-state existing
