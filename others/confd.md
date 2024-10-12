@@ -9,7 +9,7 @@
   - 一个轻量级配置管理工具
   - 实现了从某个后端存储中拉取配置信息，使用某规则，应用到模板生成对应配置文件，并最终执行配置生效的命令。
 - 支持的后端存储：
-  - etcd / consul / dynamodb / zookeeper / redis / vault / 环境变量 / aws_ssm_parameter_store 等等
+  - file / etcd / consul / dynamodb / zookeeper / redis / vault / 环境变量 / aws_ssm_parameter_store 等等
 
 ## 安装
 
@@ -84,11 +84,12 @@ return IPWL
 - 监听方式有两种，
   - （默认）一种是周期性主动获取的方式实现
   - 另一种是使用 backend 自带的 watch 监听
-- redis 看配置的 key，内部会判断 TYPE
+- redis 获取配置看配置的 key，内部会判断 TYPE（注一）
   - 如果是 string，直接获取值
-  - 如果是 hash，会 `HSCAN` 所有，获取所有 key => value
+  - 如果是 hash，会 `HSCAN` key 下所有 field，获取所有 key/field => value
   - 其他情况，会 `SCAN key*`，获取所有 key => value
 - redis 的 watch 监听是通过 PubSub 实现的
-  - PubSub 监听了 **键空间事件** （`__keyspace@<db>__:<cmd>`）实现的，
-  - 这些键操作得分 del/append/rename_from/expire 等
+  - PubSub 监听通过订阅 **键空间通知** （`__keyspace@<db>__:<key_pattern>`）实现
+  - PubSub 收到事件后，还是会通过 注一 位置的方式获取一遍数据
+  - 疑问：这里 confd 没有检查 notify-keyspace-events 的配置，也没看到文档提？
 - confd 内存中存有所有获取的信息，先清空然后再建，建立之后生成临时文件，比较源文件和临时文件是否变动，变动则更新。
