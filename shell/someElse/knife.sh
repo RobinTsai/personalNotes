@@ -153,8 +153,15 @@ function whois {
 }
 
 function whoisTenent {
-    res=`curl -s "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/tenents_info.csv" | grep "$1" | sed 's/,/ , /g'`
+    filename="${SELF_TMP}/tenents_info.csv"
+    if ! [ -e "${filename}" ]; then
+        echo "download to ${filename}"
+        curl -s "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/tenents_info.csv" -o ${filename}
+    fi
+
+    res=`grep "$1" "${filename}" | sed 's/,/ , /g'`
     echo $res
+    return
 }
 
 function ossUpload {
@@ -326,7 +333,7 @@ function grep_cti_http {
     awk '{printf "%s\t%s\t%s\n",$1,$2,$3}'
 }
 function grep_cti_channels { # 查看 channelIDs
-    grep -Eo 'channel_[0-9]_id":"[^"]*"' "$1" | sed '{s/.*://g;s/"//g}' | sort -u
+    grep -Eo 'channel_[0-9]_[a-z]+":"[^"]*"' "$1" | sed '{s/.*://g;s/"//g}' | sort -u
 }
 function grep_cti_fs_event { # 过滤 fs 事件
     sed '/Event\]\[Received/{s/.*_time\":\"//g; s/\+08:00.*\] / /g;s/\\n.*//g;p}' "$1"  -n  |

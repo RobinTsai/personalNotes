@@ -27,7 +27,7 @@ docker pull ubuntu:18.04
 
 ![docker commands](./assets/docker-cmds.png)
 
-```yml
+```sh
 docker commit [-a "author"] [-m "message"] CONTAINER_ID  REPO[:TAG]
 
 docker run [OPTIONS] IMAGE [COMMAND] [ARG...]
