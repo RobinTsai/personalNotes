@@ -149,7 +149,7 @@ function whois {
         echo $res
         return
     fi
-    curl -s "cip.cc/$1" | grep -v '^$'
+    # curl -s "cip.cc/$1" | grep -v '^$'
 }
 
 function whoisTenent {
@@ -194,7 +194,7 @@ function ossUploads {
 
 
 function ossDownloadBak {
-    local supported=" easy-deploy.tar etcd-chk.tar oss2mgr-linux.zip etcd-chk.tar ";
+    local supported=" easy-deploy etcd-chk oss2mgr-linux etcd-chk ";
     local help="only support:$supported"
     if [ ${#1} -eq 0 ]; then
         echo $help
@@ -203,7 +203,7 @@ function ossDownloadBak {
 
     local filename="$1"
     if [ "${#filename}" -gt 0 ] && [[ $supported =~ " $filename " ]]; then
-        curl "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/$filename" --output /tmp/webuser/robincai_tmp/bak_$filename
+        curl "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/$filename.tar" --output /tmp/webuser/robincai_tmp/bak_$filename.tar
         return
     fi
     echo $help
