@@ -28,6 +28,7 @@ alias grepv="grep -v grep | grep "
 alias tarx="tar -zxvf"
 
 alias grep_tower_conns="grep -Eo 'conn_id[^,]*' "
+alias grep_fs_applimit="grep mod_db.c:194 "
 
 alias grep_fs_hangup="grep 'Hangup sofia/' "
 alias grep_fs_new_channel="grep 'New Channel sofia/' "
@@ -139,17 +140,16 @@ function grep_record_by_call {
 }
 
 function whoAmi {
-    a=`uname -a | awk '{print $2 }'`; b=`ifconfig eth0| awk '/inet /{print $2 }' | grep -Eo "[0-9.]*"`; c=`curl cip.cc -s | awk '/IP/{print $3}'`
+    a=`uname -a | awk '{print $2 }'`; b=`ifconfig eth0| awk '/inet /{print $2 }' | grep -Eo "[0-9.]*"`; c=`curl ip.sb -s`
     echo -e "$a\t$b\t$c"
 }
 
 function whois {
     res=`curl -s "https://cti-paas-low.oss-cn-hangzhou.aliyuncs.com/ccps/robincai/bak/4.0_prod_host.md" | grep "$1"`
     if [[ ${res} > "  " ]]; then
-        echo $res
+        echo "$res"
         return
     fi
-    # curl -s "cip.cc/$1" | grep -v '^$'
 }
 
 function whoisTenent {
@@ -160,7 +160,7 @@ function whoisTenent {
     fi
 
     res=`grep "$1" "${filename}" | sed 's/,/ , /g'`
-    echo $res
+    echo "$res"
     return
 }
 

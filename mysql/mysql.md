@@ -6,6 +6,8 @@
 mysql -hHOST -uUSERNAME -pPASSWORD DB_NAME                      # DB 名直接加即可
 mysql -hHOST -uUSERNAME --password='WITH_SPECIAL_CHAR_PASSWORD' # 特殊符号的密码用参数名的全称，用单引号（双引号有时候不好）
 mysql -hHOST -uUSERNAME -pPASSWORD DB_NAME -e 'MYSQL CMD'       # 执行命令用 -e
+
+mysql -S /path/to/mysql.sock
 ```
 
 ### 用户管理
