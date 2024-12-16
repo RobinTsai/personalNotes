@@ -50,7 +50,7 @@ Network Address Translation，网络地址转换。
 - 内网 A 首次向外网主机发送包时创建映射关系，并为 A 分配一个公网端口
 - 此时，内网 A （同样端口）再次向另一外网主机 S2 发送数据包时，同样使用此公网端口
 - 此时，**任何外部主机** 只要向此公网端口发送数据包，都会被映射到 A 的内网 IP
-- 总结： <font color=red>内 IP+PORT = NAT Pub IP+Port = 外部 ***任何*** 主机+ ***任何*** 端口</font>
+- 总结： <font color=red>内 IP+PORT = NAT Pub IP+Port = 外部 ***任何*** 主机+ ***任何*** 端口</font> （这里 `=` 表示对应关系）
 
 ### IP 受限型 NAT
 
@@ -71,7 +71,9 @@ Network Address Translation，网络地址转换。
 - 此时，A **同样源端口** 又向外部主机 S2 发送数据包，此时 NAT 又为其分配一个地址映射端口 Y
 - 如果外部主机想要发送数据给 A，必须是收到 A 数据包的外部主机+端口，向映射地址 X/Y 均可通过
 - 总结： <font color=red>内 IP + PORT = ***N*** 个 NAT Pub IP+Port = ***N*** 个 ***指定*** 外网主机+***指定***端口 </font>
-- 注意点：一个内网 IP+port 向 N 个外部主机发送数据包，NAT 设备会为每个 pair 创建一个映射（N
+
+> 一个内网 IP+port 向 N 个外部主机发送数据包，NAT 设备会为每个 pair 创建一个映射（N 个）；
+> 而端口限制型 NAT 内网 IP+PORT 和 NAT IP+PORT 还是一一对应的。
 
 ### SNAT
 
