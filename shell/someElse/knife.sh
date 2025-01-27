@@ -71,6 +71,11 @@ do
         ossBin=`expr match "$res" ".*: \(\/[^ ]*${name}\)"`
         break
     fi
+    md5=`md5sum ${ossBin}`
+    if [[ ${md5} != "c9d373995127b886a4a73ea676fa342f" ]]; then
+        echo "oss2mgr-linux is not updated, ossDownload oss2mgr.tar to update."
+        return
+    fi
 done
 
 echo "oss bin is ${ossBin}"
@@ -194,7 +199,7 @@ function ossUploads {
 
 
 function ossDownloadBak {
-    local supported=" easy-deploy etcd-chk oss2mgr-linux etcd-chk ";
+    local supported=" easy-deploy etcd-chk oss2mgr etcd-chk ";
     local help="only support:$supported"
     if [ ${#1} -eq 0 ]; then
         echo $help

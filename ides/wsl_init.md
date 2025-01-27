@@ -68,7 +68,7 @@ echo 'PubkeyAcceptedKeyTypes +ssh-rsa' >> /etc/ssh/ssh_config
 # 安装 goup（略，目前通过 copy 的二进制文件）
 goup install go1.17.13 # 用 goup 安装 go（指定版本）
 # 指定 go sdk 版本
-goup # 输入命令后按提示切换进行指定
+goup set go1.17.13
 # 将 go 的 bin 加入 path 中，并生效（流程化安装 goup 会自动配置）
 echo 'export PATH=$PATH:$HOME/.go/current/bin' >> ~/.zshrc & source ~/.zshrc
 ```
