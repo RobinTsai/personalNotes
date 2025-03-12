@@ -42,7 +42,8 @@ echo 'PubkeyAcceptedKeyTypes +ssh-rsa' >> /etc/ssh/ssh_config
 ```
 
 一般配置文件：
-```
+
+```ini
 # ~/.gitconfig
 [alias]
         l = log
