@@ -6,12 +6,24 @@ sudo apt-get install -y zsh
 chsh -s $(which zsh)
 # oh-my-zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sh -c "$(curl -fsSL https://gitee.com/pocmon/ohmyzsh/raw/master/tools/install.sh)"
 # powerlevel10k - oh-my-zsh 的主题，安装完会自行启动配置
 git clone --depth=1 https://gitee.com/romkatv/powerlevel10k.git ~/powerlevel10k
 echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' >>~/.zshrc
 # ssh 配置（下面命令为自己生成，也可以直接拷贝已有的 私钥、公钥、config 等文件）
 ssh-keygen -t rsa -b 1024 # 注：备份自己常用的 Host Config 信息
 # git clone 项目
+```
+
+```sh
+# 安装高亮插件
+git clone https://gitee.com/asddfdf/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+# 安装自动建议插件
+git clone https://gitee.com/chenweizhen/zsh-autosuggestions.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+# 安装字体
+sudo apt-get install fonts-powerline
+# 使用插件
+plugins=( OTHER  zsh-syntax-highlighting zsh-autosuggestions)
 ```
 
 # 配置 PowerShell
