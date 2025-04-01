@@ -52,6 +52,8 @@ DROP TABLE table_name;
 INSERT INTO table_name (column1, column2, column3, ...) VALUES (value1, value2, value3, ...);
 
 INSERT INTO tenant_events (sub_id, `event`) VALUES (125, 'realtime_asr_result');
+
+mysql -h192.168.1.108 -uroot -p123456 --default-character-set=utf8 udesk_phone_location -e "update phone_location set province = '重庆', city = '重庆' where id = 1081723 limit 1;"
 ```
 
 ### 导出
