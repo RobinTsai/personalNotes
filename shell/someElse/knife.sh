@@ -268,11 +268,15 @@ function ossPushSelf {
 
 # ------------- tower 日志相关 -------------
 function grep_tower_events {
-    grep 'Method' "$1" | sed -e 's/.*_time":"//g' -e '/SignalHub-msgMap/d' -e '/Inbox/d' -e '/GetAgentStatusOptions/d' -e '/+++Read/d' -e 's/+08:00".*Method\\":\\"/ /g' -e 's/\\":\\"/:/g' -e 's/\\",\\"/ /' -e 's/\\",\\"/,/g' |
+    grep 'Method' "$1" | sed -e 's/.*_time":"//g' -e '/SignalHub-msgMap/d' -e '/Inbox/d' -e '/GetAgentStatusOptions/d' -e '/+++Read/d' -e 's/+08:00".*Method\\":\\"/ /g' -e 's/\\":\\"/:/g' -e 's/\\",\\"/ /' -e 's/\\",\\"/,/g' -e 's/StartTime:[^,]*,//g' |
     awk 'function get(raw, start, end){
             startIdx=index(raw, start)
             len=index(substr(raw, startIdx), end)
-            result=substr(raw, startIdx, len-length(end))
+            if (len > 0) {
+                result=substr(raw, startIdx, len-length(end))
+            } else {
+                result=substr(raw, startIdx)
+            }
             return result
         }
     {
@@ -281,11 +285,17 @@ function grep_tower_events {
             mode=get($3, "CurMode:", ",")
             printf "%-29s\t%-20s\t%s,%s\n", $1, $2, state, mode
         } else if ($2 ~ /AgentCallModeChange/) {
-            mode=get($3, "CurContact:", ",")
-            extState=get($3, "CurExtState:", ",")
-            printf "%-29s\t%-20s\t%s,%s\n", $1, $2, mode, extState
-        # } else if ($2 ~ /Delivered/) {
-        # } else if ($2 ~ /AgentStateChange/) {
+            modeTmp=get($3, "CurContact:", ",");   mode=substr(get(modeTmp, ":", ","), 2)
+            num=get($3, "CurNumber:", ",");        num=substr(get(num, ":", ","), 2)
+            extState=get($3, "CurExtState:", ","); extState=get(extState, "CurExtState:", "\\");
+            printf "%-29s\t%-20s\t%s:%s, %s\n", $1, $2, mode, num, extState
+        } else if ($2 ~ /AgentStateChange/) {
+            from=get($3, "OldState:", ",")
+            to=get($3, "CurState:", ",")
+            printf "%-29s\t%-20s\t%s, %s\n", $1, $2, from, to
+        } else if ($2 ~ /ExtensionStateChange/) {
+            cur=get($3, "CurState:", ",")
+            printf "%-29s\t%-20s\t%s\n", $1, $2, cur
         # } else if ($2 ~ /Originated/) {
         # } else if ($2 ~ /SetCallMode/) {
         # } else if ($2 ~ /TransferQueue/) {
