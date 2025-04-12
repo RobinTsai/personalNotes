@@ -5,6 +5,7 @@ alias cdOpenresty="cd /usr/local/openresty"
 alias cdFreeswitch="cd /usr/local/freeswitch/conf"
 alias esl-py="cd /usr/local/esl-python"
 alias ps-esl-py='ps -ef | grep recringing.py | grep -v grep  | awk '\''{ print $0 "\n\nPID: " $2 }'\'''
+alias grep='grep --color=always'
 
 alias logCcps="cd /var/log/kylin_cti; pwd"
 alias logFs="cd /usr/local/freeswitch/log; pwd"
@@ -63,7 +64,7 @@ alias fs_show_calls="fs_cli -x 'show calls'"
 alias tail_openresty_acc_err="tail -f access.log | grep -v 'HTTP/1.0' | grep -v ' HTTP/1.1\" 200 '"
 alias tail_openresty_acc_errcodes="tail_openresty_acc_err | grep -Eo 'HTTP/1.1\"[^\"]*'"
 
-ossBin="echo" # as default
+ossBin="/usr/bin/echo" # as default
 for name in "oss2mgr-linux" "oss2mgr"
 do
     res=`whereis ${name}`
@@ -344,7 +345,7 @@ function grep_cti_events {
     grep generalPublish "$1" | sed 's/.*_time":"//g; s/+08:00.*payload {\\"type\\":\\"/ /g; s/\\",\\".*\\"call_event\\":\\"/ /g; s/\\".*//g; s/ /\t/g'
 }
 function grep_cti_http {
-    sed '/BasicAuthMiddleware.*URL Info/{s/.*_time\":\"//g; s/\+08:00.*URL Info: / /g; s/\?.*//g; s/\// \//; p}' "$1" -n |
+    sed '/BasicAuthMiddleware.*URL info/{s/.*_time\":\"//g; s/\+08:00.*URL info: / /g; s/\?.*//g; s/\// \//; p}' "$1" -n |
     awk '{printf "%s\t%s\t%s\n",$1,$2,$3}'
 }
 function grep_cti_channels { # 查看 channelIDs
