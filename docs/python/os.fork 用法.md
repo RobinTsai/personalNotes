@@ -42,4 +42,4 @@ print(f"{os.getpid()}: I'm out of for range now.")
 
 具体解释参考下方图片：
 
-![os_fork](assets/os.fork.jpg)
+![os_fork](/assets/python_os.fork.jpg)

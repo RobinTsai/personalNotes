@@ -7,31 +7,30 @@
 
 <!-- code_chunk_output -->
 
-- [理解网络编程和套接字](#理解网络编程和套接字)
-  - [套接字与协议设置](#套接字与协议设置)
-    - [协议族（Protocol Family）](#协议族protocol-family)
-    - [套接字类型（Type）](#套接字类型type)
-      - [面向连接的传输方式](#面向连接的传输方式)
-      - [面向消息的套接字](#面向消息的套接字)
-- [地址族与数据序列](#地址族与数据序列)
-  - [字节序与网络字节序](#字节序与网络字节序)
-- [基于 TCP 的服务端和客户端](#基于-tcp-的服务端和客户端)
-  - [调用顺序](#调用顺序)
-  - [扩展 TCP](#扩展-tcp)
-    - [三次握手的内部实现](#三次握手的内部实现)
-    - [recv 方法内部实现](#recv-方法内部实现)
-  - [TCP 的 IO 缓冲](#tcp-的-io-缓冲)
-- [基于 UDP 的服务器端/客户端](#基于-udp-的服务器端客户端)
-- [优雅地断开套接字连接-半关闭](#优雅地断开套接字连接-半关闭)
-- [域名与网络地址](#域名与网络地址)
-- [套接字中的多种可选项](#套接字中的多种可选项)
-  - [Time-wait 状态的理解与解决](#time-wait-状态的理解与解决)
-  - [Nagle 算法](#nagle-算法)
-- [多进程服务器端](#多进程服务器端)
-  - [僵尸进程](#僵尸进程)
-  - [信号处理及利用信号消灭僵尸进程](#信号处理及利用信号消灭僵尸进程)
-- [进程间通信](#进程间通信)
-- [多播与广播](#多播与广播)
+- [TCP/IP 网络编程 {ignore=true}](#tcpip-网络编程-ignoretrue)
+  - [理解网络编程和套接字](#理解网络编程和套接字)
+    - [套接字与协议设置](#套接字与协议设置)
+      - [协议族（Protocol Family）](#协议族protocol-family)
+      - [套接字类型（Type）](#套接字类型type)
+  - [地址族与数据序列](#地址族与数据序列)
+    - [字节序与网络字节序](#字节序与网络字节序)
+  - [基于 TCP 的服务端和客户端](#基于-tcp-的服务端和客户端)
+    - [调用顺序](#调用顺序)
+    - [扩展 TCP](#扩展-tcp)
+      - [三次握手的内部实现](#三次握手的内部实现)
+      - [recv 方法内部实现](#recv-方法内部实现)
+    - [TCP 的 IO 缓冲](#tcp-的-io-缓冲)
+  - [基于 UDP 的服务器端/客户端](#基于-udp-的服务器端客户端)
+  - [优雅地断开套接字连接-半关闭](#优雅地断开套接字连接-半关闭)
+  - [域名与网络地址](#域名与网络地址)
+  - [套接字中的多种可选项](#套接字中的多种可选项)
+    - [Time-wait 状态的理解与解决](#time-wait-状态的理解与解决)
+    - [Nagle 算法](#nagle-算法)
+  - [多进程服务器端](#多进程服务器端)
+    - [僵尸进程](#僵尸进程)
+    - [信号处理及利用信号消灭僵尸进程](#信号处理及利用信号消灭僵尸进程)
+  - [进程间通信](#进程间通信)
+  - [多播与广播](#多播与广播)
 
 <!-- /code_chunk_output -->
 
@@ -131,7 +130,7 @@ IP 是 Internet Protocol （网络协议）的简写。IPv4 标准的 4 字节 I
 
 网络地址（网络 ID）是为 **区分网络** 而设置的一部分 IP 地址。当向某一主机上传输数据时，实际上是向构成网络的路由器或交换机上传递数据，由接收数据的路由器根据数据中的主机地址向目标主机传递数据。（如下图 A～C 类中蓝色段既为网络地址）
 
-![IPv4地址族](./assets/IPv4_Address.jpeg)
+![IPv4地址族](/assets/tcpip_address.jpeg)
 
 端口号是在同一操作系统内为区分不同套接字而设置的。
 端口号由 16 位构成，范围为 0～65535，但 0～1023 是分配给特定应用程序的知名端口号。
@@ -188,7 +187,7 @@ TCP/IP协议栈共分为 4 层。由下向上依次为链路层（又叫网络�
 >
 > IP 层只关注单个数据包的传输过程，其不管它在网络中是否损坏或丢失，所以是不可靠的。
 > TCP 是在 IP 层的基础上添加了许多功能，如添加序列号、消息重传、拥塞控制等等，这些传输方式的规定赋予了其可靠性。
-> TODO: 补充 UDP 
+> TODO: 补充 UDP
 
 ### 调用顺序
 
@@ -217,7 +216,7 @@ int listen(int sock, int backlog); // backlog 是连接请求等待队列的大�
 
 正如上文所述，客户端可以正常调用 connect 的时机是在服务端调用 listen 函数之后就可以了，只是此时服务端并未受理此时连接的 socket，而是加入了等待队列中。在服务器运行了 accept 函数后会开始处理队列中的 socket。
 
-### 扩展 TCP 
+### 扩展 TCP
 
 > 扩展内容源自 《深入理解 Nginx》 9.10 TCP 协议与 Nginx
 
@@ -246,7 +245,7 @@ linux 内核为 TCP 接收信息准备了两个队列：receive 队列和 out_of
 receive 队列存放已经接收到的 TCP 报文并且去除了 TCP 头、已经排好序，用户可以通过 recv 方法直接从此队列中读取数据；
 out_of_order 队列存放乱序的报文。
 
-> Nginx 是事件驱动的，它不会在 send/recv 上阻塞时通过事件驱动实现的，就是通过 epoll 注册收到网络报文的事件，当有事件产生时才去调用 recv 方法（非阻塞式） 
+> Nginx 是事件驱动的，它不会在 send/recv 上阻塞时通过事件驱动实现的，就是通过 epoll 注册收到网络报文的事件，当有事件产生时才去调用 recv 方法（非阻塞式）
 
 ### TCP 的 IO 缓冲
 
@@ -274,7 +273,7 @@ ssize_t recvfrom(int sock, void *buff, size_t nbytes, int flags, struct sockaddr
 ```
 
 > 端口分配问题
-> 
+>
 > TCP 在客户端调用 connect 函数时会自动分配 IP 地址和端口号。
 > UDP 可以用 bind 进行绑定也可以不用（bind 不区分 UDP 还是 TCP）；不用时它会在首次 sentto 时自动分配 IP 和端口号，并在后序中一直使用此IP+端口。
 
@@ -320,7 +319,7 @@ int shutdown(int sock, int howto);
 - SHUT_RDWR：同时关闭输入和输出
 
 > 如何收到对端的输出的关闭信息
-> 
+>
 > 对端断开输出流的时候最后会发送 EOF。EOF 同样也是用于文件发送结束的标志。
 
 ## 域名与网络地址
@@ -331,7 +330,7 @@ DNS 是 IP 地址与域名相互转换的系统，核心是 DNS 服务器。
 DNS 是一种分布式数据库系统。
 
 > 可通过 `nslookup` 命令查询对应 server 的 DNS 服务器地址。（不携带参数时会进入交互模式）
- 
+
 利用域名获取 IP
 ```c
 struct hostent * gethostbyname(const char* hostname);
@@ -339,7 +338,7 @@ struct hostent * gethostbyname(const char* hostname);
 struct hostent {
     char * h_name;       // 官方名
     char ** h_aliases;   // 别名列表
-    int h_addrtype;      // 地址类型，ipv4 或 ipv6 
+    int h_addrtype;      // 地址类型，ipv4 或 ipv6
     int h_length;        // IP 地址个数
     char ** h_addr_list; // IP 地址列表
 }
@@ -353,7 +352,7 @@ struct hostent * gethostbyaddr(const char * addr, socklen_t len, int family);
 
 扩展：
 
-go 中是用 
+go 中是用
 ```go
 net.LookupAddr("8.8.8.8") // 地址查对应的域名
 net.LookupNS("baidu.com") // 查域名对应的地址信息
@@ -396,7 +395,7 @@ TCP_NODELAY 控制禁用 Nagle 算法
 这是因为在四次挥手过程中，先发起 FIN 的一方在最后一次通信后会进入 **Time-wait 状态**。
 此状态的目的是为了应对最后的 ACK 可能的重传。当 TCP 在此状态时，端口仍被占用。
 
-![TCP四次挥手状态变化](./assets/tcp_4_wavehands.png)
+![TCP四次挥手状态变化](/assets/tcpip_wavehands.png)
 
 解决 Time-wait 导致的地址被占用需要用到 SO_REUSEADDR 选项，此选项用于可将 Time-wait 状态的套接字端口号重新分配给新的套接字。
 
@@ -487,7 +486,7 @@ setsockopt(send_sock, IPPROTO_IP, IP_MULTICAST_TTL, (void*) &time_live, sizeof(t
 // Receiver 代码实现
 struct ip_mreq join_adr;
 join_adr.imr_multiaddr.s_addr=inet_addr(argv[1]); // 设置多播地址（Sender的地址，注意端口号一致）
-join_adr.imr_interface.s_addr=htonl(INADDR_ANY); 
+join_adr.imr_interface.s_addr=htonl(INADDR_ANY);
 setsockopt(recv_sock, IPPROTO_IP, IP_ADD_MEMBERSHIP, (void*)&join_adr, sizeof(join_adr)); // 设置选项加入多播组
 ```
 

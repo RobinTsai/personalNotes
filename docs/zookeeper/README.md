@@ -1,5 +1,7 @@
 # zookeeper 总结
 
+源码位置: [assets/zookeeper/src](/assets/zookeeper/src/main.go)
+
 ## 特性
 
 zk 是个分布式协调服务。
@@ -23,7 +25,7 @@ ZAB，zookeeper 的原子广播协议。A 原子，B 广播。
 流程：
 - follower 收到写请求
 - 转发到 leader
-- leader 记录 事务ID 
+- leader 记录 事务ID
 - leader 用队列发送消息到各个 follower
 - 各个 follower 用日志记录变更，当还不会写入内存
 - 各个 follower “评议”后对 leader 响应是否成功（假设都成功）
@@ -89,7 +91,7 @@ zookeeper 用了三个端口：
 
 zookeeper 中，存储结构是目录树，像 linux 目录一样的树，节点称为 znode，节点是以 key/value 形式存储数据的。
 
-可以像操作目录一样执行命令，基础命令有 
+可以像操作目录一样执行命令，基础命令有
 
 ```
 ls /
@@ -98,7 +100,7 @@ ls /abc
 get /abc    // 通过 -s 查看统计信息
 stat /abc   // 查看统计信息
 delete /abc // 仅当此节点没有子节点时可删除
-``` 
+```
 
 通过 `get -s PATH` 可以查看本节点值及统计信息：
 
@@ -116,7 +118,7 @@ aclVersion = 0
 ephemeralOwner = 0x0 // 临时节点的所有者（session id）
 dataLength = 3       // 数据长度
 numChildren = 0      // 当前节点的子节点个数（不包含孙子等）
-[zk: localhost:2181(CONNECTED) 18] 
+[zk: localhost:2181(CONNECTED) 18]
 ```
 
 ## SESSION
@@ -143,21 +145,21 @@ numChildren = 0      // 当前节点的子节点个数（不包含孙子等）
 Created /seq0000000013
 [zk: localhost:2181(CONNECTED) 10] ls /
 [seq0000000013, zookeeper]
-[zk: localhost:2181(CONNECTED) 11] create -s /next 
+[zk: localhost:2181(CONNECTED) 11] create -s /next
 Created /next0000000014
 [zk: localhost:2181(CONNECTED) 12] ls /
 [next0000000014, seq0000000013, zookeeper]
-[zk: localhost:2181(CONNECTED) 13] 
+[zk: localhost:2181(CONNECTED) 13]
 # --- 紧接着，在 zk-node1 中操作
 [zk: localhost:2181(CONNECTED) 10] create -s /node1 # 可见 seq 是在集群下递增的
 Created /node10000000015
 [zk: localhost:2181(CONNECTED) 11] ls /
 [next0000000014, node10000000015, seq0000000013, zookeeper]
-[zk: localhost:2181(CONNECTED) 12] 
+[zk: localhost:2181(CONNECTED) 12]
 # --- ...
 [zk: localhost:2181(CONNECTED) 14] create -s /seq
 Created /seq0000000016
-[zk: localhost:2181(CONNECTED) 15] 
+[zk: localhost:2181(CONNECTED) 15]
 ```
 
 ### 临时性节点
@@ -166,7 +168,7 @@ Created /seq0000000016
 # --- 在 zk-master 上操作
 [zk: localhost:2181(CONNECTED) 14] create -e /lock
 Created /lock
-[zk: localhost:2181(CONNECTED) 15] get -s /lock 
+[zk: localhost:2181(CONNECTED) 15] get -s /lock
 null
 cZxid = 0x600000037
 ctime = Sun Jun 05 01:27:03 CST 2022
@@ -181,11 +183,11 @@ dataLength = 0
 numChildren = 0
 [zk: localhost:2181(CONNECTED) 16] create -e /lock # 再次创建不成功
 Node already exists: /lock
-[zk: localhost:2181(CONNECTED) 17] 
+[zk: localhost:2181(CONNECTED) 17]
 # --- 紧接着，在 zk-node1 上创建 ephemeral 锁
 [zk: localhost:2181(CONNECTED) 15] create -e /lock
 Node already exists: /lock
-[zk: localhost:2181(CONNECTED) 16] 
+[zk: localhost:2181(CONNECTED) 16]
 # --- ctrl+c 关闭 zk-master 的客户端后，大约 30s 在 zk-node1 上看到 /lock 消失
 
 # 另外，在另一个 session 中可以对非此 session 创建的 e 节点随意删除、修改，这样不冲突。
@@ -202,14 +204,14 @@ Node already exists: /lock
 Created /lockes0000000018
 [zk: localhost:2181(CONNECTED) 4] ls /
 [lockes0000000018, zookeeper]
-[zk: localhost:2181(CONNECTED) 5] 
+[zk: localhost:2181(CONNECTED) 5]
 
 # --- 紧接着，在 zk-node1 上创建，并查看
 [zk: localhost:2181(CONNECTED) 44] ls /
 [lockes0000000018, zookeeper]
 [zk: localhost:2181(CONNECTED) 45] create -e -s /lockes
 Created /lockes0000000019
-[zk: localhost:2181(CONNECTED) 46] get -s /lockes0000000018 
+[zk: localhost:2181(CONNECTED) 46] get -s /lockes0000000018
 null
 cZxid = 0x600000041
 ctime = Sun Jun 05 01:48:16 CST 2022
@@ -222,7 +224,7 @@ aclVersion = 0
 ephemeralOwner = 0x10000ee29dd0003 # zk-master 中 session ID
 dataLength = 0
 numChildren = 0
-[zk: localhost:2181(CONNECTED) 47] get -s /lockes0000000019 
+[zk: localhost:2181(CONNECTED) 47] get -s /lockes0000000019
 null
 cZxid = 0x600000042
 ctime = Sun Jun 05 01:48:49 CST 2022
@@ -235,7 +237,7 @@ aclVersion = 0
 ephemeralOwner = 0x20000ee1d900002 # zk-node1 中 sessionID
 dataLength = 0
 numChildren = 0
-[zk: localhost:2181(CONNECTED) 48] 
+[zk: localhost:2181(CONNECTED) 48]
 
 # --- ctrl+c zk-master 中的客户端后，在 zk-node1 上查看 xxx18 消失
 [zk: localhost:2181(CONNECTED) 48] ls /
@@ -247,7 +249,7 @@ ls [-s] [-w] [-R] path
 
 # --- 新开 session，在此 session 删除 zk-node1 用 -e -s 创建的节点
 [zk: localhost:2181(CONNECTED) 1] delete /lockes0000000019 # 成功！可以删除
-[zk: localhost:2181(CONNECTED) 2] 
+[zk: localhost:2181(CONNECTED) 2]
 
 # --- ephemeral 节点下是不可以有子节点的
 [zk: localhost:2181(CONNECTED) 66] create /lockes0000000019/a
@@ -262,7 +264,7 @@ Ephemerals cannot have children: /lockes0000000019/a
 [zk: localhost:2181(CONNECTED) 40] create /lockes # 创建一个节点用于监听
 Created /lockes
 [zk: localhost:2181(CONNECTED) 41] add
-addWatch   addauth    
+addWatch   addauth
 [zk: localhost:2181(CONNECTED) 41] addWatch /lockes # 添加监听器
 [zk: localhost:2181(CONNECTED) 42] set /lockes "abc" # 更新值触发事件
 
@@ -314,7 +316,7 @@ WATCHER::
 
 WatchedEvent state:SyncConnected type:NodeCreated path:/lockes
 Created /lockes
-[zk: localhost:2181(CONNECTED) 52] 
+[zk: localhost:2181(CONNECTED) 52]
 ```
 
 ### 完整命令支持列表
@@ -325,7 +327,7 @@ Created /lockes
 ZooKeeper -server host:port -client-configuration properties-file cmd args
 	addWatch [-m mode] path # optional mode is one of [PERSISTENT, PERSISTENT_RECURSIVE] - default is PERSISTENT_RECURSIVE
 	addauth scheme auth
-	close 
+	close
 	config [-c] [-w] [-s]
 	connect host:port
 	create [-s] [-e] [-c] [-t ttl] path [data] [acl]
@@ -336,11 +338,11 @@ ZooKeeper -server host:port -client-configuration properties-file cmd args
 	getAcl [-s] path
 	getAllChildrenNumber path
 	getEphemerals path
-	history 
+	history
 	listquota path
 	ls [-s] [-w] [-R] path
 	printwatches on|off
-	quit 
+	quit
 	reconfig [-s] [-v version] [[-file path] | [-members serverID=host:port1:port2;port3[,...]*]] | [-add serverId=host:port1:port2;port3[,...]]* [-remove serverId[,...]*]
 	redo cmdno
 	removewatches path [-c|-d|-a] [-l]
@@ -349,8 +351,8 @@ ZooKeeper -server host:port -client-configuration properties-file cmd args
 	setquota -n|-b|-N|-B val path
 	stat [-w] path
 	sync path
-	version 
-	whoami 
+	version
+	whoami
 Command not found: Command not found help
 ```
 
@@ -361,7 +363,7 @@ Command not found: Command not found help
 - redis 特有的按通信最好的
 - 然后按 id 排序（zk 按 id 大的，redis 是按 id 小的）
 
-> 投票过程中会先推荐自己，然后传输数据中携带 事务ID，由此按最大 事务ID 选举。 
+> 投票过程中会先推荐自己，然后传输数据中携带 事务ID，由此按最大 事务ID 选举。
 > redis 有两个选举过程，一个是 哨兵 在做故障转移之前选举一个领导者；一个是主从状态下，主节点宕机，从从节点中选举主节点的过程。
 
 > 3888 是选举过程中的通信端口，zk 是两两连接的；
@@ -374,6 +376,6 @@ Command not found: Command not found help
 - 3. 获得锁的人如何释放锁，
 - 4. 其他抢锁者如何知道锁的释放
     - 4.1 方案一：主动轮询，弊端：延迟、压力
-    - 4.2 方案二：watch 
+    - 4.2 方案二：watch
         - 4.2.1 watch 节点进行回调，可以解决延时问题，但可能造成“惊群”问题造成压力（watch 者很多，都在进行争抢锁）
         - 4.2.2 sequence 节点 + watch 子节点的前一个 seq，可以保证队列式获得锁（前者释放锁后只会发起后一个 seq 者的回调，避免“惊群”）

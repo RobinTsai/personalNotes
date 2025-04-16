@@ -26,7 +26,7 @@
 
 ## 线上情况
 
-See [./homer.drawio](./homer.drawio)
+See [./homer.drawio](/assets/others_homer.drawio)
 
 数据库使用的是 postgres
 

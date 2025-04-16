@@ -25,7 +25,7 @@ docker pull ubuntu:18.04
 
 ## 命令流转
 
-![docker commands](./assets/docker-cmds.png)
+![docker commands](/assets/others_docker-cmds.png)
 
 ```sh
 docker commit [-a "author"] [-m "message"] CONTAINER_ID  REPO[:TAG]
