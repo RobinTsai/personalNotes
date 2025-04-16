@@ -2,3 +2,6 @@
 go.sum
 .idea/
 .vscode
+_book
+node_modules
+package-lock.json
