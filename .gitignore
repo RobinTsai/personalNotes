@@ -5,3 +5,4 @@ go.sum
 _book
 node_modules
 package-lock.json
+nohup.out

@@ -60,7 +60,7 @@ function writeSummaryTable(dirs, level = 0) {
         }
 
         if (item.isDirectory) {
-            str = `${' '.repeat(4 * level)}* [${item.name.replace(/^(\d*_?)*_/g, '')}](${escape(item.path.replace(root, projRoot)) + "/README.md"})`
+            str = `${' '.repeat(4 * level)}* [${item.name.replace(/^(\d*_?)*_/g, '')}](${(item.path.replace(root, projRoot)) + "/README.md"})`
             fs.appendFileSync("SUMMARY.md", str + "\n")
             if (item.children) {
                 writeSummaryTable(item.children, level + 1)
@@ -69,7 +69,7 @@ function writeSummaryTable(dirs, level = 0) {
             if (item.name === 'README.md') {
                 return
             }
-            str = `${' '.repeat(4 * level)}* [${item.name.replace(".md", "").replace(/^\d*_/g, '')}](${escape(item.path.replace(root, projRoot))})`
+            str = `${' '.repeat(4 * level)}* [${item.name.replace(".md", "").replace(/^\d*_/g, '')}](${(item.path.replace(root, projRoot))})`
             fs.appendFileSync("SUMMARY.md", str + "\n")
         }
     })
