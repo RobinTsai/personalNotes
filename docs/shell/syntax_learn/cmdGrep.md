@@ -1,3 +1,4 @@
+```sh
 #!/bin/bash
 
 echo -e "\e[1;42mGlobal Regular Expression Print\e[0m"

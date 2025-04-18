@@ -1,3 +1,4 @@
+```sh
 #!/bin/bash
 
 echo -e "\e[1;41mYou should use 'source' command to run this file.\e[0m"

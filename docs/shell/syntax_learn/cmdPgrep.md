@@ -1,3 +1,4 @@
+```sh
 #!/bin/bash
 
 echo -e "\e[1;42mUse this to get process PID.\e[0m"

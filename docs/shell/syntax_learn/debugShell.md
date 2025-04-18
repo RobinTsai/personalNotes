@@ -1,3 +1,4 @@
+```sh
 #!/bin/bash
 
 echo "1. Use set -x"

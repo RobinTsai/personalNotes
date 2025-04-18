@@ -1,8 +1,9 @@
-# Google style guide
+# Safe Coding
 
-> 整理来源于 [Google Go Style](https://gocn.github.io/styleguide/)，只整理重要的。
-> （延申：这是用 [Hugo](https://gohugo.io/) 发布的文档网站）
+准则：
 
+- 可能引发 panic 的为必须
+- 一些技巧避免后人犯错的为建议
 
 ## map
 

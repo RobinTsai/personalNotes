@@ -1,3 +1,4 @@
+```sh
 #!/bin/bash
 
 echo -e "\e[1;42mstty\e[0m Hide, such as password input"

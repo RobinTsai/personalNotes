@@ -1,3 +1,4 @@
+```sh
 #!/bin/bash
 
 echo -e "\e[1;42mtput\e[0m Operation terminal"

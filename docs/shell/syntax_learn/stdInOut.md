@@ -1,3 +1,4 @@
+```sh
 #!/bin/bash
 
 echo -e "\e[1;42mUse >, >> to input and append at the end.\e[0m"

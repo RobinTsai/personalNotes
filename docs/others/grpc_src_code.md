@@ -42,7 +42,7 @@ func NewGreeterClient(cc grpc.ClientConnInterface) GreeterClient {
 	- 设置压缩/解压方式
 	- 设置 ServiceConfig（弃用 opt 方式了，改为 name resolver 方式使用）
 	- 设置拦截器（Unary 的和 Stream 式的）
-	- 是否 block 
+	- 是否 block
 	- 等等
 - target 是个地址，可以是 DNS resolver 地址，用于根据域名解析到真实的服务 IP 地址
 - *此处见下方 Resolver 工作原理*
@@ -125,7 +125,7 @@ type Server struct {
 
 	mu  sync.Mutex // 锁
 	lis map[net.Listener]bool
-	
+
 	conns    map[string]map[transport.ServerTransport]bool // conns 会记录每一个监听端口服务上的每一个连接
 	serve    bool                                          // 是否开启了服务
 	drain    bool                    // 标记是否所有的处理协程都完成，用于优雅退出（drain: 排出）
@@ -158,7 +158,7 @@ func(stream *transport.Stream) {
         data := &serverWorkerData{st: st, wg: &wg, stream: stream}
         select {
         // 将数据放入固定 worker 池（初始化Server 的时候创建的）中，最后还是调用 s.handleStream()
-        case s.serverWorkerChannels[atomic.AddUint32(&roundRobinCounter, 1)%s.opts.numServerWorkers] <- data: 
+        case s.serverWorkerChannels[atomic.AddUint32(&roundRobinCounter, 1)%s.opts.numServerWorkers] <- data:
         default: // worker 中如果已满开户新协程执行
             go func() {
                 s.handleStream(st, stream, s.traceInfo(st, stream))
@@ -174,7 +174,7 @@ func(stream *transport.Stream) {
 }
 ```
 
-`s.handleStream()` 
+`s.handleStream()`
 
 ```go
 func (s *Server) handleStream(t transport.ServerTransport, stream *transport.Stream, trInfo *traceInfo) {
@@ -182,7 +182,7 @@ func (s *Server) handleStream(t transport.ServerTransport, stream *transport.Str
 	if sm != "" && sm[0] == '/' { // 除去首行 /
 		sm = sm[1:]
 	}
-	pos := strings.LastIndex(sm, "/") 
+	pos := strings.LastIndex(sm, "/")
 	// ...
 	service := sm[:pos]  // helloworld.Greeter
 	method := sm[pos+1:] // SayHello
@@ -250,8 +250,8 @@ func (s *Server) register(sd *ServiceDesc, ss interface{}) {
 }
 ```
 
-最后调用 `s.processUnaryRPC(t, stream, srv, md, trInfo)` 执行函数，此函数比较复杂，当前有些看不懂，似乎在前面是解析（包含解压）数据最后调了 `md.Handler(info.serviceImpl, ctx, df, s.opts.unaryInt)` 方法，即 `_Greeter_SayHello_Handler` 
- 
+最后调用 `s.processUnaryRPC(t, stream, srv, md, trInfo)` 执行函数，此函数比较复杂，当前有些看不懂，似乎在前面是解析（包含解压）数据最后调了 `md.Handler(info.serviceImpl, ctx, df, s.opts.unaryInt)` 方法，即 `_Greeter_SayHello_Handler`
+
 
 其中 md 是 grpc.MethodDesc
 
@@ -283,3 +283,74 @@ func _Greeter_SayHello_Handler(srv interface{}, ctx context.Context, dec func(in
 ```
 
 `interceptor` 是 `serverOptions{}.chainUnaryInts` 是在 NewServer 的时候可以设置的拦截器。
+
+
+# 如何使用 Header
+
+gRPC 收到 Header 默认都是小写的，如果不想转换，都设置成小写最好了
+
+## 调用端传递 Header 到 gRPC
+
+在调用端调用 gRPC 前添加代码写入 Header：
+
+```go
+// GrpcAddHeaderTrackID 向 ctx 中添加 "x-track-id" header，其会在调用的时候传到服务端
+func GrpcAddHeaderTrackID(ctx context.Context, value string) context.Context {
+	md := metadata.New(map[string]string{"x-track-id": value})
+	return metadata.NewOutgoingContext(ctx, md)
+
+    // 如果用这种方式，则允许多个相同的 header 存在
+    // ctx = metadata.AppendToOutgoingContext(ctx, "x-track-id", value)
+}
+```
+
+在服务端添加代码接收 Header：
+
+```go
+// GrpcGetHeaderTrackID 从 ctx 中读取 header，并返回 x-track-id Header 的值
+func GrpcGetHeaderTrackID(ctx context.Context) string {
+	if md, _ := metadata.FromIncomingContext(ctx); len(md) != 0 {
+		log.Debugf("TEST_APM got header from ctx", md)
+		for _, value := range md["x-track-id"] {
+			if value != "" {
+				return value
+			}
+		}
+	}
+	return ""
+}
+```
+
+## 调用端接收 gRPC 的 Header
+
+在服务端添加代码写入 Header：
+
+```go
+func (s *DemoServer) DemoHandler(ctx context.Context, req *DemoSrvRequest) (*DemoResp, error) {
+    // some handle logic...
+    header := metadata.New(map[string]string{
+        "x-data": "data...",
+    })
+    // 发送 Header 帧
+    if e := grpc.SendHeader(ctx, header); e != nil {
+        log.Errorf("sending header failed with msg %s", e.Error())
+    }
+    return result, nil
+}
+```
+
+在客户端添加代码接收服务端返回的 Header：
+
+```go
+	var respHeader metadata.MD
+    // 调用 gRPC 服务，接收 Header 的关键在 grpc.Header(&respHeader) 的 opts 的传入
+	resp, err = demoCli.DemoHandler(ctx, &req, append(defaultOpts, grpc.Header(&respHeader))...)
+	if nil != err && err != redis.Nil {
+		log.Errorf("getService callId=%s, error: %s", callID, err)
+		return nil, err
+	}
+
+	for _, txData := range respHeader["x-data"] {
+		// got x-data header
+	}
+```

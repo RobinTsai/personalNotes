@@ -1,3 +1,4 @@
+```sh
 #!/bin/bash
 
 echo -n Time count:

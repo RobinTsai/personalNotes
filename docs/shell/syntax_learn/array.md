@@ -1,3 +1,5 @@
+
+```sh
 #!/bin/bash
 
 echo -e "\e[1;42mDefine & use like normal variable\e[0m "

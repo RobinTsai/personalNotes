@@ -1,3 +1,4 @@
+```sh
 #!/bin/bash
 
 # printf 可用于格式化输出，这是 echo 无法做到的

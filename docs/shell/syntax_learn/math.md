@@ -1,3 +1,4 @@
+```sh
 #!/bin/bash
 
 var1=9

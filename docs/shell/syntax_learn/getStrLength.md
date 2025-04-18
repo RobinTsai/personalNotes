@@ -1,3 +1,4 @@
+```sh
 #!/bin/bash
 
 str="Hello, I'm Robin."

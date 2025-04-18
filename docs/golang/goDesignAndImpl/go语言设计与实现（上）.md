@@ -1,48 +1,11 @@
 # go语言设计与实现（上） {ignore=true}
 
 
-<!-- @import "[TOC]" {cmd="toc" depthFrom=1 depthTo=6 orderedList=false} -->
-
-<!-- code_chunk_output -->
-
-- [编译原理](#编译原理)
-- [数据结构](#数据结构)
-  - [数组](#数组)
-  - [切片](#切片)
-  - [哈希表](#哈希表)
-  - [字符串](#字符串)
-- [语言基础](#语言基础)
-  - [函数调用](#函数调用)
-  - [接口](#接口)
-  - [反射](#反射)
-- [常用关键字](#常用关键字)
-  - [for range](#for-range)
-  - [select](#select)
-  - [defer](#defer)
-  - [panic 和 recover](#panic-和-recover)
-  - [make 和 new](#make-和-new)
-- [并发编程](#并发编程)
-  - [context.Context](#contextcontext)
-  - [锁](#锁)
-    - [互斥锁](#互斥锁)
-    - [读写锁](#读写锁)
-  - [sync.WaitGroup](#syncwaitgroup)
-  - [sync.Once](#synconce)
-  - [sync.Cond](#synccond)
-  - [sync.Map](#syncmap)
-  - [sync.Pool](#syncpool)
-  - [扩展包中的 ErrGroup](#扩展包中的-errgroup)
-  - [扩展包中的 Semaphore](#扩展包中的-semaphore)
-  - [扩展包中的 SingleFlight](#扩展包中的-singleflight)
-
-<!-- /code_chunk_output -->
-
-
 为原书从开头到 6.2 章内容的笔记，同时同步到 [简书：go语言设计与实现（上）](https://www.jianshu.com/p/275b6f3ba7b0)
 
 ## 编译原理
 
-![编译原理](https://upload-images.jianshu.io/upload_images/3491218-84bef2a41536d56e.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/480)
+![编译原理](/assets/go_design_build.png)
 
 
 - 静态单赋值，SSA，代码优化方式的一种，主要是在编译期间确保变量只赋值一次。
@@ -58,7 +21,7 @@
 - 对于字面量数组，当 `len<=4` 时，在栈上分配；`len>4`时在 **静态区** 分配，运行时取出；
 - 编译期间可检查出简单的越界问题，但仅限于简单的越界；
 
- ![内存分配模型](https://upload-images.jianshu.io/upload_images/3491218-fc641de8c61d6ba3.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/480)
+ ![内存分配模型](/assets/go_design_malloc.png)
 
 ### 切片
 
@@ -67,9 +30,9 @@
 ```go
 // 内部实现结构
 // 转换方法： (*reflect.SliceHeader)(unsafe.Pointer(&A))
-type SliceHeader struct { 
+type SliceHeader struct {
     Data uintptr
-    Len int 
+    Len int
     Cap int
 }
 ```
@@ -99,6 +62,7 @@ type SliceHeader struct {
 ### 哈希表
 
 先独自思考一下基本的设计思路：
+
 - 哈希函数取余 + 数组
 - 由于哈希碰撞，数组 => 数组（桶） + 链表
 - 由于效率期望 O(1) 问题，链表尽可能短 => 扩容，时机 => 计算装载率
@@ -108,8 +72,8 @@ type SliceHeader struct {
 > - 解决哈希碰撞的一般方法：1. 开放寻址法；2. 拉链法。
 > - 装载率：`装载率 = 元素数量 / 数组大小 * 100%`
 > - 哈希的读写性能关键：1. 哈希函数；2. 定位桶的效率；3. 遍历链表。
- 
- ![Map数据结构](https://upload-images.jianshu.io/upload_images/3491218-04cb1a07ac463baa.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+
+ ![Map数据结构](/assets/go_design_map.png)
 
 - 对应到上方“基本设计思路”：
     - 哈希种子 hash0，在创建时就确定
@@ -162,7 +126,7 @@ type SliceHeader struct {
 
 三个对象：具体对象、接口对象、反射对象。
 
-![接口对象与反射对象](https://upload-images.jianshu.io/upload_images/3491218-9df504084aaf7f57.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/480)
+![接口对象与反射对象](/assets/go_design_interface.png)
 
 - 三大法则：
     - 接口对象可以转换为反射对象（reflect.TypeOf/ValueOf）；
@@ -177,14 +141,14 @@ type SliceHeader struct {
 
 ```go
 type Type interface {
-  Align() int
-  FieldAlign() int 
-  Method(int) Method                 // 通过下标返回方法
-  MethodByName(string) (Method, int) // 通过String找方法
-  NumMethod() int                    // 方法个数
-  Implement(u Type) bool             // 判断是否实现了某 reflect.Type 类型
-  NumIn() int                        // 返回入参个数
-  // ...
+    Align() int
+    FieldAlign() int
+    Method(int) Method                 // 通过下标返回方法
+    MethodByName(string) (Method, int) // 通过String找方法
+    NumMethod() int                    // 方法个数
+    Implement(u Type) bool             // 判断是否实现了某 reflect.Type 类型
+    NumIn() int                        // 返回入参个数
+    // ...
 }
 
 type Value struct {/* ... */}
@@ -229,16 +193,17 @@ func (v Value) Bytes() []byte
 - 调用时机是在函数返回的时候调用，调用顺序按先进后出的栈式（实质是链表结构）原则
 - 预计算参数：在 defer 函数定义时就计算好参数值。另外参考文章[《defer 和闭包》](https://www.jianshu.com/p/b4fb3d361d87)
 - 数据结构：
+
 ```go
 type _defer struct {
-	started bool
-	heap    bool
-	sp        uintptr // sp at time of defer，栈指针
-	pc        uintptr // pc at time of defer，程序计数器
-	fn        func()  // can be nil for open-coded defers
-	_panic    *_panic // panic that is running defer
-	link      *_defer // next defer on G; can point to either heap or stack! // 组成链表
-	// ...
+    started bool
+    heap    bool
+    sp        uintptr // sp at time of defer，栈指针
+    pc        uintptr // pc at time of defer，程序计数器
+    fn        func()  // can be nil for open-coded defers
+    _panic    *_panic // panic that is running defer
+    link      *_defer // next defer on G; can point to either heap or stack! // 组成链表
+    // ...
 }
 ```
 - 编译过程：……
@@ -256,14 +221,14 @@ type _defer struct {
 
 ```GO
 type _panic struct {
-	argp      unsafe.Pointer
-	arg       interface{} // panic 传入的参数
-	link      *_panic // panic 函数链表，指向上一次（因为只能在 defer 中才能有两个 panic）调用的 panic
-	recovered bool // 是否被 recover 恢复
-	aborted   bool // 当前的 panic 是否被强行终止（需要更详细解释）
-	pc        uintptr
-	sp        unsafe.Pointer
-	goexit    bool // 是否调用了 runtime.Goexit （recover 不恢复  runtime.Goexit 的退出）（runtime.Goexit 也只退出当前 goroutine）
+    argp      unsafe.Pointer
+    arg       interface{} // panic 传入的参数
+    link      *_panic // panic 函数链表，指向上一次（因为只能在 defer 中才能有两个 panic）调用的 panic
+    recovered bool // 是否被 recover 恢复
+    aborted   bool // 当前的 panic 是否被强行终止（需要更详细解释）
+    pc        uintptr
+    sp        unsafe.Pointer
+    goexit    bool // 是否调用了 runtime.Goexit （recover 不恢复  runtime.Goexit 的退出）（runtime.Goexit 也只退出当前 goroutine）
 }
 ```
 
@@ -296,10 +261,10 @@ type _panic struct {
 
 ```go
 type Context interface {
-  Deadline() (deadline time.Time, ok bool) // 返回截止时间
-  Done() <-chan struct{}                   // 返回关闭的channel指针，用于获取关闭的信息
-  Err() error                              // 获取Context结束的原因
-  Value(key interface{}) interface{}       // 获取键对应的值
+    Deadline() (deadline time.Time, ok bool) // 返回截止时间
+    Done() <-chan struct{}                   // 返回关闭的channel指针，用于获取关闭的信息
+    Err() error                              // 获取Context结束的原因
+    Value(key interface{}) interface{}       // 获取键对应的值
 }
 ```
 ```go
@@ -312,9 +277,10 @@ func WithDeadline(p Context, d time.Time) (Context, CancelFunc) {}    // 带超�
 func WithTimeout(p Context, t time.Duration) (Context, CancelFunc) {} // 调用了WithDeadline
 // 设置 value 用的，链式存的
 func WithValue(p Context, key, val interface{}) Context {} // 可设置值的ctx
-``` 
+```
 
 实现 Context 接口有以下几个类型（空实现就忽略了）：
+
 - cancelCtx，通过 WithCancel 创建；
 - valueCtx，通过 WithValue 创建；
 - timerCtx，通过 WithDeadline 和 WithTimeout 创建。
@@ -332,6 +298,7 @@ type valueCtx struct {
 ```
 
 - timerCtx 结构中嵌入了 cancelCtx，只不过是多了一个 `time.After()` 来调用 cancelCtx 的取消函数。结构如下：
+
 ```go
 type timerCtx struct {
 	cancelCtx
@@ -342,48 +309,50 @@ type timerCtx struct {
 
 - cancelCtx 的结构和设计模型如下图示。（timerCtx 底层也是 cancelCtx 所以不展开它的设计原则了）
 
- ![cancelCtx的设计模型](https://upload-images.jianshu.io/upload_images/3491218-2db8330a19e17d9b.jpg?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
+![cancelCtx的设计模型](/assets/go_design_cancelCtx.png)
 
 - 如上可知，cancelCtx 是通过多叉树的方式进行存储的，多叉树中不包含 valueCtx。（timerCtx 也会创建 cancelCtx 所以是包含的）
-- cancelCtx 的 *传递取消关系* 函数的逻辑：    
+- cancelCtx 的 *传递取消关系* 函数的逻辑：
     > propagateCancel 应该理解为 传递取消关系 的意思
-    ```go
-    // propagateCancel arranges for child to be canceled when parent is.
-    func propagateCancel(parent Context, child canceler) {
-        done := parent.Done()
-        // ...
-        select {
-        case <-done:
-            child.cancel(false, parent.Err()) // parent 已经取消
-            return
-        default:
-        }
 
-        if p, ok := parentCancelCtx(parent); ok { // 此函数会找到上层最近的 cancelCtx
-            // ...
-            p.children[child] = struct{}{} // 加入扁平多叉树结构中
-        } else {
-            go func() {
-                select { // 阻塞判断
-                case <-parent.Done():
-                    child.cancel(false, parent.Err())
-                case <-child.Done():
-                }
-            }()
-        }
+```go
+// propagateCancel arranges for child to be canceled when parent is.
+func propagateCancel(parent Context, child canceler) {
+    done := parent.Done()
+    // ...
+    select {
+    case <-done:
+        child.cancel(false, parent.Err()) // parent 已经取消
+        return
+    default:
     }
-    ```
+
+    if p, ok := parentCancelCtx(parent); ok { // 此函数会找到上层最近的 cancelCtx
+        // ...
+        p.children[child] = struct{}{} // 加入扁平多叉树结构中
+    } else {
+        go func() {
+            select { // 阻塞判断
+            case <-parent.Done():
+                child.cancel(false, parent.Err())
+            case <-child.Done():
+            }
+        }()
+    }
+}
+```
 
 - `parentCancelCtx()` 方法值得注意，它找上层 cancelCtx 的时候是通过 Value() 方法查找到最近的 cancelCtx 的，`p, ok := parent.Value(&cancelCtxKey).(*cancelCtx)`。（注意 timeCtx 也会创建一个 cancelCtx）
 - 可以通过 Value 方法找上层的 cancelCtx 是因为 cancelCtx 类型的 Value 方法当输入 key 是 `&cancelCtxKey` （cancelCtxKey 是个全局唯一量）时，直接返回自身。
-    ```go
-    func (c *cancelCtx) Value(key any) any {
-        if key == &cancelCtxKey {
-            return c
-        }
-        return value(c.Context, key)
+
+```go
+func (c *cancelCtx) Value(key any) any {
+    if key == &cancelCtxKey {
+        return c
     }
-    ```
+    return value(c.Context, key)
+}
+```
 
 ### 锁
 
@@ -426,28 +395,28 @@ type Mutex struct { // 总共空间 8 字节
 
 #### 读写锁
 
-```go 
+```go
 type RWMutex struct {
     w           Mutex  // 读写锁用 Mutex 锁做基础
     // 写信号量，由写操作申请，由最后一个被等待的读者 RUnlock 时释放
-    writerSem   uint32 
+    writerSem   uint32
     // 读信号量，由读申请使用，“写”在 Unlock 时释放 readerCount 个
-    readerSem   uint32 
+    readerSem   uint32
     // 为正数时，是正在读的读者（相当于已经获取了读锁）的个数；
     // 为负数时，为 正在读的个数 - (1 << 30)
-    readerCount int32  
+    readerCount int32
     // 只在 readerCount 为负数时使用，表明是写锁在等待读者的个数
-    readerWait  int32  
+    readerWait  int32
 }
 ```
 
 设计思路：
 
-> RWMutex 中内嵌的 Mutex （`rw.w`）是用来做 **写与写** 并发控制的锁；
-> RWMutex 中不需要对读与读的做并发控制，读会用 **原子计数** 方式来计数；
-> **读和写**的并发控制是 **原子计数** 和 **信号量**（可以说 **再加上 Mutex**）配合完成的。
+> - RWMutex 中内嵌的 Mutex （`rw.w`）是用来做 **写与写** 并发控制的锁；
+> - RWMutex 中不需要对读与读的做并发控制，读会用 **原子计数** 方式来计数；
+> - **读和写**的并发控制是 **原子计数** 和 **信号量**（可以说 **再加上 Mutex**）配合完成的。
 >
-> 以下是读和写并发控制的设计思路，主要靠两个计数和两个信号量相互配合完成。
+> - 以下是读和写并发控制的设计思路，主要靠两个计数和两个信号量相互配合完成。
 
 - 读上锁 RLock 的时候，readerCount 原子加一；解锁 RUnlock 的时候会原子减一；
 - 当写锁 Lock 发生时，
@@ -495,7 +464,7 @@ type WaitGroup struct { // go version 1.18
     noCopy noCopy // 用于 go vet 检测用
 
     // 64位值：高32位为协程计数器，低32位是等待者计数器。
-    // 64位原子操作要求 64 位对齐，但32位编译器只保证了32位对齐 
+    // 64位原子操作要求 64 位对齐，但32位编译器只保证了32位对齐
     // 因此在32位架构中会在 state() 函数中判断是否 state1 被对齐，
     // 然后动态 swap 字段的顺序获取这两个值的意义（这里用 64 位机做注解）
     state1 uint64 // 状态，高32位为 counter；低32位为 waiterCounter
@@ -505,7 +474,7 @@ type WaitGroup struct { // go version 1.18
 
 WaitGroup 有三个暴露的函数:
 ```go
-func (wg *WaitGroup) Add(delta int) 
+func (wg *WaitGroup) Add(delta int)
 func (wg *WaitGroup) Done()  // 调用 Add(-1)
 func (wg *WaitGroup) Wait()
 ```
@@ -585,7 +554,7 @@ func (o *Once) doSlow(f func()) {
 
 ```go
 type Cond struct {
-    noCopy noCopy 
+    noCopy noCopy
     L Locker           // *Mutex 或 *RWMutex
     notify  notifyList //
     checker copyChecker
@@ -624,7 +593,7 @@ func (c *Cond) Broadcast()   // 广播，让所有的协程都开始执行
 			runtime_notifyListWait(&c.notify, t) // 将此票据加入等待队列
 			c.L.Lock() // 再次上锁，恢复用户 Lock 的场景
 		}
-		``` 
+		```
 	> 注意开发者在使用 Wait() 函数时需要被 `c.L.Lock()`  和 `c.L.Unlock()` 包裹，所以在外层的这个“上锁”之间并不是原子的，而是被 Wait 分开两段原子逻辑。
 	> 由上一条可知在加入等待队列这个操作不是顺序的，所以需要“票据 ticket”这个信息。可以通过 `runtime_notifyListNotifyOne` 源码看到，是在链表上循环查找直到查到票据或遍历完才结束
 - Singal() 函数直接调用 `runtime_notifyListNotifyOne(&c.notify)` 即通知 c.notify 这个编号开启执行。
@@ -665,7 +634,7 @@ func (c *Cond) Broadcast()   // 广播，让所有的协程都开始执行
 >	releasetime int64  // 时间记录
 >	ticket      uint32 // 票据，就是当前等待者的一个编号
 >
->	isSelect bool 
+>	isSelect bool
 >	success bool
 >
 >	parent   *sudog // semaRoot binary tree
@@ -696,7 +665,7 @@ func (c *Cond) Broadcast()   // 广播，让所有的协程都开始执行
 func (m *Map) Load(key interface{}) (value interface{}, ok bool)
 func (m *Map) Store(key, value interface{})
 func (m *Map) LoadOrStore(key, value interface{})
-func (m *Map) Delete(key interface{}) 
+func (m *Map) Delete(key interface{})
 func (m *Map) LoadAndDelete(key interface{})
 func (m *Map) Range(f func(key, value interface{}) bool)
 ```
@@ -704,6 +673,8 @@ func (m *Map) Range(f func(key, value interface{}) bool)
 待续。。。
 
 ### sync.Pool
+
+TODO
 
 ### 扩展包中的 ErrGroup
 
@@ -810,7 +781,7 @@ func (s *Weighted) Acquire(ctx context.Context, n int64) error {
             err = nil // 这种情况下直接认为是已经申请到资源了
         default: // 请求资源超时
             isFront := s.waiters.Front() == elem
-            s.waiters.Remove(elem) 
+            s.waiters.Remove(elem)
             if isFront && s.size > s.cur { // 如果是第一个节点超时，并且有余量资源，则通知下一个等待节点
             // 为什么要判断 isFront 而不是直接全部取消呢？
             // 因为每个 Acquire 可以能是不同的 ctx
@@ -832,7 +803,7 @@ func (s *Weighted) notifyWaiters() {
 		if next == nil { break } // 没有等待者直接退出循环
 
 		w := next.Value.(waiter)
-		if s.size-s.cur < w.n { // 余量不够当前节点申请，会阻塞在此节点 
+		if s.size-s.cur < w.n { // 余量不够当前节点申请，会阻塞在此节点
 			break // 退出循环，即不会通知下一个节点去获取资源
 		}
 
@@ -854,7 +825,7 @@ func (s *Weighted) notifyWaiters() {
 
 细节：
 - 申请量大于资源量的时候，不加入队列直接阻塞，开发者需要自己注意
-- 释放量也是开发者传入的，一旦释放量导致资源总借出量 cur 小于 0，会造成 panic 
+- 释放量也是开发者传入的，一旦释放量导致资源总借出量 cur 小于 0，会造成 panic
 
 ### 扩展包中的 SingleFlight
 
@@ -875,7 +846,7 @@ type call struct {
 	wg sync.WaitGroup // Group.m map 的每个元素是一个分组
 
 	val interface{} // 调用 fn 的结果和错误信息
-	err error       // 
+	err error       //
 	forgotten bool  // 标记是否在访问期间被调用了 Forget 函数（默认访问完自动 forgot）
 
 	dups  int             // 同时访问此 call 的个数（可能在访问过程中增加计数）
@@ -889,9 +860,9 @@ type Result struct { // 结果收集器，结果、错误、是否被多个协�
 }
 ```
 ```go
-func (g *Group) Do(key string, fn func() (interface{}, error)) (v interface{}, err error, shared bool) 
-func (g *Group) DoChan(key string, fn func() (interface{}, error)) <-chan Result  
-func (g *Group) Forget(key string) 
+func (g *Group) Do(key string, fn func() (interface{}, error)) (v interface{}, err error, shared bool)
+func (g *Group) DoChan(key string, fn func() (interface{}, error)) <-chan Result
+func (g *Group) Forget(key string)
 ```
 
 逻辑：
@@ -902,7 +873,7 @@ func (g *Group) Forget(key string)
 - `Forget()` 用于在 flight（调用进行中）期间删除 Group.m[key]（默认是在访问结束后自动删除），它的作用在于在 flight 期间，调用 `Forget()` 之前和之后会有两次实际的访问
 
 细节：
-- 源码中用了两个 defer 来区分 panic 退出和 runtime.Goexit 退出。区别方法（the only way）在于：recover 不会捕捉 runtime.Goexit 
+- 源码中用了两个 defer 来区分 panic 退出和 runtime.Goexit 退出。区别方法（the only way）在于：recover 不会捕捉 runtime.Goexit
 - 源码从结果上来说不会用 recover 捕捉 panic，更准确地说时捕捉了一次后再次抛出了 panic（捕捉一次的原因见上一条）
 - 用 defer 捕获异常后会隐藏 panic 的调用栈信息，所以为了能够在捕获后再抛出的时候有这个信息，第二次的 panic 内容被封装了调用栈信息
 - 源码上为了阻止 channel 造成死锁，为了保证 panic 一定不能被 recover，它用了 `go panic()` 这种调用方法。由于 recover 只能捕获本协程内的 panic，所以这种调用方法一定不能被服务 recover 住。
