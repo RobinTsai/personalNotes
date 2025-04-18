@@ -64,3 +64,4 @@ fs.readdir(process.cwd(), function(err, files) {
 
 console.log(process.argv);
 console.log(process.argv.slice(2));
+```

@@ -11,3 +11,4 @@ emitter.on('someEvent', function(arg1, arg2) {
 });
 
 emitter.emit('someEvent', 'arg1 param', 'arg2 param');
+```

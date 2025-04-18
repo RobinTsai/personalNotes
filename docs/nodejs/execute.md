@@ -8,3 +8,4 @@ function execute(func, val) {
 }
 
 execute(function(val) {console.log(val)}, 'hello');
+```
