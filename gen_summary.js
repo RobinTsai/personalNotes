@@ -5,7 +5,7 @@ const path = require('path');
 const ejs = require('ejs');
 
 
-var excludeFilenames = ["vue", "syntax_learn"]
+var excludeFilenames = ["vue", "syntax_learn", "assets"]
 
 var projRoot = '/docs/'
 var root = path.join(__dirname, projRoot)

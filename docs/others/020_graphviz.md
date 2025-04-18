@@ -1,3 +1,28 @@
+# graphviz
+
+## ads-fsm.dot
+
+```
+strict digraph {
+  label = <ADS state machine<br/> >
+  labelloc = "t";
+
+  Start -> Start [label="EC_Create (EC=ChannelEvt)"]
+  Start -> UserAnswer [label=EC_Answer]
+  Start -> FailEnd [label=EC_Hangup]
+
+  UserAnswer -> UserAnswer [label=EC_Create]
+  UserAnswer -> Talking [label=EC_Answer]
+  UserAnswer -> FailEnd [label=EC_Hangup]
+
+  Talking -> SuccEnd [label=FsEvtChannelHangup]
+}
+
+```
+
+## test.dotuml
+
+```
 SequenceDiagram {
  lifeline "a" as 3563413
  lifeline "A_in" as 355060
@@ -49,3 +74,4 @@ SequenceDiagram {
  355060 --> 3563413 "977. BYE sip:1000@35:63413;ob"
  3563413 -r-> 355060 "978. 200 OK"
 }
+```

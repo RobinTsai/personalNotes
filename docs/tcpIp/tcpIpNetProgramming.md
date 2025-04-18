@@ -329,9 +329,6 @@ net.LookupNS("baidu.com") // 查域名对应的地址信息
 
 > 第九章 [参考](https://blog.csdn.net/amoscykl/article/details/80261754)
 
-![选项列表1](https://leanote.com/api/file/getImage?fileId=5af32319ab64413fc1002d0f)
-![选项列表2](https://leanote.com/api/file/getImage?fileId=5af3231aab64413fc1002d19)
-
 套接字选项按层分三类：
 - IPPROTO_IP，
 - IPPROTO_TCP
