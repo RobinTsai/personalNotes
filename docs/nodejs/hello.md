@@ -1,3 +1,4 @@
+```js
 function Hello() {
   var name;
   this.setName = function (thyName) {

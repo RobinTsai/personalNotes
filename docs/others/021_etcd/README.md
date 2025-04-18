@@ -1,4 +1,13 @@
-# 租约的使用
+## CRUD
+
+```sh
+ETCDCTL_API=3 /usr/local/bin/etcdctl get --prefix ""
+
+etcdctl put foo bar
+```
+
+
+## 租约的使用
 
 租约（lease）是
 
