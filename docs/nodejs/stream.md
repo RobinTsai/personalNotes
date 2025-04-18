@@ -1,3 +1,4 @@
+```js
 var fs = require('fs');
 var zlib = require('zlib');
 

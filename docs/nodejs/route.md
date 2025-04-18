@@ -1,3 +1,4 @@
+```js
 function route(pathname) {
   console.log('route->pathname = ' + pathname);
 }

@@ -1,3 +1,4 @@
+```js
 var fs = require('fs'),
   stdout = process.stdout,
   stdin = process.stdin,

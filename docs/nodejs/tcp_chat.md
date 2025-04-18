@@ -1,3 +1,4 @@
+```js
 /* use `node fileName` run this service in one Terminal.
  * use `telnet 127.0.0.1 3000` run one client in another Termianls (users).
  * Write your name at the first time you log in as a user.
@@ -54,3 +55,4 @@ var server = net.createServer(function(conn) {
 server.listen(3000, function() {
   console.log('\033[96m    server listening on *:3000\033[39m');
 });
+```

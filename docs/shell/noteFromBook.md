@@ -29,8 +29,8 @@
     + `-u`: only print unique lines
     + `-w N`: only first N chars, `N` is a number
 
-- `rm` 不进回收站，所以最好复写
-- `less` > `more`: 比more多了强大的键盘操作
+- `rm` 不进回收站，所以最好复写（如用 alias）
+- `less` > `more`: 比 more 多了强大的键盘操作
 - `du`: 查看文件夹所有文件和大小（包括嵌套、隐藏文件）
     + `--max-depth=1` 最大深度为 1
     + `-h` 以易读的方式显示文件大小
@@ -51,7 +51,6 @@
     + 执行第一个 zsh。这个时候已经进入了第一个 zsh shell，所以后面的命令没有执行
     + 当你按`CTRL+D`时，退出第一个 zsh shell，执行第二个 zsh，……
     + 所以这个脚本从开始执行，你需要按三次 `CTRL+D`，才能输出命令 `ps --forest`的结果
-
 
 ## 变量
 
