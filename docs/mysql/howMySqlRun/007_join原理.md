@@ -5,7 +5,7 @@
 - 内连接
 - 外连接
 - 完全连接：只有 ON 条件，没有 WHERE 条件
-- 交叉连接：内连接没有 ON 条件，又叫笛卡尔积连接
+- 交叉连接：是没有 ON 条件的内连接，又叫笛卡尔积连接。用 `CORSS JOIN`, `逗号`, `或不加 ON 条件的内连接`。
 
 无论是 内连接 还是 外连接，都有一个是 驱动表 一个是 被驱动表（只是内连接在表象上不分驱动与被驱动）。
 
@@ -14,13 +14,15 @@
 内连接和外连接的主要差别是：如果没有匹配的字段是否还需要显示驱动表的信息，内连接不显示，外连接将被驱动表信息显示为 null。
 
 内连接语法：
-- select * from t1 JOIN t2
-- select * from t1 INNER JOIN t2
-- select * from t1 CROSS JOIN t2
+- `select * from t1 JOIN t2 ON ...`
+- `select * from t1 INNER JOIN t2 ON ...`
+- `select * from t1 CROSS JOIN t2`
+
+> 特别注意，交叉连接是没有 ON 条件的内连接，所以要注意在大表上的使用。
 
 外连接语法：
-- select * from t1 LEFT [OUTER] JOIN t2 ON *join_condition* [where *filter*]
-- select * from t1 RUGHT [OUTER] JOIN t2 ON *join_condition* [where *filter*]
+- `select * from t1 LEFT [OUTER] JOIN t2 ON {join_condition} [where {filter}]`
+- `select * from t1 RUGHT [OUTER] JOIN t2 ON {join_condition} [where {filter}]`
 
 ## JOIN 原理
 
