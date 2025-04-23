@@ -11,7 +11,7 @@ echo -e "\e[1;41m The same method. \e[0m reset"
 echo ""
 echo "font color:       0, 30, 31, 32, 33, 34, 35,  36, 37"
 echo "background color: 0, 40, 41, 42, 43, 44, 45,  46, 47"
-echo "对应分别是:     重置,黑, 红, 绿, 黄，蓝,洋红, 青, 白"
+echo "对应分别是:     重置, 黑, 红, 绿, 黄，蓝,洋红, 青, 白"
 
 echo -n "This is one echo."
 echo " But remove \\n."

@@ -6,6 +6,7 @@ alias cdFreeswitch="cd /usr/local/freeswitch/conf"
 alias esl-py="cd /usr/local/esl-python"
 alias ps-esl-py='ps -ef | grep recringing.py | grep -v grep  | awk '\''{ print $0 "\n\nPID: " $2 }'\'''
 alias grep='grep --color=always'
+alias zgrep='zgrep --color=always'
 
 alias logCcps="cd /var/log/kylin_cti; pwd"
 alias logFs="cd /usr/local/freeswitch/log; pwd"
@@ -312,20 +313,31 @@ function grep_cti_ivr {
         s/.*","_time":"/post_app\t/g;
         s/+08:00.*v1\/call/\tv1\/call/g;
         s/\?app_id.*\\"type\\":\\"/\t/g;
+        /asr_gather_succ/{
+            s/\\",\\"timestamp\\".*\\"result\\":\\"\\",/\t\tEMPTY/g;
+            s/\\",\\"timestamp\\".*\\"result\\":\\"/\t\t/g;
+        }
         s/\\".*//g;
+        s/^.*$/\x1b[1;32m&\x1b[0m/g;
         p};
 	/appRespProcess/{s/.*","_time":"/app_resp\t/g;
         s/+08:00.*\\"order\\":\\"/\t/g;
+        /asr_gather\\",/{
+            s/\\",\\"app_id\\":.*\\"type\\":\\"/\ttype:/g;
+            s/\\",\\"content\\":\\"\\",/\tEMPTY/g;
+            s/\\",\\"content\\":\\"/\t/g;
+        }
         s/\\".*//g;
+        s/^.*$/\x1b[1;33m&\x1b[0m/g;
         p}' "$1" | grep -v '"'
 }
 grep_cti_ivr_kcc () {
-        sed -n '/callworker\.(\*ReportSend)\.post/{
+    sed -n '/callworker\.(\*ReportSend)\.post/{
         s/.*","_time":"/post_app\t/g;
         s/+08:00.*\\"type\\":\\"/\t/g;
         s/\\".*//g;
         p};
-        /appRespProcess/{s/.*","_time":"/app_resp\t/g;
+    /appRespProcess/{s/.*","_time":"/app_resp\t/g;
         s/+08:00.*\\"order\\":\\"/\t/g;
         s/\\".*//g;
         p}' "$1"
