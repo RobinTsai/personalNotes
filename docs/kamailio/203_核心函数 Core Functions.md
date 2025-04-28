@@ -15,7 +15,7 @@
 | `error`                                 | ...                                                                                           |
 | `exec`                                  | ...                                                                                           |
 | `drop`                                  | 丢弃包，不处理                                                                                |
-| `exit`                                  | 停止脚本的执行，和 `return(0)` 效果一样，不影响后面的脚本执行（`exit [val]`）                 |
+| `exit`                                  | 停止脚本的执行，和 `return(0)` 效果一样，不影响后面的脚本的隐式操作                 |
 | `force_rport()`                         | 增加 rport 信息到首个 Via 头，用于 NAT 穿越                                                   |
 | `add_rport()`                           | 等同于 `force_rport()`                                                                        |
 | `force_send_socket([protocal:]ip:port)` | 强制使用指定 socket 发送包，这个 Socket 一定要 `listen`                                       |

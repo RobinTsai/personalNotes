@@ -1,6 +1,16 @@
 # xlog
 
-[xlog](https://www.kamailio.org/docs/modules/5.0.x/modules/xlog.html)
+[xlog](https://www.kamailio.org/docs/modules/5.0.x/moaadules/xlog.html)
+
+日志目录的配置参考 [一些配置项](../209_一些配置项.md)
+
+提供了能力按用户指定格式输出日志，类似于 C 中的 printf 函数。
+
+与早期 Kamailio 版本的不同：
+
+- `%` 替换成 `$`
+- 打印 header，使用 `$hdr(header_name[index])` 而不是 `%hdr(header_name[index]) `
+- 打印 AVP，使用 `$avp([si]:avp_id[index])` 或 `$avp([$avp_alias[index])` 而不是 `%{[si]:avp_id[index]}` 或 `%{[$avp_alias[index]}`
 
 
 - level 参数

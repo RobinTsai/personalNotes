@@ -15,7 +15,7 @@ sqlite3 /usr/local/freeswitch/db/core.db # sqlite 每个 .db 文件是个 DB，�
 .schema table_name   -- 查看表结构
 
 .show        -- 查看一些设置
-.header on   -- 打开 header 展示
+.headers on   -- 打开 header 展示
 .mode column -- 栏模式（展示模式） line：每字段一行
 .timer on    -- 打开 CPU 消耗时长统计
 
