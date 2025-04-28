@@ -17,12 +17,9 @@
 - [Go 语言设计与实现](/docs/golang/goDesignAndImpl/go语言设计与实现（上）.md)
 - [Go 黑帽子：渗透测试编程之道](/docs/coloredHat/goBlackHat/README.md)
 
----
 
-Markdown 中引入图片的示例
+## 友情链接
 
-<img src='https://g.gravizo.com/svg?digraph G {label = "";labelloc = "t";Start -> Start [label="EC_Create (EC=ChannelEvt)"];Start -> UserAnswer [label=EC_Answer];Start -> FailEnd [label=EC_Hangup];UserAnswer -> UserAnswer [label=EC_Create];UserAnswer -> Talking [label=EC_Answer];UserAnswer -> FailEnd [label=EC_Hangup];Talking -> SuccEnd [label=FsEvtChannelHangup];}'/>
-
-```sh
-<img src='https://g.gravizo.com/svg?digraph G {label = "";labelloc = "t";Start -> Start [label="EC_Create (EC=ChannelEvt)"];Start -> UserAnswer [label=EC_Answer];Start -> FailEnd [label=EC_Hangup];UserAnswer -> UserAnswer [label=EC_Create];UserAnswer -> Talking [label=EC_Answer];UserAnswer -> FailEnd [label=EC_Hangup];Talking -> SuccEnd [label=FsEvtChannelHangup];}'/>
-```
+- 个人简书主页 [Robin92 - 简书](https://www.jianshu.com/u/b24f7e469109)
+- 本项目地址 [RobinTsai/personalNotes - Github](https://github.com/RobinTsai/personalNotes)
+- 本项目地址 [robincai/personalNotes - Gitee](https://gitee.com/robincai1992/personalNotes)

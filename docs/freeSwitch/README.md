@@ -9,3 +9,14 @@
     1.4 answer 接听
     1.5 转到 transfer in_ivr_park XML udesk_cti
 2. 到达 udesk_cti context 中的 in_ivr_park 扩展，最终执行 park（挂起）
+
+
+---
+
+Markdown 中引入图片的示例（备用）
+
+<img src='https://g.gravizo.com/svg?digraph G {label = "";labelloc = "t";Start -> Start [label="EC_Create (EC=ChannelEvt)"];Start -> UserAnswer [label=EC_Answer];Start -> FailEnd [label=EC_Hangup];UserAnswer -> UserAnswer [label=EC_Create];UserAnswer -> Talking [label=EC_Answer];UserAnswer -> FailEnd [label=EC_Hangup];Talking -> SuccEnd [label=FsEvtChannelHangup];}'/>
+
+```sh
+<img src='https://g.gravizo.com/svg?digraph G {label = "";labelloc = "t";Start -> Start [label="EC_Create (EC=ChannelEvt)"];Start -> UserAnswer [label=EC_Answer];Start -> FailEnd [label=EC_Hangup];UserAnswer -> UserAnswer [label=EC_Create];UserAnswer -> Talking [label=EC_Answer];UserAnswer -> FailEnd [label=EC_Hangup];Talking -> SuccEnd [label=FsEvtChannelHangup];}'/>
+```
