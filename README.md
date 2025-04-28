@@ -11,7 +11,7 @@
 - [TCP/IP 网络编程](/docs/tcpIp/tcpIpNetProgramming.md)
 - [linux高性能服务器编程——游双（著）](/docs/linuxHighPerformance/README.md)
 - [MySQL 是怎样运行的：从根儿上理解 MySQL](/docs/mysql/howMySqlRun/README.md)
-- TODO: [高性能 MySQL]()
+- [高性能 MySQL](/docs/mysql/highPerformanceMySQL/README.md)
 - [MongoDB 核心原理与实践](/docs/mongoDB/README.md)
 - [Redis 设计与实现](/docs/redisDevOps/README.md)
 - [Go 语言设计与实现](/docs/golang/goDesignAndImpl/go语言设计与实现（上）.md)
