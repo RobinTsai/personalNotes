@@ -5,10 +5,12 @@
 
 页有好多类型的，这里只说索引页。
 
+![page](/assets/mysql_page.png)
+
 ## 页的结构
 
 - File Header：文件头，存储页的信息，和前后页形成双向链表
-- Page Header：页头，记录业内的存储信息，槽数量、最后插入位置、当前页位于 B+ 树的层级等等
+- Page Header：页头，记录页内的存储信息，槽数量、最后插入位置、当前页位于 B+ 树的层级等等
 - Infimum 和 Supremum：页中最小、最大记录
 - User Records：存储行记录的地方
 - Free Space：空闲空间

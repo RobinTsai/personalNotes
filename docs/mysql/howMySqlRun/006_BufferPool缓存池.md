@@ -2,13 +2,19 @@
 
 用于磁盘与 CPU 之间缓存，通过将磁盘中的 **页数据** 加入到 **连续的内存** 中缓存起来，进而降低 IO 开销。
 
-通过配置可配置缓存池大小，默认 128M，最小 5M，配置小于 5M 也会是 5M.
+通过配置可配置缓存池大小，默认 128M，最小 5M，配置小于 5M 也会是 5M。
+
+`SHOW ENGINE INNODB STATUS` 中可以查看 Buffer Pool 的状态信息。
 
 ```yaml
+# 配置项
 [server]
 innodb_buffer_pool_size=268435456 # 总空间
 innodb_buffer_pool_instatnces=2
+innodb_buffer_pool_chunk_size=134217728 # 默认 chunk size 128M
 ```
+
+![buffer pool](/assets/mysql_buffer_pool.png)
 
 ## 内部组成
 
@@ -111,9 +117,9 @@ mysql 的做法时按照某个比例将其分成两部分，young 区在前，ol
 
 ## Buffer Pool 的多实例
 
-因为在访问 Buffer Pool 中的各个链表时，都是需要加锁的，防止并发冲突。所以只有一个实例肯定效率不高。
+由于在访问 Buffer Pool 中的各个链表时，都是需要 **加锁** 的，用于防止并发冲突。所以只有一个实例肯定效率不高。
 
-Buffer Pool 在内存中是由若干个小实例组成的。可以通过 `innodb_buffer_pool_instatnces` 来控制个数。
+因此，Buffer Pool 在内存中实际是由若干个小实例组成的，各自管理内部的链表。可以通过 `innodb_buffer_pool_instatnces` 来控制个数。
 
 ```
 每个实例的大小 = innodb_buffer_pool_size / innodb_buffer_pool_instatnces
@@ -121,7 +127,7 @@ Buffer Pool 在内存中是由若干个小实例组成的。可以通过 `innodb
 
 ## Buffer Pool Chunk
 
-在 5.7.5 版本之后，允许在 runtime 过程中调整 Buffer Pool 大小，但此操作需要先申请内存然后将旧空间中内容复制到新空间——极其耗时。因此将 Buffer Pool 分块了。
+在 5.7.5 版本之后，允许在 runtime 过程中调整 Buffer Pool 大小，但此操作需要先申请内存然后将旧空间中内容复制到新空间——极其耗时。因此将 Buffer Pool 分块了，申请内存空间时 **以 chunk 为单位** 向操作系统申请的。
 
 即，一个 Buffer Pool 由多个 chunk 组成，每一个 chunk 是一块连续的内存空间，里面包含了若干个 控制块和缓冲页。
 
