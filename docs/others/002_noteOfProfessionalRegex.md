@@ -64,9 +64,9 @@
     + 注意这里的加号的解读，`(\d{3})+`表示后面的`\d`是3的倍数时，才是正确的匹配.所以后面有9个时(是3的倍数)能匹配到，下次匹配就是匹配到后面是6个时，再下次就是匹配到后面是3个时.
 
 - See the supportability between BREG or EREG
-    + ![Supportability between BREG or EREG](./BasicOrExtendedSupportability.png)
+    + ![Supportability between BREG or EREG](/assets/regex_basicOrExtendedSupportability.png)
 
 - See the supportability among some REG utils
-    + ![Supportability among utils](./ModernUtilSupportability.png)
+    + ![Supportability among utils](/assets/regex_modernUtilSupportability.png)
 
 - 注意 **语言** 中的 **元字符** 在 *正则语句* 中使用时的冲突问题,有时，要加两个转义符号 **\\**
