@@ -22,6 +22,7 @@ func main() {
 	go goPrint(wg, 1, ch2, ch3, "cat", done)
 	go goPrint(wg, 0, ch3, ch1, "fish", done)
 
+
 	ch1 <- "fish"
 	wg.Wait()
 }
