@@ -9,6 +9,7 @@ sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.
 sh -c "$(curl -fsSL https://gitee.com/pocmon/ohmyzsh/raw/master/tools/install.sh)"
 # powerlevel10k - oh-my-zsh 的主题，安装完会自行启动配置
 git clone --depth=1 https://gitee.com/romkatv/powerlevel10k.git ~/powerlevel10k
+git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ~/powerlevel10k
 echo 'source ~/powerlevel10k/powerlevel10k.zsh-theme' >>~/.zshrc
 # ssh 配置（下面命令为自己生成，也可以直接拷贝已有的 私钥、公钥、config 等文件）
 ssh-keygen -t rsa -b 1024 # 注：备份自己常用的 Host Config 信息
