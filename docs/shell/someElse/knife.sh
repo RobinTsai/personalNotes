@@ -77,7 +77,6 @@ do
     md5=`md5sum ${ossBin}`
     if [[ ${md5} != "c9d373995127b886a4a73ea676fa342f" ]]; then
         echo "oss2mgr-linux is not updated, ossDownload oss2mgr.tar to update."
-        return
     fi
 done
 
