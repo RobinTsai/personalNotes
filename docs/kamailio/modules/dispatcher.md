@@ -40,7 +40,7 @@ route[DISPATCH] {
 ./sbin/kamcmd dispatcher.reload
 # 标记为 inactive, 这种情况下在 options probing 成功后会自动恢复
 ./sbin/kamcmd dispatcher.set_state ip 1 sip:8.215.102.230:5474
-# 标记为 diable，这种情况下不再进行探测
+# 标记为 disable，这种情况下不再进行探测
 ./sbin/kamcmd dispatcher.set_state d 1 sip:8.215.102.230:5474
 # 查看 dispatcer 后端负载列表信息
 ./sbin/kamcmd dispatcher.list
