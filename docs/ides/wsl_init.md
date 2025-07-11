@@ -29,6 +29,7 @@ plugins=( OTHER  zsh-syntax-highlighting zsh-autosuggestions)
 
 # 配置 PowerShell
 
+- 参考 [本项目下：docs/others/powershell.md](/docs/others/022.powershell.md)
 - 编辑 `~\Documents\WindowsPowerShell\profile.ps1` 若没有则创建目录和文件
 - 创建目录用 `mkdir WindowsPowerShell`
 - 创建文件用 `New-Item profile.ps1`
@@ -276,7 +277,7 @@ windows 的 keymaps 配置文件在 `"~\AppData\Roaming\JetBrains\GoLand2021.2\k
         "when": "editorTextFocus && foldingEnabled"
     },
     {
-        "key": "ctrl+[",
+        "key": "ctrl+shift+oem_4",
         "command": "editor.foldAll",
         "when": "editorTextFocus && foldingEnabled"
     },
@@ -308,6 +309,29 @@ windows 的 keymaps 配置文件在 `"~\AppData\Roaming\JetBrains\GoLand2021.2\k
         "key": "ctrl+k ctrl+k",
         "command": "cursorDown",
         "when": "textInputFocus"
+    },
+    {
+        "key": "ctrl+shift+u",
+        "command": "editor.action.transformToUppercase"
+    },
+    {
+        "key": "ctrl+shift+l",
+        "command": "editor.action.transformToLowercase"
+    },
+    {
+        "key": "ctrl+k ctrl+l",
+        "command": "-editor.toggleFold",
+        "when": "editorTextFocus && foldingEnabled"
+    },
+    {
+        "key": "ctrl+shift+u",
+        "command": "-workbench.action.output.toggleOutput",
+        "when": "workbench.panel.output.active"
+    },
+    {
+        "key": "ctrl+k ctrl+u",
+        "command": "-editor.action.removeCommentLine",
+        "when": "editorTextFocus && !editorReadonly"
     }
 ]
 ```

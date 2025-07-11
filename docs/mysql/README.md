@@ -23,7 +23,38 @@ mysql -hlocalhost -ukamailio -pkamailio;
 ### 表管理
 
 ```sql
-ALTER table tableName ADD INDEX indexName(columnName)
+RENAME TABLE 原表名 TO 新表名;
+
+-- 列操作
+ALTER table tableName 
+  ADD INDEX indexName(columnName),
+  DROP  COLUMN tts_timbre,
+  ADD COLUMN created_by VARCHAR(128) NULL DEFAULT NULL COMMENT 'created_by',
+  MODIFY COLUMN modified_by VARCHAR(128) COMMENT 'modified by username',          -- modify 仅能该字段的属性，不能改字段名
+  CHANGE COLUMN mode_id_asr model_id_asr bigint unsigned NOT NULL COMMENT 'ASR model ID (unsigned bigint)'; -- change 必须修改列名（可以同名），同时可以修改字段属性
+
+ALTER TABLE webcall_robot_use 
+    DROP  COLUMN tts_timbre,
+    DROP  COLUMN tts_volume,
+    DROP  COLUMN tts_pitch,
+    DROP  COLUMN tts_speed,
+    DROP  COLUMN tts_preview,
+    DROP  COLUMN tts_language_id,
+    -- asr 相关配置
+    DROP  COLUMN asr_hot_words,
+    DROP  COLUMN asr_language_id;
+
+ALTER TABLE webcall_robot_use 
+  CHANGE COLUMN mode_id_asr model_id_asr bigint unsigned NOT NULL COMMENT 'ASR model ID (unsigned bigint)', 
+  CHANGE COLUMN mode_id_tts model_id_tts bigint unsigned NOT NULL COMMENT 'TTS model ID (unsigned bigint)';
+
+ALTER TABLE webcall_robot_use ADD COLUMN is_delete BOOL NOT NULL DEFAULT FALSE COMMENT 'is_delete', 
+    ADD COLUMN created_by VARCHAR(128) NULL DEFAULT NULL COMMENT 'created_by',
+    ADD COLUMN modified_by VARCHAR(128) NULL DEFAULT NULL COMMENT 'modified_by',
+    CHANGE COLUMN created_time create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation timestamp',
+    CHANGE COLUMN updated_time update_time timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last update timestamp';
+
+
 ALTER TABLE tableName ADD COLUMN column_name tinyint DEFAULT 0, ADD COLUMN column_name_2 tinyint DEFAULT 0;
 ALTER TABLE tableName MODIFY COLUMN column_name TINYINT DEFAULT 0;
 
