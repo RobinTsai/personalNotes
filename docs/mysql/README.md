@@ -48,12 +48,10 @@ ALTER TABLE webcall_robot_use
   CHANGE COLUMN mode_id_asr model_id_asr bigint unsigned NOT NULL COMMENT 'ASR model ID (unsigned bigint)', 
   CHANGE COLUMN mode_id_tts model_id_tts bigint unsigned NOT NULL COMMENT 'TTS model ID (unsigned bigint)';
 
-ALTER TABLE webcall_robot_use ADD COLUMN is_delete BOOL NOT NULL DEFAULT FALSE COMMENT 'is_delete', 
+ALTER TABLE webcall_tts_model  
     ADD COLUMN created_by VARCHAR(128) NULL DEFAULT NULL COMMENT 'created_by',
-    ADD COLUMN modified_by VARCHAR(128) NULL DEFAULT NULL COMMENT 'modified_by',
-    CHANGE COLUMN created_time create_time TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP COMMENT 'Creation timestamp',
-    CHANGE COLUMN updated_time update_time timestamp NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT 'Last update timestamp';
-
+    ADD COLUMN modified_by VARCHAR(128) NULL DEFAULT NULL COMMENT 'modified_by';
+     
 
 ALTER TABLE tableName ADD COLUMN column_name tinyint DEFAULT 0, ADD COLUMN column_name_2 tinyint DEFAULT 0;
 ALTER TABLE tableName MODIFY COLUMN column_name TINYINT DEFAULT 0;

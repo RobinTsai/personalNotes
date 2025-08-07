@@ -29,6 +29,7 @@ plugins=( OTHER  zsh-syntax-highlighting zsh-autosuggestions)
 
 # 配置 PowerShell
 
+- Win10 系统可以安装 [WindowsTerminal](https://github.com/microsoft/terminal/releases) 支持多 Tab
 - 参考 [本项目下：docs/others/powershell.md](/docs/others/022.powershell.md)
 - 编辑 `~\Documents\WindowsPowerShell\profile.ps1` 若没有则创建目录和文件
 - 创建目录用 `mkdir WindowsPowerShell`
