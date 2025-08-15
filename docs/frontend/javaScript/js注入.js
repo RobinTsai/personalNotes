@@ -7,3 +7,8 @@ JSON.parse = function(params) {
     debugger;
     return ori_parser(params);
 };
+
+
+// 在 F12，网络请求等资源上右键选择“替代内容”，会跳转到“源代码” Tab 弹出关联本地的一个文件夹（也可以在这里发起替代）
+// 编辑这里的替代文件信息（记得保存才能生效）
+// 可以替代的内容包括：请求标头（Header）、请求响应、js 代码
