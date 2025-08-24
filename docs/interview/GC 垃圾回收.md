@@ -24,9 +24,6 @@
 - **常量池**。就是一些字面量，程序会有一块内存空间存储这些字面量。
 - **JNI 指针**（Java Native Interface）。native 是与C++联合开发的时候用的关键字，指明这个方法是原生函数，也就是这个方法是用C/C++语言实现的，并且被编译成了DLL，由java去调用的。它也是概对象。
 
-![根可达算法](https://upload-images.jianshu.io/upload_images/3491218-e7f5a311a3bb4704.png?imageMogr2/auto-orient/strip%7CimageView2/2/w/480)
-
-
 ## 如何清理垃圾
 
 三种方法：

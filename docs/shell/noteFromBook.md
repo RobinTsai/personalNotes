@@ -1,7 +1,6 @@
 # 《Linux 命令行与 shell 脚本编程大全》
 
 - [《Linux 命令行与 shell 脚本编程大全》](#linux-命令行与-shell-脚本编程大全)
-  - [一些常用命令及参数](#一些常用命令及参数)
   - [shell 基础](#shell-基础)
   - [变量](#变量)
     - [字符串操作](#字符串操作)
@@ -30,45 +29,6 @@
 - [《鸟哥的Linux私房菜》笔记](#鸟哥的linux私房菜笔记)
   - [bash 和 zsh 的差别](#bash-和-zsh-的差别)
 
-## 一些常用命令及参数
-
-- `ls`
-    + `-a`: all
-    + `-l`: long info
-    + `-F`: classify 分类
-    + `-R`: recursion (这个好用，嵌套文件也能找)
-
-- `ln`
-    + `-s`: 软链
-    + 无 `-s`: 硬链，但不可链文件夹，同样是同一个文件，因为 inode 相同，可用 `ls -i` 查看
-
-- `cat`
-    + `-n`: 行号
-    + `-b`: 空行无行号
-    + `-s`: 压缩连续的空行为一个
-
-- `mkdir`
-    + `-p`: parents, 自动创建缺失的父目录
-
-- `uniq`: 按行去重
-    + `-c`: count, 输出重复的次数
-    + `-d`: print continuous duplicated lines ONLY ONCE
-    + `-D`: print continuous duplicated lines ALL
-    + `-s N`: skip first N chars, `N` is a number
-    + `-i`: ignore case
-    + `-u`: only print unique lines
-    + `-w N`: only first N chars, `N` is a number
-
-- `rm` 不进回收站，所以最好复写（如用 alias）
-- `less` > `more`: 比 more 多了强大的键盘操作
-- `du`: 查看文件夹所有文件和大小（包括嵌套、隐藏文件）
-    + `--max-depth=1` 最大深度为 1
-    + `-h` 以易读的方式显示文件大小
-- `df -h`: 查看磁盘使用信息
-- `ps`: 只能看当前用户进程
-    + `-ef`: 查看所有进程
-- `top`: 查看占用内存情况
-
 ## shell 基础
 
 - 外部命令（如 `ps`）和内部命令（如 `cd`），可用 `type/which -a` 查看
@@ -77,8 +37,8 @@
 - `()`: 创建子 shell 执行命令。子 shell 的成本高，会拖慢速度
 - `coproc`: 协程，并行方式执行命令
 - 示例 `(zsh; zsh; zsh; ps --forest)` 分析
-    + 遇见 `(`，创建一个子shell, `)`结束这个子shell
-    + 执行第一个 zsh。这个时候已经进入了第一个 zsh shell，所以后面的命令没有执行
+    + 遇见 `(`，创建一个子shell, 遇见 `)` 结束这个子shell
+    + 执行第一个 zsh，这是一个交互式 shell。这个时候已经进入了第一个 zsh shell，所以后面的命令没有执行
     + 当你按`CTRL+D`时，退出第一个 zsh shell，执行第二个 zsh，……
     + 所以这个脚本从开始执行，你需要按三次 `CTRL+D`，才能输出命令 `ps --forest`的结果
 
@@ -89,26 +49,27 @@
     - `echo ${b:=abc}; echo ${b}`， `:=` 定义变量 b 为 abc 并返回值
     - `echo ${a:-123}`，`:-` 在变量未定义或为空值时，返回 `123`，否则返回 `$a`
     - `echo ${a:+234}`，`:+` 在变量定义且非空时，返回 `234`，`$a` 的值不变
-- 有双引号和无双引号的差别：当用 for 循环的时候，带双引号的是一个完整的值，不带双引号会按空格分割读取每一个元素
-    - 如： `a="1 2  3 4"; for v in $a; do echo $v; done` 输出 `1 \n 2 \n 3 \n 4` (`\n` 表示换行)
-    - 如： `a="1 2  3 4"; for v in "$a"; do echo $v; done` 输出 `1 2 3 4`
+- 有双引号和无双引号的差别：
+  - 当用 for 循环的时候，带双引号的是一个完整的值，不带双引号会按空格分割读取每一个元素
+    - 如： `a="1 2 3 4"; for v in $a; do echo $v; done` 输出 `1 \n 2 \n 3 \n 4` (`\n` 表示换行)
+    - 如： `a="1 2 3 4"; for v in "$a"; do echo $v; done` 输出 `1 2 3 4`
 - 查看变量：`set` 不加参数是查看所有 *用户变量*，加参数是用来设置 shell 的执行方式。另外还有 `env`, `printenv` 来查看环境变量。
 - 环境变量：环境变量的设置要用 `=`，导成全局要用 `export`，但仅当前 shell 中有效
 - 变量继承：subshell 继承的变量只能是父 shell 导出（`export`）的变量
 - 一般地，使用变量用 `$`，修改变量不用前缀 `$`，如 `unset $my_var`，但 `printenv` 例外，用它查看环境变量不用前缀 `$`。
     + 注意变量值为带有空格的字符串时，要使用引号 `"$var"`
 - 单个点号加入 `$PATH`变量，执行本目录命令就不用 `./`了。但这样还有其他问题：重启系统后即丢失 => 持久化需放入 `/etc/profile.d/` 下的 shell 文件中。这关系到下面讲的三种 shell 不同的启动方式
-- `let` 只用于基本的算数运算并赋值，不能用于字符串赋值
+- `let` 只用于基本的 *算数运算* 并赋值，不能用于字符串赋值
 
 ### 字符串操作
 
 - 取长度：`${#var}`
 - 按匹配删除：
   - 规则：`#` 从左到右、`%` 从右到左、两个按最长、一个按最短、`*` 只是通配
-  - 从左到右删除长匹配 *str：`${varible##*str}`
-  - 从左到右删除短匹配 *str：`${varible#*str}`
-  - 从右向左删除长匹配 str*：`${varible%%str*}`
-  - 从右向左删除短匹配 str*：`${varible%str*}`
+  - 从左到右删除长匹配 `*str`：`${varible##*str}`
+  - 从左到右删除短匹配 `*str`：`${varible#*str}`
+  - 从右向左删除长匹配 `str*`：`${varible%%str*}`
+  - 从右向左删除短匹配 `str*`：`${varible%str*}`
 - 按下标读取：
   - `${varible:START}`，从下表 START 始，截取到最后（下标从 0 开始计数）
   - `${varible:START:LEN}`，从下表 START 始，长度为 LEN
@@ -116,13 +77,13 @@
   - `${var: -LEN}` 或 `${var:(-LEN)}` 截取后 LEN 位，注意冒号后方有空格，或加括号
   - `${var:(-4):2}`，从后 4 位开始截取 2 个字符
 - 读变量时附加判断：
-  - 规则：`:` 多判断个空、`-` 只管返回值、`=` 赋值+返回、`+` 与 `-` 相反
   - 未定义返回默认值：`${var-DEFAULT}`（为空时返回空）
   - 非有效字串时返回默认值：`${var:-DEFAULT}`（为空返回 DEFAULT）
   - 未定义时，定义为默认值，并返回：`${var=DEFAULT}`
   - 非有效字串时，定义为默认值，并返回：`${var:=DEFAULT}`
   - 已定义返回 OTHER：`${var+OTHER}`
   - 已定义且非空返回 OTHER：`${var:+OTHER}`
+  - 总结规则：`:` 多判断个空、`-` 只管返回值、`=` 赋值+返回、`+` 与 `-` 相反
 - 按匹配替换：
   - 规则：`#` 从前、`%` 从后、
   - 替换一次匹配：`${string/substring/replacement}`
